@@ -74,6 +74,15 @@ export function mountPrep(host: HTMLElement): void {
   render()
   void loadShelters()
   window.addEventListener('online', () => void loadShelters())
+  // Refresh a saved box that predates the hospital/pharmacy data or is older than 6 h, while we have a connection.
+  const stale = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const places = (state.prep?.places as any) || null
+    const age = state.prepAt ? Date.now() - Date.parse(state.prepAt) : Infinity
+    return !!state.prep && (!places || !('hospital' in places) || age > 6 * 3600_000)
+  }
+  if (navigator.onLine && stale()) void pack()
+  window.addEventListener('online', () => { if (stale()) void pack() })
   onLang(render)
   on('prep', render)
   window.addEventListener('bb-installable', render)
