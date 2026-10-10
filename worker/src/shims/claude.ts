@@ -37,7 +37,26 @@ export async function callClaude(model: string, req: ModelRequest, timeoutMs: nu
           ]
         : m.content,
   }));
-  const body = { max_tokens: req.maxTokens ?? 1200, system: req.system, messages };
+  // Non-Anthropic models (Gemini) take the OpenAI chat shape through the binding: system as a message, image as image_url.
+  const body = model.startsWith('anthropic/')
+    ? { max_tokens: req.maxTokens ?? 1200, system: req.system, messages }
+    : {
+        max_tokens: req.maxTokens ?? 1200,
+        reasoning_effort: 'minimal', // ~2 s photo reads instead of ~10 s
+        messages: [
+          ...(req.system ? [{ role: 'system', content: req.system }] : []),
+          ...req.messages.map((m, i) => ({
+            role: m.role,
+            content:
+              i === firstUser && req.imageBase64
+                ? [
+                    { type: 'image_url', image_url: { url: `data:${req.mime || 'image/jpeg'};base64,${req.imageBase64}` } },
+                    { type: 'text', text: m.content },
+                  ]
+                : m.content,
+          })),
+        ],
+      };
   let timer: ReturnType<typeof setTimeout> | undefined;
   let json: any;
   try {

@@ -98,7 +98,7 @@ export async function normalizeItems(raw: unknown, provider: string): Promise<It
 export async function visionItems(body: any) {
   const img = readImage(body);
   const { data, result, retried } = await callModelJson<any>(
-    { task: 'vision', system: P1_VISION_ITEMS_SYSTEM, messages: [{ role: 'user', content: P1_VISION_ITEMS_USER }], ...img, maxTokens: 2048 },
+    { task: 'vision', system: P1_VISION_ITEMS_SYSTEM, messages: [{ role: 'user', content: P1_VISION_ITEMS_USER }], ...img, maxTokens: 6000 },
     RETRY_JSON_VISION,
   );
   const items = await normalizeItems(data?.items, result.provider);
@@ -132,7 +132,7 @@ export async function describe(body: any) {
   const lang = readLang(body?.lang);
   const kind = ['scene', 'document', 'flood'].includes(body?.kind) ? body.kind : 'scene';
   const { data, result } = await callModelJson<any>(
-    { task: 'vision', system: P4_SCENE_READ_SYSTEM, messages: [{ role: 'user', content: P4_SCENE_READ_USER }], ...img, maxTokens: 2048 },
+    { task: 'vision', system: P4_SCENE_READ_SYSTEM, messages: [{ role: 'user', content: P4_SCENE_READ_USER }], ...img, maxTokens: 6000 },
     RETRY_JSON,
   );
   const description = typeof data?.description === 'string' ? data.description : '';

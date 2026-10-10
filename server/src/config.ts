@@ -21,7 +21,7 @@ export const config = {
     token: env.CF_API_TOKEN || '',
     gatewayId: env.CF_GATEWAY_ID || 'default',
   },
-  visionModel: env.VISION_MODEL || 'anthropic/claude-sonnet-5.5',
+  visionModel: env.VISION_MODEL || 'google/gemini-3.5-flash',
   chatModel: env.CHAT_MODEL || 'anthropic/claude-fable-5.1',
   dataGovKey: env.DATA_GOV_API_KEY || '',
   nwsUserAgent: env.NWS_USER_AGENT || 'BlackoutBox (hackathon)',
