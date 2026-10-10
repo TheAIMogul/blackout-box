@@ -7,7 +7,7 @@ import { parseModelJson } from '../json.js';
 import { callClaude, claudeConfigured } from './claude.js';
 import { ModelRequest, ProviderError, ProviderReply } from './types.js';
 
-export type ModelResult = ProviderReply & { provider: 'claude'; latencyMs: number; fellBack?: boolean };
+export type ModelResult = ProviderReply & { provider: 'claude'; latencyMs: number; fellBack?: boolean; fellBackErrors?: string[] };
 
 let lastOk: { at: string; model: string } | null = null;
 let lastError: { at: string; message: string } | null = null;
@@ -24,6 +24,11 @@ export async function callModel(req: ModelRequest): Promise<ModelResult> {
   const attempts: { model: string; timeout: number }[] =
     req.task === 'vision'
       ? [{ model: config.visionModel, timeout: req.timeoutMs ?? config.modelTimeoutMs }]
+      : req.task === 'translate'
+      ? [
+          { model: config.translateModel, timeout: req.timeoutMs ?? CHAT_PRIMARY_TIMEOUT },
+          { model: config.chatModel, timeout: FALLBACK_TIMEOUT },
+        ]
       : [
           { model: config.chatModel, timeout: req.timeoutMs ?? CHAT_PRIMARY_TIMEOUT },
           ...(config.visionModel !== config.chatModel ? [{ model: config.visionModel, timeout: FALLBACK_TIMEOUT }] : []),
@@ -34,7 +39,7 @@ export async function callModel(req: ModelRequest): Promise<ModelResult> {
     try {
       const r = await callClaude(a.model, req, a.timeout);
       lastOk = { at: new Date().toISOString(), model: a.model };
-      return { ...r, provider: 'claude', latencyMs: Date.now() - t0, fellBack: i > 0 || undefined };
+      return { ...r, provider: 'claude', latencyMs: Date.now() - t0, fellBack: i > 0 || undefined, fellBackErrors: i > 0 ? errors : undefined };
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       errors.push(`${a.model}: ${msg}`);

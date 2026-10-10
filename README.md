@@ -32,7 +32,8 @@ After a hurricane, Miami can lose power for days in 90°F heat. The people hit h
 | --- | --- | --- |
 | Read a fridge / freezer / medicine photo | **Gemini 3.5 Flash** (`google/gemini-3.5-flash`, minimal reasoning, ~3 s) via Cloudflare AI Gateway, strict JSON item list | The sample-photo sheet scans real photos on stage; items appear as chips |
 | Decide how long each item has | **Open rules engine**, no model: [`modules/four-hour-rule`](modules/four-hour-rule) (63 tests) | Each card quotes its rule and links the source (FoodSafety.gov chart row, FoodKeeper ID, or openFDA set ID) |
-| Answer questions, translate | **Claude Fable 5.1** (`anthropic/claude-fable-5.1`), falls back to Sonnet 5.5 | Answers list their sources; a server-side filter blocks dosing advice and "safe to use" claims about medicine |
+| Answer questions | **Claude Fable 5.1** (`anthropic/claude-fable-5.1`), falls back to Sonnet 5.5 | Answers list their sources; a server-side filter blocks dosing advice and "safe to use" claims about medicine |
+| Translate to Spanish and Haitian Creole | **Gemma 4** (`@cf/google/gemma-4-26b-a4b-it`, open weights, Workers AI through Cloudflare AI Gateway), falls back to Claude | `POST /api/translate` returns `_model` |
 
 The model never invents a number. It turns a photo into item names; the engine turns names and labels into clocks.
 
@@ -93,7 +94,7 @@ Spanish and Haitian Creole strings marked `// MT` in [`web/src/i18n.ts`](web/src
 ## Built with
 
 - TypeScript, Vite, vite-plugin-pwa (Workbox), IndexedDB (`idb`), MapLibre GL, Express.
-- Models: Gemini 3.5 Flash (photo reading) and Claude Fable 5.1 (questions and translation) through Cloudflare AI Gateway. Images: Grok Imagine (hero scenes, 3D icons, app icon, sample photos).
+- Models: Gemini 3.5 Flash (photo reading), Claude Fable 5.1 (questions) and Gemma 4 26B (Spanish / Haitian Creole translation, open weights on Workers AI) through Cloudflare AI Gateway. Images: Grok Imagine (hero scenes, 3D icons, app icon, sample photos).
 - AI tools used to build it: Claude Code (Claude Fable 5.1 and Claude Opus 5.5 as coordinator; four Claude Opus 5.5 build agents for the engine, server, web app and map).
 
 ## Team

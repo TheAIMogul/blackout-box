@@ -23,6 +23,8 @@ export const config = {
   },
   visionModel: env.VISION_MODEL || 'google/gemini-3.5-flash',
   chatModel: env.CHAT_MODEL || 'anthropic/claude-fable-5.1',
+  // Gemma 4 (open weights) handles Spanish / Haitian Creole translation on Workers AI through the gateway.
+  translateModel: env.TRANSLATE_MODEL || '@cf/google/gemma-4-26b-a4b-it',
   dataGovKey: env.DATA_GOV_API_KEY || '',
   nwsUserAgent: env.NWS_USER_AGENT || 'BlackoutBox (hackathon)',
   modelTimeoutMs: 60_000,

@@ -1,5 +1,5 @@
 export type ProviderName = 'claude';
-export type Task = 'vision' | 'chat';
+export type Task = 'vision' | 'chat' | 'translate';
 export type ChatMsg = { role: 'user' | 'assistant'; content: string };
 
 export type ModelRequest = {

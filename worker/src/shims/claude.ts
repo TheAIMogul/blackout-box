@@ -17,8 +17,16 @@ function replyText(json: any): string {
   if (Array.isArray(json?.content)) {
     return json.content.filter((b: any) => b?.type === 'text' && typeof b.text === 'string').map((b: any) => b.text).join('');
   }
-  const choice = json?.choices?.[0]?.message?.content;
-  if (typeof choice === 'string') return choice;
+  const msg = json?.choices?.[0]?.message;
+  const choice = msg?.content;
+  if (typeof choice === 'string' && choice.trim()) return choice;
+  if (Array.isArray(choice)) return choice.map((c: any) => (typeof c === 'string' ? c : c?.text ?? '')).join('');
+  // Gemma on Workers AI can return the answer in reasoning_content when content is empty; keep the last JSON object in it.
+  const rc = msg?.reasoning_content;
+  if (typeof rc === 'string' && rc.trim()) {
+    const m = rc.match(/\{[\s\S]*\}(?![\s\S]*\{)/);
+    if (m) return m[0];
+  }
   if (typeof json?.response === 'string') return json.response;
   return '';
 }
@@ -42,7 +50,7 @@ export async function callClaude(model: string, req: ModelRequest, timeoutMs: nu
     ? { max_tokens: req.maxTokens ?? 1200, system: req.system, messages }
     : {
         max_tokens: req.maxTokens ?? 1200,
-        reasoning_effort: 'minimal', // ~2 s photo reads instead of ~10 s
+        ...(model.startsWith('@cf/') ? {} : { reasoning_effort: 'minimal' }), // ~2 s photo reads instead of ~10 s; Workers AI models reject it
         messages: [
           ...(req.system ? [{ role: 'system', content: req.system }] : []),
           ...req.messages.map((m, i) => ({
@@ -73,6 +81,6 @@ export async function callClaude(model: string, req: ModelRequest, timeoutMs: nu
     if (timer) clearTimeout(timer);
   }
   const text = replyText(json);
-  if (!text) throw new ProviderError('claude', 502, `empty reply via AI binding (keys: ${Object.keys(json || {}).join(',')})`, model);
+  if (!text) throw new ProviderError('claude', 502, `empty reply via AI binding: ${JSON.stringify(json?.choices?.[0] ?? json).slice(0, 400)}`, model);
   return { text, model: typeof json?.model === 'string' && json.model.includes('/') ? json.model : model, finishReason: json?.stop_reason ?? json?.choices?.[0]?.finish_reason, usage: json?.usage };
 }

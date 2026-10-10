@@ -19,7 +19,7 @@ import {
 } from './prompts.js';
 import { FIXED, filterAnswer, filterDescription, filterTranslation, Lang } from './safety.js';
 
-export const meta = (r: ModelResult) => ({ _model: r.model, _provider: r.provider, _latencyMs: r.latencyMs, _fellBack: r.fellBack });
+export const meta = (r: ModelResult) => ({ _model: r.model, _provider: r.provider, _latencyMs: r.latencyMs, _fellBack: r.fellBack, _fellBackErrors: r.fellBackErrors });
 
 /* ---------- image input ---------- */
 export function readImage(body: any): { imageBase64: string; mime: string } {
@@ -117,7 +117,7 @@ export async function translate(text: string, to: 'es' | 'ht') {
   if (!text?.trim()) throw new HttpError(400, 'NO_TEXT', 'text is required');
   if (text.length > 6000) throw new HttpError(413, 'TEXT_TOO_LONG', 'text over 6000 characters');
   const { data, result } = await callModelJson<any>(
-    { task: 'chat', system: fill(P3_TRANSLATE_SYSTEM, { lang: LANG_NAMES[to] }), messages: [{ role: 'user', content: fill(P3_TRANSLATE_USER, { text }) }], maxTokens: 1200 },
+    { task: 'translate', system: fill(P3_TRANSLATE_SYSTEM, { lang: LANG_NAMES[to] }), messages: [{ role: 'user', content: fill(P3_TRANSLATE_USER, { text }) }], maxTokens: 4000 },
     RETRY_JSON,
   );
   const out = typeof data?.text === 'string' ? data.text : '';
