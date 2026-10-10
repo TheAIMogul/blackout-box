@@ -1,15 +1,65 @@
 // Prep ("Pack my box"): geolocation (fallback 25.77,-80.19) → GET /api/prep → IndexedDB → render.
 // "Apple meets Airbnb": zone hero card + Pack my box pill, places and FEMA as iOS grouped lists. US units: mi, ft, °F.
-import { getPrep, type Place, type PrepBundle } from './api'
+import { API, getPrep, type Place, type PrepBundle } from './api'
+import { CONTACTS, cl } from './contacts'
 import { kvGet, kvSet } from './db'
 import { onMedia } from './media'
-import { onLang, t } from './i18n'
+import { getLang, onLang, t } from './i18n'
 import { emit, esc, fmtF, fmtMi, fmtFt, fmtWhen, haptic, usText, on, state } from './util'
 
 const FALLBACK = { lat: 25.77, lon: -80.19 }
 let root: HTMLElement
 let phase: 'idle' | 'locating' | 'loading' | 'done' | 'fail' | 'demo' = 'idle'
 let locNote = ''
+
+// ---------- shelters (same API + IndexedDB key as shelter.ts, so either tab warms the offline copy) ----------
+type Shelter = { name: string; address?: string; lat: number; lon: number; open?: boolean; petFriendly?: boolean; specialNeeds?: boolean; distanceMi?: number }
+type ShelterResp = { anyOpen?: boolean; shelters: Shelter[]; note?: string }
+let shel: ShelterResp | null = null
+let shelSaved = false
+let shelLoading = false
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+const dirUrl = (lat: number, lon: number) => isIOS() ? `https://maps.apple.com/?daddr=${lat},${lon}` : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`
+
+async function loadShelters(): Promise<void> {
+  if (shelLoading) return
+  shelLoading = true
+  if (!shel) {
+    const rec = await kvGet<ShelterResp>('shelters').catch(() => undefined)
+    if (rec?.value?.shelters) { shel = rec.value; shelSaved = true; render() }
+  }
+  try {
+    const ctl = new AbortController()
+    const timer = setTimeout(() => ctl.abort(), 15000)
+    const r = await fetch(`${API}/shelters?lat=${state.lat}&lon=${state.lon}`, { signal: ctl.signal }).finally(() => clearTimeout(timer))
+    if (!r.ok) throw new Error(`HTTP ${r.status}`)
+    const body = (await r.json()) as ShelterResp
+    if (Array.isArray(body?.shelters)) { shel = body; shelSaved = false; void kvSet('shelters', body, 'GET /api/shelters') }
+  } catch (e) { console.warn('prep shelters', e) }
+  shelLoading = false
+  render()
+}
+
+const PREP_CSS = `
+.pp-dir{flex:none;display:inline-flex;align-items:center;gap:4px;padding:8px 12px;border-radius:999px;background:var(--rausch,#e11d48);color:#fff;font-weight:600;font-size:14px;text-decoration:none;min-height:40px}
+.pp-dir .ms{font-size:18px}
+.pp-end{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
+.pp-mi{font-weight:700;font-variant-numeric:tabular-nums}
+.pp-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;margin-right:6px}
+.pp-pill.open{background:#16a34a;color:#fff}
+.pp-pill.closed{background:var(--fill,rgba(127,127,127,.18));color:var(--text-2,inherit)}
+.pp-911{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:14px;background:#b91c1c;color:#fff;font-weight:700;font-size:17px;text-decoration:none;margin-bottom:10px}
+.pp-call{display:flex;align-items:center;gap:12px;padding:14px 16px;min-height:64px;text-decoration:none;color:inherit}
+.pp-call .pp-num{font-weight:700;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pp-call .ms.callico{color:#16a34a}
+.pp-src{font-size:11px;opacity:.7;padding:0 16px 10px 64px;display:block}
+.pp-src a{color:inherit}
+@media (max-width:420px){.pp-call{flex-wrap:wrap}.pp-call .pp-num{font-size:16px}}
+`
+function injectCss(): void {
+  if (document.getElementById('pp-css')) return
+  const st = document.createElement('style'); st.id = 'pp-css'; st.textContent = PREP_CSS; document.head.appendChild(st)
+}
 
 export async function loadPrepFromCache(): Promise<void> {
   const rec = await kvGet<PrepBundle>('prep')
@@ -20,7 +70,10 @@ export async function loadPrepFromCache(): Promise<void> {
 
 export function mountPrep(host: HTMLElement): void {
   root = host
+  injectCss()
   render()
+  void loadShelters()
+  window.addEventListener('online', () => void loadShelters())
   onLang(render)
   on('prep', render)
   window.addEventListener('bb-installable', render)
@@ -59,6 +112,7 @@ async function pack(): Promise<void> {
     emit('prep')
   }
   render()
+  void loadShelters()
 }
 
 // ---------- normalizers (server shapes vary: places is { power: [], library: [], fire: [], note }) ----------
@@ -119,6 +173,35 @@ const kindIcon = (k: string) => (k === 'power' ? 'ev_station' : k === 'library' 
 const banner = (kind: '' | 'ok' | 'warn' | 'error', icon: string, html: string) => `<div class="banner ${kind}"><span class="ms" aria-hidden="true">${icon}</span><span>${html}</span></div>`
 
 // ---------- render ----------
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function llOf(p: any): { lat: number; lon: number } | null {
+  const lat = Number(p?.lat ?? p?.latitude ?? p?.geometry?.coordinates?.[1])
+  const lon = Number(p?.lon ?? p?.lng ?? p?.longitude ?? p?.geometry?.coordinates?.[0])
+  return Number.isFinite(lat) && Number.isFinite(lon) && (lat !== 0 || lon !== 0) ? { lat, lon } : null
+}
+const hasLL = (p: Place) => llOf(p) != null
+
+function shelterHtml(): string {
+  const list = (shel?.shelters ?? []).slice(0, 5)
+  const head = `<div class="section-h"><h2>${esc(cl('shelters'))}</h2>${shelSaved ? `<span class="muted">${esc(t('shelter_saved'))}</span>` : `<span class="muted">${esc(t('distance'))}</span>`}</div>`
+  if (!list.length) return `${head}<div class="empty">${esc(shelLoading ? '…' : (shel?.note || t('shelter_none')))}</div>`
+  return `${head}<div class="list">${list.map((s) => `
+    <div class="row"><span class="ico"><span class="ms" aria-hidden="true">night_shelter</span></span>
+      <span class="main"><span class="t1">${esc(s.name)}</span><span class="t2" style="display:block"><span class="pp-pill ${s.open ? 'open' : 'closed'}">${esc(s.open ? t('shelter_open') : t('shelter_not_open'))}</span>${s.petFriendly ? esc(t('shelter_pets')) + ' · ' : ''}${s.specialNeeds ? esc(t('shelter_special')) + ' · ' : ''}${s.address ? esc(s.address) : ''}</span></span>
+      <span class="pp-end"><span class="pp-mi">${typeof s.distanceMi === 'number' ? esc(fmtMi(s.distanceMi)) : '—'}</span><a class="pp-dir" href="${esc(dirUrl(s.lat, s.lon))}" target="_blank" rel="noopener"><span class="ms" aria-hidden="true">directions</span>${esc(t('directions'))}</a></span></div>`).join('')}</div>
+    ${shel?.note ? `<p class="src-line">${esc(shel.note)}</p>` : ''}`
+}
+
+function contactsHtml(): string {
+  return `<div class="section-h"><h2>${esc(cl('title'))}</h2></div>
+    <a class="pp-911" href="tel:911"><span class="ms" aria-hidden="true">emergency</span>${esc(cl('e911'))}</a>
+    <div class="list">${CONTACTS.map((c) => `<div>
+      <a class="pp-call" href="tel:${esc(c.tel)}" aria-label="${esc(c.name)} ${esc(c.number)}"><span class="ico"><span class="ms" aria-hidden="true">${esc(c.icon)}</span></span>
+        <span class="main" style="flex:1;min-width:0"><span class="t1" style="display:block;font-weight:600">${esc(c.name)}</span><span class="t2" style="display:block">${esc(c.for[getLang()] ?? c.for.en)}</span></span>
+        <span class="pp-num">${esc(c.number)}</span><span class="ms callico" aria-hidden="true">call</span></a>
+      <span class="pp-src">${esc(cl('source'))}: <a href="${esc(c.src)}" target="_blank" rel="noopener">${esc(c.srcLabel)}</a></span></div>`).join('')}</div>
+    <p class="src-line">${esc(cl('note'))}</p>`
+}
 function render(): void {
   if (!root) return
   const b = state.prep
@@ -156,13 +239,16 @@ function render(): void {
     </div>
     <div style="margin-top:12px">${locNote ? banner('', 'info', esc(locNote)) : ''}${status}</div>
     ${!b ? '' : `
-    <div class="section-h"><h2>${esc(t('places'))}</h2><span class="muted">${esc(t('distance'))}</span></div>
+    <div class="section-h"><h2>${esc(cl('power'))}</h2><span class="muted">${esc(t('distance'))}</span></div>
     ${rows.length ? `<div class="list">${rows.map(({ g, p }) => `
       <div class="row"><span class="ico"><span class="ms" aria-hidden="true">${kindIcon(g.kind)}</span></span>
         <span class="main"><span class="t1">${esc(p.name)}</span><span class="t2" style="display:block">${esc(kindLabel(g.kind))}${p.open24h ? ' · 24 h' : ''}${p.address ? ' · ' + esc(p.address) : ''}</span></span>
-        <span class="end">${p.distanceMi != null ? esc(fmtMi(p.distanceMi)) : '—'}</span></div>`).join('')}</div>` : `<div class="empty">—</div>`}
+        <span class="pp-end"><span class="pp-mi">${p.distanceMi != null ? esc(fmtMi(p.distanceMi)) : '—'}</span>${hasLL(p) ? `<a class="pp-dir" href="${esc(dirUrl(llOf(p)!.lat, llOf(p)!.lon))}" target="_blank" rel="noopener"><span class="ms" aria-hidden="true">directions</span>${esc(t('directions'))}</a>` : ''}</span></div>`).join('')}</div>` : `<div class="empty">—</div>`}
     <p class="src-line">${esc(placesNote || t('places_note'))}${groups.map((g) => g.source).filter(Boolean).length ? ' · ' + esc([...new Set(groups.map((g) => g.source).filter(Boolean))].join(', ')) : ''}</p>
-
+    `}
+    ${shelterHtml()}
+    ${contactsHtml()}
+    ${!b ? '' : `
     <div class="grid2" style="margin-top:18px">
       <div class="card">
         <h3><span class="ms" aria-hidden="true">waves</span>${esc(t('tide'))}</h3>
@@ -201,5 +287,6 @@ function render(): void {
       <img src="/icons/apple-touch-icon-180.png" alt=""><span style="flex:1;min-width:0"><b style="display:block;font-size:17px">${esc(t('install_title'))}</b><span class="muted small">${esc(t('install_why'))}</span></span><span class="ms chev" aria-hidden="true">chevron_right</span></button>` : ''}`
 
   root.querySelector('#prep-go')?.addEventListener('click', () => { haptic(); void pack() })
+  root.querySelectorAll('a.pp-dir, a.pp-call, a.pp-911').forEach((a) => a.addEventListener('click', () => haptic()))
   root.querySelector('#prep-install')?.addEventListener('click', () => window.dispatchEvent(new Event('bb-open-install')))
 }

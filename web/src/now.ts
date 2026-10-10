@@ -22,7 +22,8 @@ export async function mountNow(hero: HTMLElement, view: HTMLElement, stage: HTML
   heroEl = hero; viewEl = view; stageEl = stage
   // Mockup 1:52 PM, top to bottom: power-out pill → hero temp → snap cards (in the hero); mini map → warnings → tiles.
   // The slots are built once so the snap buttons and the MapLibre mini map survive every re-render.
-  heroEl.innerHTML = '<div class="nh-out"></div><div class="now-hero nh-main"></div><div class="nh-snaps"></div>'
+  heroEl.innerHTML = '<div class="nh-intro"></div><div class="nh-out"></div><div class="now-hero nh-main"></div><div class="nh-snaps"></div>'
+  heroEl.querySelector<HTMLElement>('.nh-intro')!.addEventListener('click', onIntroStep)
   viewEl.innerHTML = '<div class="mini-map" id="now-minimap"></div><div class="nv-shelter"></div><div class="nv-warn"></div><div class="nv-tiles"></div>'
   paintShelter(viewEl.querySelector<HTMLElement>('.nv-shelter')!)
   paintOut(heroEl.querySelector<HTMLElement>('.nh-out')!)
@@ -168,10 +169,36 @@ function paintBackdrop(): void {
   wasBlackout = nowBlackout
 }
 
+// ---------- what this app is for (replaces the Now subtitle) ----------
+const STEPS: Array<[string, string]> = [['photo_camera', '1'], ['power_off', '2'], ['timer', '3']]
+let lastIntro = ''
+function paintIntro(): void {
+  const el = heroEl?.querySelector<HTMLElement>('.nh-intro')
+  if (!el || lastIntro === getLang()) return
+  lastIntro = getLang()
+  el.innerHTML = `<h2 class="ni-head">${esc(t('intro_head'))}</h2>
+    <ol class="ni-steps">${STEPS.map(([icon, n]) => `<li><button type="button" class="ni-step" data-step="${n}">
+      <span class="ni-ic"><span class="ms fill" aria-hidden="true">${icon}</span><b class="ni-n">${n}</b></span>
+      <span class="ni-t">${esc(t('intro_' + n + 't'))}</span><span class="ni-b">${esc(t('intro_' + n + 'b'))}</span>
+    </button></li>`).join('')}</ol>`
+}
+function onIntroStep(e: Event): void {
+  const b = (e.target as HTMLElement).closest<HTMLElement>('[data-step]')
+  if (!b) return
+  haptic()
+  const n = b.dataset.step
+  if (n === '1') heroEl.querySelector('.nh-snaps')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  else if (n === '2') {
+    const out = heroEl.querySelector<HTMLButtonElement>('[data-out]')
+    if (out) out.click(); else location.hash = 'fourhour'
+  } else location.hash = 'fourhour'
+}
+
 // ---------- render ----------
 function render(): void {
   if (!heroEl) return
   paintStage()
+  paintIntro()
   const w = data?.weather
   const warns = (data?.warnings ?? []).filter((x) => x && x.title)
   const watch = warns.filter((x) => x.level !== 'green')

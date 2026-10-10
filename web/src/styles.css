@@ -915,3 +915,54 @@ video.lightsout.out { opacity: 0; }
   .why-step, .why-dot, .why-step::after, .why-chip { transition: none !important; }
   .why-step, .why-chip { opacity: 1; transform: none; }
 }
+
+/* ---------- 3:40 PM: Now explainer card (replaces the subtitle) ---------- */
+.stage.now-stage .lt-sub { display: none; }
+.nh-intro { margin-top: 4px; padding: 12px 12px 10px; border-radius: 20px; color: #fff;
+  background: rgba(20, 20, 24, .34); border: .5px solid rgba(255, 255, 255, .22);
+  -webkit-backdrop-filter: saturate(160%) blur(18px); backdrop-filter: saturate(160%) blur(18px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .12); }
+.nh-intro:empty { display: none; }
+.ni-head { margin: 0 2px 8px; font: 700 16px/1.25 var(--font); letter-spacing: -.01em; text-shadow: 0 1px 8px rgba(0, 0, 0, .25); }
+.ni-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.ni-steps li { display: flex; min-width: 0; }
+.ni-step { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left;
+  padding: 8px 8px 9px; border-radius: 14px; border: 0; cursor: pointer; color: #fff;
+  background: rgba(255, 255, 255, .14); font: 500 11.5px/1.3 var(--font); transition: transform .2s var(--spring), background .2s; }
+.ni-step:hover { background: rgba(255, 255, 255, .22); }
+.ni-step:active { transform: scale(.96); }
+.ni-step:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.ni-ic { display: inline-flex; align-items: center; gap: 4px; margin-bottom: 2px; }
+.ni-ic .ms { font-size: 20px; }
+.ni-n { display: inline-grid; place-items: center; width: 17px; height: 17px; border-radius: 50%; background: var(--rausch); color: #fff; font: 700 11px/1 var(--font); }
+.ni-t { font-weight: 700; font-size: 12.5px; line-height: 1.2; }
+.ni-b { opacity: .92; }
+:root[data-blackout="1"] .nh-intro { background: rgba(18, 18, 20, .6); border-color: rgba(255, 255, 255, .1); }
+@media (min-width: 900px) { .nh-intro { max-width: 760px; padding: 16px; } .ni-head { font-size: 19px; } .ni-step { font-size: 13px; padding: 10px 12px 12px; } .ni-t { font-size: 14px; } }
+/* tighten the first screen so intro + button + temp + snaps fit at 375x812 */
+.stage.now-stage .content.lt { padding-bottom: 4px; }
+.stage.now-stage .nh-out { margin: 10px 0 2px; }
+.stage.now-stage .nh-snaps { padding-top: 14px; }
+@media (max-width: 520px) {
+  .stage.now-stage .large-title { font-size: 30px; line-height: 36px; }
+  .stage.now-stage .h-temp { font-size: 72px; margin: 2px 0 0; }
+  .stage.now-stage .h-temp span { font-size: 30px; vertical-align: 34px; }
+}
+
+/* ---------- 3:40 PM: floating pill tab bar on every width (matches desktop) ---------- */
+.tabbar, .tabbar:not(#x) {
+  left: calc(12px + var(--safe-l)); right: calc(12px + var(--safe-r)); bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  height: 62px; padding: 0 6px; transform: none; width: auto;
+  border-radius: 28px; border: .5px solid var(--glass-line); border-top: .5px solid var(--glass-line);
+  background: var(--glass); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .12), 0 0 0 1px rgba(0, 0, 0, .02);
+}
+@media (min-width: 900px) {
+  .tabbar, .tabbar:not(#x) { left: 50%; right: auto; width: 540px; transform: translateX(-50%); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+}
+:root[data-blackout="1"] .tabbar, :root[data-blackout="1"] .tabbar:not(#x) {
+  background: rgba(18, 18, 20, .72); border-color: rgba(255, 255, 255, .1); box-shadow: 0 6px 20px rgba(0, 0, 0, .5);
+}
+body { padding-bottom: calc(62px + 12px + 24px + env(safe-area-inset-bottom, 0px)); }
+/* floating bar = 62px + 12px gap: sticky bars and the hero's first-screen height clear it */
+:root { --tabbar-h: 74px; }

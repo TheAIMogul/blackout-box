@@ -166,6 +166,13 @@ const en: Dict = {
   title_map: 'Map',
   title_ask: 'Ask',
   now_sub: 'Conditions and warnings, at a glance.',
+  intro_head: 'Your hurricane kit for the fridge and medicine cabinet.',
+  intro_1t: 'Before the storm',
+  intro_1b: 'Snap your fridge, freezer and medicine.',
+  intro_2t: 'When the power goes out',
+  intro_2b: 'Tap “The power just went out.”',
+  intro_3t: 'Every item gets a clock',
+  intro_3b: 'Know what’s safe, what to use now, what to toss. Works offline.',
   map_sub: 'Evacuation zones, flood reports and tides.',
   now_watch_one: '1 thing to watch in Zone {z}',
   now_watch_other: '{n} things to watch in Zone {z}',
@@ -519,6 +526,13 @@ const es: Dict = {
   title_map: 'Mapa',
   title_ask: 'Preguntar',
   now_sub: 'Condiciones y alertas de un vistazo.',
+  intro_head: 'Su kit de huracán para el refrigerador y el botiquín.', // MT
+  intro_1t: 'Antes de la tormenta', // MT
+  intro_1b: 'Tome fotos de su refrigerador, congelador y medicinas.', // MT
+  intro_2t: 'Cuando se vaya la luz', // MT
+  intro_2b: 'Toque “Se acaba de ir la luz.”', // MT
+  intro_3t: 'Cada artículo tiene un reloj', // MT
+  intro_3b: 'Sepa qué es seguro, qué usar ya y qué botar. Funciona sin conexión.', // MT
   map_sub: 'Zonas de evacuación, reportes de inundación y mareas.',
   now_watch_one: '1 cosa a vigilar en la Zona {z}',
   now_watch_other: '{n} cosas a vigilar en la Zona {z}',
@@ -872,6 +886,13 @@ const ht: Dict = {
   title_map: 'Kat',
   title_ask: 'Mande',
   now_sub: 'Kondisyon ak avètisman, yon sèl kou.',
+  intro_head: 'Twous siklòn ou pou frijidè ak armwa medikaman.', // MT
+  intro_1t: 'Anvan tanpèt la', // MT
+  intro_1b: 'Pran foto frijidè, frizè ak medikaman ou.', // MT
+  intro_2t: 'Lè kouran an koupe', // MT
+  intro_2b: 'Peze “Kouran an fèk koupe.”', // MT
+  intro_3t: 'Chak atik gen yon revèy', // MT
+  intro_3b: 'Konnen sa ki an sekirite, sa pou itilize kounye a, sa pou jete. Mache san entènèt.', // MT
   map_sub: 'Zòn evakyasyon, rapò inondasyon ak mare.',
   now_watch_one: '1 bagay pou veye nan Zòn {z}',
   now_watch_other: '{n} bagay pou veye nan Zòn {z}',
