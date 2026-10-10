@@ -19,7 +19,8 @@ After a hurricane, Miami can lose power for days in 90°F heat. The people hit h
 1. **Prep (before the storm, online).** "Pack my box" saves to the device: your Miami-Dade evacuation zone, nearby places likely to have power (EV chargers, libraries, fire stations), Miami-Dade disaster declarations, the live NWS heat index, Florida's emergency prescription refill law (F.S. 252.358), FDA emergency insulin guidance, and the USDA power-outage food rules.
 2. **The 4-Hour Rule (after the power goes out).** Photograph your fridge and medicine cabinet. Claude reads every item. Our open rules engine gives each one a live countdown with SAFE / USE NOW / DISCARD / PAST LABEL LIMIT, and every number cites its source: the FoodSafety.gov power-outage chart, the USDA FoodKeeper table, or the drug's FDA label from openFDA. Tap "I opened the fridge" and the clocks shorten. Enter the room temperature and medicine clocks follow the label's limit.
 3. **Ask.** Questions in English, Spanish or Haitian Creole, answered from the saved box. If someone mentions a downed wire, gas smell, chest pain or trouble breathing, the answer starts with "Call 911."
-4. **Map.** All 2,147 Miami-Dade evacuation-zone polygons, 2,736 flooding and drainage 311 requests from 2023 as a heatmap, the live NOAA tide at Virginia Key with king-tide flags, and a 0–12 ft flood slider that fills buildings from the ground up.
+4. **Closest shelter.** The nearest hurricane shelters from FEMA's shelter system, open or not, with one-tap directions.
+5. **Map.** All 2,147 Miami-Dade evacuation-zone polygons, 2,736 flooding and drainage 311 requests from 2023 as a heatmap, the live NOAA tide at Virginia Key with king-tide flags, and a 0–12 ft flood slider that fills buildings from the ground up.
 
 **Offline:** it's a PWA. After one visit, the app, your saved box and every countdown keep working with no network. The countdown engine runs on the device with no model. Only reading a new photo and free-form questions need a connection.
 
@@ -29,7 +30,7 @@ After a hurricane, Miami can lose power for days in 90°F heat. The people hit h
 
 | Step | What does the work | How to verify |
 | --- | --- | --- |
-| Read a fridge / medicine photo | **Claude Sonnet 5.5** (`anthropic/claude-sonnet-5.5`) via Cloudflare AI Gateway, strict JSON item list | Every result shows the model ID and latency under the cards |
+| Read a fridge / freezer / medicine photo | **Gemini 3.5 Flash** (`google/gemini-3.5-flash`, minimal reasoning, ~3 s) via Cloudflare AI Gateway, strict JSON item list | The sample-photo sheet scans real photos on stage; items appear as chips |
 | Decide how long each item has | **Open rules engine**, no model: [`modules/four-hour-rule`](modules/four-hour-rule) (63 tests) | Each card quotes its rule and links the source (FoodSafety.gov chart row, FoodKeeper ID, or openFDA set ID) |
 | Answer questions, translate | **Claude Fable 5.1** (`anthropic/claude-fable-5.1`), falls back to Sonnet 5.5 | Answers list their sources; a server-side filter blocks dosing advice and "safe to use" claims about medicine |
 
@@ -48,6 +49,10 @@ The model never invents a number. It turns a photo into item names; the engine t
 | [Miami-Dade County Open Data Hub](https://gis-mdc.opendata.arcgis.com) | Hurricane evacuation zones, libraries, fire stations, 311 service requests 2023 | Miami-Dade open data terms |
 | [OpenFEMA Disaster Declarations Summaries v2](https://www.fema.gov/about/openfema/data-sets) | Miami-Dade disaster declarations | Public domain |
 | [NOAA CO-OPS](https://tidesandcurrents.noaa.gov/stationhome.html?id=8723214) station 8723214 Virginia Key | Tide predictions, observed water level, flood thresholds | Public domain |
+| [FEMA ESF#6 Shelter System (NSS)](https://gis.fema.gov/arcgis/rest/services/NSS/FEMA_NSS/MapServer) | Nearest hurricane shelters, open status | Public domain |
+| [National Hurricane Center CurrentStorms.json](https://www.nhc.noaa.gov/CurrentStorms.json) | Active storms, distance and movement | Public domain |
+| [Open-Meteo](https://open-meteo.com) | UV, wind, rain chance, air quality, sunrise/sunset | CC BY 4.0 |
+| [AWS Terrain Tiles](https://registry.opendata.aws/terrain-tiles/) | Ground elevation for the flood map | Public / open data |
 | [NREL / NLR Alternative Fuel Stations API](https://developer.nlr.gov/docs/transportation/alt-fuel-stations-v1/) | EV chargers as places likely to have power | Public domain |
 | [OpenFreeMap](https://openfreemap.org) / OpenMapTiles / OpenStreetMap | Basemap and building footprints | ODbL / OpenMapTiles license |
 
@@ -88,7 +93,7 @@ Spanish and Haitian Creole strings marked `// MT` in [`web/src/i18n.ts`](web/src
 ## Built with
 
 - TypeScript, Vite, vite-plugin-pwa (Workbox), IndexedDB (`idb`), MapLibre GL, Express.
-- Models: Claude Sonnet 5.5 and Claude Fable 5.1 through Cloudflare AI Gateway.
+- Models: Gemini 3.5 Flash (photo reading) and Claude Fable 5.1 (questions and translation) through Cloudflare AI Gateway. Images: Grok Imagine (hero scenes, 3D icons, app icon, sample photos).
 - AI tools used to build it: Claude Code (Claude Fable 5.1 and Claude Opus 5.5 as coordinator; four Claude Opus 5.5 build agents for the engine, server, web app and map).
 
 ## Team
