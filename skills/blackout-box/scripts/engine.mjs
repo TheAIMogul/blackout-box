@@ -740,7 +740,7 @@ var FROZEN_DISCARD = words("ice cream|helado|helados|krem glase|frozen yogurt|fr
 var FROZEN_CONTEXT = words("frozen|congelado|congelada|congelados|congeladas|glase");
 var FROZEN_VEG = words("vegetable|vegetables|veggies|veg|peas|corn|broccoli|spinach|green beans|carrots|vegetales|verduras|legumbres|legim|maiz|guisantes|espinaca");
 var MAYO = words("mayo|mayonnaise|mayonesa|mayonez|tartar|tartar sauce|horseradish|aioli");
-var FORMULA = words("formula|baby formula|infant formula|formula de bebe|let bebe");
+var FORMULA = words("formula|formulas|baby formula|infant formula|formula de bebe|formula infantil|let bebe|enfamil|similac|gerber good start");
 var OPENED = words("opened|open|abierto|abierta|louvri|mixed|prepared|preparada");
 var UNOPENED = words("unopened|sealed|sin abrir|cerrado|cerrada");
 var POWDER = words("powder|polvo|poud");
@@ -758,7 +758,7 @@ var KEEP = words(
   "cheddar|colby|swiss|parmesan|parmigiano|provolone|romano|hard cheese|butter|margarine|mantequilla|be|ketchup|catsup|mustard|mostaza|moutad|jelly|jam|jalea|mermelada|relish|olive|olives|aceitunas|pickle|pickles|pepinillos|encurtidos|bbq|barbecue|vinegar|tortilla|tortillas|bagel|muffin|cake|rolls|waffle|waffles|pancake|pancakes|apple|manzana|pom|orange|naranja|zoranj|banana|guineo|platano|bannann|grapes|uvas|mango|lemon|limon|sitwon|lime|pear|pera|peach|melocoton|strawberries|fresas|berries|juice|jugo|ji|raisins|pasas|mushrooms|hongos|champinones|herbs|cilantro|parsley|perejil|spices|pepper|peppers|pimiento|aji|onion|cebolla|zonyon|garlic|ajo|carrot|carrots|zanahoria|kawot|celery|cucumber|pepino|tomato|tomate|tomat|cabbage|repollo|avocado|aguacate|zaboka"
 );
 var DISCARD_FIRST = words(
-  "egg|eggs|huevo|huevos|ze|chicken|pollo|poul|beef|carne|vyann|steak|bistec|pork|cerdo|puerco|kochon|lamb|cordero|goat|chivo|kabrit|turkey|pavo|kodenn|meat|fish|pescado|pwason|salmon|tuna|atun|shrimp|camaron|camarones|kribich|crab|cangrejo|lobster|langosta|seafood|mariscos|deli|lunch meat|lunchmeat|cold cuts|fiambre|ham|jamon|janbon|hot dog|salchicha|sosis|sausage|chorizo|bacon|tocino|salami|pepperoni|bologna|leftover|leftovers|sobras|takeout|rice|arroz|diri|pasta|spaghetti|noodles|fideos|macaroni|cooked|cocido|cocinado|kwit|soup|sopa|stew|guiso|estofado|casserole|pizza|gravy|broth|caldo|stuffing|tofu|sushi|empanada|empanadas|croquetas|tamales|quiche|custard|flan|pudding|budin"
+  "egg|eggs|huevo|huevos|ze|chicken|pollo|poul|beef|carne|vyann|steak|bistec|pork|cerdo|puerco|kochon|lamb|cordero|goat|chivo|kabrit|turkey|pavo|kodenn|meat|fish|pescado|pwason|salmon|tuna|atun|shrimp|camaron|camarones|kribich|crab|cangrejo|lobster|langosta|seafood|mariscos|deli|lunch meat|lunchmeat|cold cuts|fiambre|ham|jamon|janbon|hot dog|salchicha|sosis|sausage|chorizo|bacon|tocino|salami|pepperoni|bologna|leftover|leftovers|sobras|takeout|rice|arroz|diri|pasta|spaghetti|noodles|fideos|macaroni|cooked|cocido|cocinado|kwit|soup|sopa|stew|guiso|estofado|casserole|pizza|gravy|broth|caldo|stuffing|tofu|sushi|empanada|empanadas|croquetas|tamales|quiche|custard|flan|pudding|budin|yogurt|yoghurt|yogurts|yogur|yogures|yogourt|yogurth|yaout|kefir|milk|leche|whipped cream|half and half|creamer"
 );
 var DISCARD = words(
   "milk|leche|let|cream|crema|half and half|yogurt|yoghurt|yogur|yaout|cheese|queso|fromaj|mozzarella|brie|ricotta|cottage|feta|salad|ensalada|salsa|dough|masa|pastry|eggnog|coquito|soy milk|almond milk|oat milk|dip|hummus|guacamole"
@@ -775,7 +775,8 @@ function classifyFoodDetailed(name, opts = {}) {
   if (frozenCtx) return kw(has(q, FROZEN_VEG) ? "frozen_veg_6h" : "frozen_refreeze");
   if (has(q, MAYO)) return kw("mayo_8h_50f");
   if (has(q, FORMULA)) {
-    const opened2 = opts.opened === true || has(q, OPENED);
+    const inFridge = opts.location === "fridge" || opts.location === "door";
+    const opened2 = opts.opened === true || has(q, OPENED) || inFridge;
     if (has(q, POWDER) || !opened2 && (opts.opened === false || has(q, UNOPENED))) return kw("shelf_stable");
     return kw("discard_4h");
   }
@@ -825,6 +826,7 @@ var DOOR_OPEN_CAP_H = 2;
 var MAYO_AFTER_WARM_H = 8;
 var FROZEN_VEG_AFTER_WARM_H = 6;
 var MED_SAFETY_MARGIN = 0.9;
+var USP_ROOM_TEMP_MAX_F = 77;
 var MED_USE_NOW_H = 48;
 var LOW_CONFIDENCE = 0.5;
 var FOODSAFETY_URL = "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage";
@@ -1220,6 +1222,9 @@ function medDraft(it, c) {
       return unknown("Enter the indoor temperature (a thermometer reading is best) to check the label limit.", ["need_indoor_temp", ...frozenNote]);
     }
     if (tempOver) return overTemp();
+    if (max == null && L.storage === "refrigerated" && temp != null && temp > USP_ROOM_TEMP_MAX_F) {
+      return unknown(`The label allows ${roomDays} days at room temperature but gives no heat limit, and the room is ${temp}\xB0F. Keep it as cool as possible and ask your pharmacist.`, ["no_heat_limit_on_label", "room_above_usp_room_temp", "ask_pharmacist", ...frozenNote]);
+    }
     a.push("safety_margin_0_9", "outage_hours_count_as_room_temp");
     const roomAllow = roomDays * 24 * MED_SAFETY_MARGIN;
     let left = roomAllow - c.hoursOut;
@@ -1390,7 +1395,7 @@ function limitForMed(label) {
     }
   }
   let maxTempF;
-  const ceiling = hit(new RegExp(String.raw`(?:up to|not to exceed|not exceeding|no (?:higher|warmer) than)\s*` + F, "i"));
+  const ceiling = hit(new RegExp(String.raw`(?:up to|not to exceed|not exceeding|no (?:higher|warmer) than|maximum (?:temperature )?of)\s*(?:a\s+)?(?:maximum (?:temperature )?(?:of\s+)?)?` + F, "i"));
   if (ceiling) maxTempF = Number(ceiling[1]);
   if (maxTempF == null) {
     const exc = /excursions?[^.;]*/i.exec(core);
@@ -1461,6 +1466,7 @@ export {
   MED_USE_NOW_H,
   OPENFDA_URL,
   QUOTES,
+  USP_ROOM_TEMP_MAX_F,
   assess,
   classifyFood,
   classifyFoodDetailed,

@@ -88,7 +88,9 @@ function catOf(it: WebItem): Cat {
   const loc = String(it.location ?? '').toLowerCase()
   const fc = String(it.foodClass ?? '').toLowerCase()
   if (loc.includes('freezer') || it.frozen === true || fc.startsWith('frozen')) return 'freezer'
-  if (/shelf|cabinet|pantry|counter/.test(loc) || /shelf|pantry/.test(fc)) return 'pantry'
+  if (/fridge|door|refrig/.test(loc)) return 'fridge'
+  // Pantry only when the photo says so, or when there is no location and the food is shelf-stable.
+  if (/shelf|cabinet|pantry|counter/.test(loc) || (!loc && /shelf|pantry/.test(fc))) return 'pantry'
   return 'fridge'
 }
 
@@ -378,7 +380,7 @@ function actKey(it: WebItem, c: string, s: Status): string {
   return `act.${c}.${s}`
 }
 
-const LOC_KEY: Record<string, string> = { fridge: 'cat_fridge', door: 'cat_fridge', freezer: 'cat_freezer', shelf: 'cat_pantry', cabinet: 'cat_pantry' }
+const LOC_KEY: Record<string, string> = { fridge: 'cat_fridge', door: 'cat_fridge', freezer: 'cat_freezer', shelf: 'cat_pantry', cabinet: 'cat_pantry', pantry: 'cat_pantry', counter: 'cat_pantry' }
 function kindLine(it: WebItem): string {
   const c = it.category === 'med' ? t('med') : t('food')
   const loc = it.location ? t(LOC_KEY[String(it.location)] ?? '') : ''
@@ -648,7 +650,10 @@ async function ingest(results: Awaited<ReturnType<typeof visionItems>>[], replac
   const fallback = results.some((r) => r._fallback)
   if (fallback) note = { text: t('demo_items_fallback'), kind: 'warn' }
   else if (!fresh.length) note = { text: t('fh_none_found'), kind: 'info' }
-  items = replace ? fresh : [...items, ...fresh]
+  // Same product + category + location from a new scan replaces the old card instead of adding a second one.
+  const key = (x: WebItem) => `${x.category}|${String(x.location ?? '').toLowerCase()}|${String(x.name).toLowerCase().replace(/\s+/g, ' ').trim()}`
+  const freshKeys = new Set(fresh.map(key))
+  items = replace ? fresh : [...items.filter((x) => !freshKeys.has(key(x))), ...fresh]
   const latency = results.reduce((a, r) => a + (r._latencyMs ?? 0), 0)
   lastRead = { model: last._model, provider: last._provider ?? state.health?.provider ?? '', latencyMs: latency || undefined, fallback, unreadable: results.reduce((a, r) => a + (r.unreadableCount ?? 0), 0) || undefined, at: new Date().toISOString() }
   if (!fallback && last._model && last._model !== 'demo') { state.lastModel = last._model; emit('health') }
