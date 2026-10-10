@@ -345,3 +345,57 @@ describe('copy safety and data files', () => {
     assert.deepEqual(onDisk, JSON.parse(JSON.stringify(foodRulesDoc())))
   })
 })
+
+describe('QA 2026-10-10: wrong Safe verdicts (8.3 h out, fridge opened 1×, freezer half, 91 °F)', () => {
+  const o = outage(8.3, { doorOpenedAt: [ago(5)], freezerFull: false })
+  const e = env(91)
+  const humiraLabel = {
+    set_id: '4977567e-3525-44ac-9ff5-f1e74b053950',
+    openfda: { brand_name: ['Humira'] },
+    how_supplied: ['Storage and Stability Do not use beyond the expiration date on the container. HUMIRA must be refrigerated at 36°F to 46°F (2°C to 8°C). DO NOT FREEZE. Do not use if frozen even if it has been thawed. Store in original carton until time of administration to protect from light. If needed, for example when traveling, HUMIRA may be stored at room temperature up to a maximum of 77°F (25°C) for a period of up to 14 days, with protection from light. HUMIRA should be discarded if not used within the 14-day period.'],
+  }
+
+  test('Infant Formula in the fridge → discard_4h → DISCARD (even if the photo says unopened)', () => {
+    assert.equal(classifyFood('Infant Formula', { location: 'fridge', opened: false }), 'discard_4h')
+    assert.equal(classifyFood('Infant Formula', { location: 'door', opened: null }), 'discard_4h')
+    assert.equal(classifyFood('Fórmula infantil', { location: 'fridge' }), 'discard_4h')
+    assert.equal(one({ id: 'f1', name: 'Infant Formula', category: 'food', location: 'fridge', opened: false }, o, e).status, 'DISCARD')
+  })
+
+  test('unopened formula off the fridge, and powder, stay shelf stable', () => {
+    assert.equal(classifyFood('Infant formula, unopened', { location: 'cabinet' }), 'shelf_stable')
+    assert.equal(classifyFood('Baby formula powder', { location: 'fridge' }), 'shelf_stable')
+  })
+
+  for (const name of ['Yogurt (Peach)', 'Peach yogurt', 'Yogur de fresa', 'Strawberry yoghurt', 'Yogourt', 'Strawberry milk']) {
+    test(`${name} → discard_4h → DISCARD`, () => {
+      assert.equal(classifyFood(name, { location: 'fridge' }), 'discard_4h')
+      assert.equal(one({ id: 'f2', name, category: 'food', location: 'fridge' }, o, e).status, 'DISCARD')
+    })
+  }
+
+  test('peaches and peanut butter still keep; frozen yogurt still frozen_discard', () => {
+    assert.equal(classifyFood('Peaches'), 'keep')
+    assert.equal(classifyFood('Peanut butter'), 'keep')
+    assert.equal(classifyFood('Frozen yogurt', { location: 'freezer' }), 'frozen_discard')
+  })
+
+  test('Humira label: "up to a maximum of 77°F" is read as the ceiling → PAST_LIMIT at 91 °F', () => {
+    const L = limitForMed(humiraLabel)
+    assert.equal(L?.maxTempF, 77)
+    assert.equal(L?.days, 14)
+    assert.equal(L?.storage, 'refrigerated')
+    assert.equal(one(med('m1', 'Humira pen', L), o, e).status, 'PAST_LIMIT')
+  })
+
+  test('Humira with no label found → UNKNOWN, never SAFE', () => {
+    assert.equal(one(med('m1', 'Humira pen', null), o, e).status, 'UNKNOWN')
+  })
+
+  test('refrigerated drug with room-temp days but no °F ceiling, room above 77 °F → UNKNOWN', () => {
+    const L: Limit = { kind: 'days_at_room_temp', days: 14, storage: 'refrigerated', source: 'test label', quote: 'may be stored at room temperature for up to 14 days' }
+    const v = one(med('m2', 'some biologic', L), o, e)
+    assert.equal(v.status, 'UNKNOWN')
+    assert.equal(one(med('m2', 'some biologic', L), o, env(75)).status, 'SAFE')
+  })
+})

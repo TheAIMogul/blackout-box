@@ -95,7 +95,7 @@ function render(): void {
     [[], 'wifi_off', 'why_f2', 'why_f2s'],
     [['icon.wind', 'icon.rain'], 'cyclone', 'why_f3', 'why_f3s'],
     [['icon.zone'], 'home_pin', 'why_f4', 'why_f4s'],
-    [['icon.map'], 'bolt', 'why_f5', 'why_f5s'],
+    [['icon.map'], 'local_hospital', 'why_f5', 'why_f5s'],
     [['icon.tide'], 'water', 'why_f6', 'why_f6s'],
     [['icon.chat'], 'translate', 'why_f7', 'why_f7s'],
   ]

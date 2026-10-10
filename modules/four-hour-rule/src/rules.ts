@@ -14,6 +14,7 @@ export const DOOR_OPEN_CAP_H = 2 // ours
 export const MAYO_AFTER_WARM_H = 8
 export const FROZEN_VEG_AFTER_WARM_H = 6
 export const MED_SAFETY_MARGIN = 0.9 // ours (Cold Chain brief)
+export const USP_ROOM_TEMP_MAX_F = 77 // USP <659> controlled room temperature upper bound (25°C)
 export const MED_USE_NOW_H = 48 // ours (Cold Chain brief USE_SOON_HOURS)
 export const LOW_CONFIDENCE = 0.5
 

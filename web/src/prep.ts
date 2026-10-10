@@ -3,7 +3,7 @@
 import { API, getPrep, type Place, type PrepBundle } from './api'
 import { CONTACTS, cl } from './contacts'
 import { kvGet, kvSet } from './db'
-import { onMedia } from './media'
+import { emptyArt, iconHTML, onMedia } from './media'
 import { getLang, onLang, t } from './i18n'
 import { emit, esc, fmtF, fmtMi, fmtFt, fmtWhen, haptic, usText, on, state } from './util'
 
@@ -40,26 +40,8 @@ async function loadShelters(): Promise<void> {
   render()
 }
 
-const PREP_CSS = `
-.pp-dir{flex:none;display:inline-flex;align-items:center;gap:4px;padding:8px 12px;border-radius:999px;background:var(--rausch,#e11d48);color:#fff;font-weight:600;font-size:14px;text-decoration:none;min-height:40px}
-.pp-dir .ms{font-size:18px}
-.pp-end{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
-.pp-mi{font-weight:700;font-variant-numeric:tabular-nums}
-.pp-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;margin-right:6px}
-.pp-pill.open{background:#16a34a;color:#fff}
-.pp-pill.closed{background:var(--fill,rgba(127,127,127,.18));color:var(--text-2,inherit)}
-.pp-911{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:14px;background:#b91c1c;color:#fff;font-weight:700;font-size:17px;text-decoration:none;margin-bottom:10px}
-.pp-call{display:flex;align-items:center;gap:12px;padding:14px 16px;min-height:64px;text-decoration:none;color:inherit}
-.pp-call .pp-num{font-weight:700;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.pp-call .ms.callico{color:#16a34a}
-.pp-src{font-size:11px;opacity:.7;padding:0 16px 10px 64px;display:block}
-.pp-src a{color:inherit}
-@media (max-width:420px){.pp-call{flex-wrap:wrap}.pp-call .pp-num{font-size:16px}}
-`
-function injectCss(): void {
-  if (document.getElementById('pp-css')) return
-  const st = document.createElement('style'); st.id = 'pp-css'; st.textContent = PREP_CSS; document.head.appendChild(st)
-}
+// v8: all Prep styles live in styles.css ("v8 Prep + Clocks").
+function injectCss(): void { /* no-op: kept so mountPrep stays unchanged */ }
 
 export async function loadPrepFromCache(): Promise<void> {
   const rec = await kvGet<PrepBundle>('prep')
@@ -188,29 +170,62 @@ function llOf(p: any): { lat: number; lon: number } | null {
   const lon = Number(p?.lon ?? p?.lng ?? p?.longitude ?? p?.geometry?.coordinates?.[0])
   return Number.isFinite(lat) && Number.isFinite(lon) && (lat !== 0 || lon !== 0) ? { lat, lon } : null
 }
-const hasLL = (p: Place) => llOf(p) != null
+
+const KIND_TINT: Record<string, string> = { hospital: 'var(--red)', pharmacy: 'var(--green)', library: 'var(--blue)', fire: 'var(--orange)', power: 'var(--purple)', shelter: 'var(--rausch)' }
+const label = (txt: string, end = '') => `<div class="pv-label"><span>${esc(txt)}</span>${end ? `<span class="pv-label-end">${end}</span>` : ''}</div>`
+const dirBtn = (lat: number, lon: number, name: string) =>
+  `<a class="pv-dir" href="${esc(dirUrl(lat, lon))}" target="_blank" rel="noopener" aria-label="${esc(t('directions'))}: ${esc(name)}"><span class="ms fill" aria-hidden="true">directions</span></a>`
+const skeleton = (n: number) => `<div class="pv-list" aria-hidden="true">${Array.from({ length: n }, () => `<div class="pv-row sk"><span class="pv-ic sk-b"></span><span class="pv-main"><span class="sk-b sk-l1"></span><span class="sk-b sk-l2"></span></span><span class="sk-b sk-end"></span></div>`).join('')}</div>`
+const timeOf = (iso?: string | null) => {
+  if (!iso) return ''
+  const d = new Date(iso)
+  return Number.isFinite(d.getTime()) ? d.toLocaleTimeString({ en: 'en-US', es: 'es-US', ht: 'fr-HT' }[getLang()], { hour: 'numeric', minute: '2-digit' }) : ''
+}
 
 function shelterHtml(): string {
   const list = (shel?.shelters ?? []).slice(0, 5)
-  const head = `<div class="section-h"><h2>${esc(cl('shelters'))}</h2>${shelSaved ? `<span class="muted">${esc(t('shelter_saved'))}</span>` : `<span class="muted">${esc(t('distance'))}</span>`}</div>`
-  if (!list.length) return `${head}<div class="empty">${esc(shelLoading ? '…' : (shel?.note || t('shelter_none')))}</div>`
-  return `${head}<div class="list">${list.map((s) => `
-    <div class="row"><span class="ico"><span class="ms" aria-hidden="true">night_shelter</span></span>
-      <span class="main"><span class="t1">${esc(s.name)}</span><span class="t2" style="display:block"><span class="pp-pill ${s.open ? 'open' : 'closed'}">${esc(s.open ? t('shelter_open') : t('shelter_not_open'))}</span>${s.petFriendly ? esc(t('shelter_pets')) + ' · ' : ''}${s.specialNeeds ? esc(t('shelter_special')) + ' · ' : ''}${s.address ? esc(s.address) : ''}</span></span>
-      <span class="pp-end"><span class="pp-mi">${typeof s.distanceMi === 'number' ? esc(fmtMi(s.distanceMi)) : '—'}</span><a class="pp-dir" href="${esc(dirUrl(s.lat, s.lon))}" target="_blank" rel="noopener"><span class="ms" aria-hidden="true">directions</span>${esc(t('directions'))}</a></span></div>`).join('')}</div>
-    ${shel?.note ? `<p class="src-line">${esc(shel.note)}</p>` : ''}`
+  const head = label(cl('shelters'), shelSaved ? esc(t('shelter_saved')) : '')
+  if (!list.length) return head + (shelLoading ? skeleton(2) : `<div class="pv-empty-row"><span class="ms" aria-hidden="true">night_shelter</span>${esc(shel?.note || t('shelter_none'))}</div>`)
+  return `${head}<div class="pv-list">${list.map((s) => `
+    <div class="pv-row"><span class="pv-ic" style="--tint:var(--rausch)"><span class="ms fill" aria-hidden="true">night_shelter</span></span>
+      <span class="pv-main"><span class="pv-t1">${esc(s.name)}</span>
+        <span class="pv-t2"><span class="pv-pill ${s.open ? 'open' : 'closed'}">${esc(s.open ? t('shelter_open') : t('shelter_not_open'))}</span>${s.petFriendly ? `<span class="ms" title="${esc(t('shelter_pets'))}" aria-label="${esc(t('shelter_pets'))}">pets</span>` : ''}${s.specialNeeds ? `<span class="ms" title="${esc(t('shelter_special'))}" aria-label="${esc(t('shelter_special'))}">accessible</span>` : ''}</span></span>
+      <span class="pv-mi">${typeof s.distanceMi === 'number' ? esc(fmtMi(s.distanceMi)) : ''}</span>${dirBtn(s.lat, s.lon, s.name)}</div>`).join('')}</div>
+    ${shel?.note ? `<p class="pv-cap">${esc(shel.note)}</p>` : ''}`
 }
 
 function contactsHtml(): string {
-  return `<div class="section-h"><h2>${esc(cl('title'))}</h2></div>
-    <a class="pp-911" href="tel:911"><span class="ms" aria-hidden="true">emergency</span>${esc(cl('e911'))}</a>
-    <div class="list">${CONTACTS.map((c) => `<div>
-      <a class="pp-call" href="tel:${esc(c.tel)}" aria-label="${esc(c.name)} ${esc(c.number)}"><span class="ico"><span class="ms" aria-hidden="true">${esc(c.icon)}</span></span>
-        <span class="main" style="flex:1;min-width:0"><span class="t1" style="display:block;font-weight:600">${esc(c.name)}</span><span class="t2" style="display:block">${esc(c.for[getLang()] ?? c.for.en)}</span></span>
-        <span class="pp-num">${esc(c.number)}</span><span class="ms callico" aria-hidden="true">call</span></a>
-      <span class="pp-src">${esc(cl('source'))}: <a href="${esc(c.src)}" target="_blank" rel="noopener">${esc(c.srcLabel)}</a></span></div>`).join('')}</div>
-    <p class="src-line">${esc(cl('note'))}</p>`
+  return `${label(cl('title'), esc(t('tap_to_call')))}
+    <a class="pv-911" href="tel:911"><span class="pv-911-ic"><span class="ms fill" aria-hidden="true">emergency</span></span>
+      <span class="pv-911-txt"><b>911</b><span>${esc(t('life_threat'))}</span></span><span class="ms fill" aria-hidden="true">call</span></a>
+    <div class="pv-grid">${CONTACTS.map((c) => {
+      const [big, alt] = c.number.split(' · ')
+      return `<a class="pv-tile" href="tel:${esc(c.tel)}" title="${esc(c.for[getLang()] ?? c.for.en)}" aria-label="${esc(c.name)} ${esc(c.number)}">
+        <span class="pv-tile-top"><span class="pv-ic sm"><span class="ms" aria-hidden="true">${esc(c.icon)}</span></span><span class="ms pv-call" aria-hidden="true">call</span></span>
+        <span class="pv-tile-name">${esc(c.name)}</span>
+        <span class="pv-tile-num">${esc(big)}</span>${alt ? `<span class="pv-tile-alt">${esc(alt)}</span>` : ''}</a>`
+    }).join('')}</div>`
 }
+
+function sourcesHtml(b: PrepBundle | null, z: ReturnType<typeof zoneOf>, groups: Group[], placesNote?: string): string {
+  const li = (k: string, v: string) => `<li><b>${esc(k)}</b><span>${v}</span></li>`
+  const link = (u?: string, txt?: string) => (u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(txt ?? u)}</a>` : '')
+  const rows: string[] = []
+  rows.push(li(t('zone'), `<span class="tnum">${esc(state.lat)}, ${esc(state.lon)}</span>${z.source ? ' · ' + esc(z.source) : ''}${state.prepAt ? ` · ${esc(t('checked'))} ${esc(fmtWhen(state.prepAt))}` : ''}`))
+  if (b) {
+    const ps = [...new Set(groups.map((g) => g.source).filter(Boolean))] as string[]
+    rows.push(li(t('help_nearby'), esc(placesNote || t('places_note')) + (ps.length ? ' · ' + esc(ps.join(', ')) : '')))
+    if (b.tide) rows.push(li(t('tide'), `${b.tide.latest ? `${esc(fmtWhen(String(b.tide.latest.t).replace(' ', 'T')))} · ${esc(fmtFt(b.tide.latest.v))} · ` : ''}MLLW${b.tide._source ? ' · ' + esc(b.tide._source) : ''}`))
+    if (b.nws) rows.push(li(t('weather'), `${esc(b.nws.station ?? '')} ${esc(fmtWhen(b.nws.observedAt))}${b.nws._source ? ' · ' + esc(b.nws._source) : ''}`))
+    rows.push(li(t('fema'), `${esc(t('fema_register'))} · ${esc(b.fema?._source ?? 'OpenFEMA')}`))
+    if (b.statute?.url) rows.push(li(t('statute'), link(b.statute.url)))
+    if (b.fdaEmergencyInsulin?.url) rows.push(li(t('insulin'), link(b.fdaEmergencyInsulin.url, 'fda.gov')))
+    if (b.foodRules?.url) rows.push(li(t('food_rules'), link(b.foodRules.url, 'FoodSafety.gov')))
+  }
+  rows.push(li(cl('title'), `${esc(cl('note'))}<br>${CONTACTS.map((c) => `${esc(c.name)}: ${link(c.src, c.srcLabel)}`).join(' · ')}`))
+  return `<details class="pv-src"><summary><span class="ms" aria-hidden="true">info</span>${esc(t('sources'))}<span class="ms pv-chev" aria-hidden="true">expand_more</span></summary><ul>${rows.join('')}</ul></details>`
+}
+
 function render(): void {
   if (!root) return
   const b = state.prep
@@ -219,7 +234,6 @@ function render(): void {
   const groups = placeGroups(b)
   const fema = femaList(b)
   const hi = nextHigh(b)
-  const stamp = state.prepAt ? `${t('checked')} ${fmtWhen(state.prepAt)}` : ''
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const placesNote = (b?.places as any)?.note as string | undefined
   // 5 places, mixed so it isn't all chargers in one garage: the 2 nearest charging sites, 2 libraries, 1 fire station.
@@ -245,74 +259,67 @@ function render(): void {
   const status =
     phase === 'locating' ? `<div class="progress"><i></i></div>${banner('', 'my_location', esc(t('prep_locating')))}` :
     phase === 'loading' ? `<div class="progress"><i></i></div>${banner('', 'cloud_download', esc(t('prep_loading')))}` :
-    phase === 'done' ? banner('ok', 'check_circle', `<b>${esc(t('prep_done'))}</b>`) :
     phase === 'fail' ? banner('error', 'error', esc(t('prep_fail'))) :
-    phase === 'demo' ? banner('warn', 'warning', esc(t('prep_demo'))) : ''
+    phase === 'demo' ? banner('warn', 'science', esc(t('prep_demo'))) : ''
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const canInstall = (window as any).bbCanInstall?.() === true
+  const saved = !!b && !b._fallback
+  const savedChip = saved
+    ? `<span class="pv-chip ok${phase === 'done' ? ' pop' : ''}" ${phase === 'done' ? `role="status" title="${esc(t('prep_done'))}"` : ''}><span class="ms fill" aria-hidden="true">check_circle</span><span class="tnum">${esc(t('saved_dot', { t: timeOf(state.prepAt) }))}</span></span>`
+    : b ? `<span class="pv-chip"><span class="ms" aria-hidden="true">science</span>${esc(t('sample_data'))}</span>` : ''
+  const zoneTitle = !b ? t('prep_title') : z.letter ? `${t('zone')} ${z.letter}` : z.known ? t('zone_none') : t('zone_unknown')
+  const zoneLine = !b ? t('prep_none') : z.letter ? t('zone_check_short') : ''
 
-  root.innerHTML = `
-    <div class="card hero">
-      <div class="zone-hero">
-        <div class="zone-letter${z.letter ? '' : ' none'}" aria-label="${esc(t('zone'))} ${esc(z.letter ?? '—')}">${esc(z.letter ?? '—')}</div>
-        <div style="min-width:0;flex:1">
-          <div class="what">${!b ? esc(t('prep_title')) : z.letter ? `${esc(t('zone'))} ${esc(z.letter)}` : esc(z.known ? t('zone_none') : t('zone_unknown'))}</div>
-          <div class="why">${!b ? esc(t('prep_none')) : z.letter ? esc(t('zone_check')) : ''}</div>
+  root.innerHTML = `<div class="pv">
+    <section class="pv-hero">
+      <div class="pv-zone">
+        <div class="pv-letter${z.letter ? '' : ' none'}" aria-label="${esc(t('zone'))} ${esc(z.letter ?? '')}">${z.letter ? esc(z.letter) : `<span class="ms" aria-hidden="true">${b ? 'location_off' : 'inventory_2'}</span>`}</div>
+        <div class="pv-zone-txt">
+          <div class="pv-eyebrow">${esc(t('zone'))}</div>
+          <div class="pv-zt">${esc(zoneTitle)}</div>
+          ${zoneLine ? `<div class="pv-zm">${esc(zoneLine)}</div>` : ''}
         </div>
       </div>
-      <button type="button" class="btn primary block" id="prep-go" style="margin-top:16px" ${busy ? 'disabled' : ''}>${busy ? '<span class="spinner" aria-hidden="true"></span>' : '<span class="ms" aria-hidden="true">download</span>'}${esc(t('prep_btn'))}</button>
-      <div class="src-line">${b && !b._fallback ? `${esc(t('prep_cached'))} · ${esc(stamp)} · ` : ''}<span class="tnum">${esc(state.lat)}, ${esc(state.lon)}</span>${z.source ? ' · ' + esc(z.source) : ''}</div>
-    </div>
-    <div style="margin-top:12px">${locNote ? banner('', 'info', esc(locNote)) : ''}${status}</div>
-    ${!b ? '' : `
-    <div class="section-h"><h2>${esc(cl('power'))}</h2><span class="muted">${esc(t('distance'))}</span></div>
-    ${rows.length ? `<div class="list">${rows.map(({ g, p }) => `
-      <div class="row"><span class="ico"><span class="ms" aria-hidden="true">${kindIcon(g.kind)}</span></span>
-        <span class="main"><span class="t1">${esc(p.name)}</span><span class="t2" style="display:block">${esc(kindLabel(g.kind))}${p.open24h ? ' · 24 h' : ''}${p.address ? ' · ' + esc(p.address) : ''}</span></span>
-        <span class="pp-end"><span class="pp-mi">${p.distanceMi != null ? esc(fmtMi(p.distanceMi)) : '—'}</span>${hasLL(p) ? `<a class="pp-dir" href="${esc(dirUrl(llOf(p)!.lat, llOf(p)!.lon))}" target="_blank" rel="noopener"><span class="ms" aria-hidden="true">directions</span>${esc(t('directions'))}</a>` : ''}</span></div>`).join('')}</div>` : `<div class="empty">—</div>`}
-    <p class="src-line">${esc(placesNote || t('places_note'))}${groups.map((g) => g.source).filter(Boolean).length ? ' · ' + esc([...new Set(groups.map((g) => g.source).filter(Boolean))].join(', ')) : ''}</p>
-    `}
+      <button type="button" class="btn primary block pv-go${saved ? ' is-saved' : ''}" id="prep-go" ${busy ? 'disabled' : ''}>${busy ? '<span class="spinner" aria-hidden="true"></span>' : `<span class="ms${saved ? ' fill' : ''}" aria-hidden="true">${saved ? 'download_done' : 'download'}</span>`}<span>${esc(t('prep_btn'))}</span></button>
+      ${savedChip ? `<div class="pv-chips">${savedChip}</div>` : ''}
+    </section>
+    ${locNote || status ? `<div class="pv-status">${locNote ? banner('', 'info', esc(locNote)) : ''}${status}</div>` : ''}
+    ${!b ? (busy ? `${label(t('help_nearby'))}${skeleton(4)}` : `<div class="pv-empty">${emptyArt('empty.prep') || iconHTML(['icon.bag'], 'inventory_2', 'mi pv-empty-ic')}<p>${esc(t('prep_none'))}</p></div>`) : `
+    ${label(t('help_nearby'), esc(t('distance')))}
+    ${rows.length ? `<div class="pv-list">${rows.map(({ g, p }) => {
+      const ll = llOf(p)
+      return `<div class="pv-row"><span class="pv-ic" style="--tint:${KIND_TINT[g.kind] ?? 'var(--grey)'}"><span class="ms fill" aria-hidden="true">${kindIcon(g.kind)}</span></span>
+        <span class="pv-main"><span class="pv-t1">${esc(p.name)}</span><span class="pv-t2">${esc(kindLabel(g.kind))}${p.open24h ? ' · 24 h' : ''}</span></span>
+        <span class="pv-mi">${p.distanceMi != null ? esc(fmtMi(p.distanceMi)) : ''}</span>${ll ? dirBtn(ll.lat, ll.lon, p.name) : '<span class="pv-dir-gap"></span>'}</div>`
+    }).join('')}</div>` : (busy ? skeleton(3) : `<div class="pv-empty-row"><span class="ms" aria-hidden="true">location_searching</span>${esc(placesNote || t('places_note'))}</div>`)}`}
     ${shelterHtml()}
     ${contactsHtml()}
     ${!b ? '' : `
-    <div class="grid2" style="margin-top:18px">
-      <div class="card">
-        <h3><span class="ms" aria-hidden="true">waves</span>${esc(t('tide'))}</h3>
-        ${hi ? `<div class="muted small">${esc(t('tide_next_high'))}</div><div class="stat">${esc(fmtFt(hi.v).replace(' ft', ''))}<small> ft</small></div><div class="small muted tnum">${esc(hi.t)} · MLLW</div>` : `<p class="muted">${esc(t('tide_none'))}</p>`}
-        ${b.tide?.latest ? `<div class="src-line">${esc(fmtWhen(String(b.tide.latest.t).replace(' ', 'T')))} · ${esc(fmtFt(b.tide.latest.v))}${b.tide._source ? ' · ' + esc(b.tide._source) : ''}</div>` : ''}
-      </div>
-      <div class="card">
-        <h3><span class="ms" aria-hidden="true">thermostat</span>${esc(t('weather'))}</h3>
-        ${b.nws?.tempF != null ? `<div class="stat">${esc(fmtF(b.nws.tempF).replace(' °F', ''))}<small> °F</small></div>${b.nws.heatIndexF != null ? `<div class="small muted">${esc(t('heat_index'))} ${esc(fmtF(b.nws.heatIndexF))}</div>` : ''}<div class="src-line">${esc(b.nws.station ?? '')} ${esc(fmtWhen(b.nws.observedAt))}${b.nws._source ? ' · ' + esc(b.nws._source) : ''}</div>` : '<p class="muted">—</p>'}
-      </div>
+    ${label(t('tide_weather'))}
+    <div class="pv-list">
+      <div class="pv-row"><span class="pv-ic" style="--tint:var(--blue)"><span class="ms fill" aria-hidden="true">waves</span></span>
+        <span class="pv-main"><span class="pv-t1">${esc(t('tide_next_high'))}</span><span class="pv-t2 tnum">${hi ? esc(hi.t.slice(5).replace(' ', ' · ')) + ' · MLLW' : esc(t('tide_none'))}</span></span>
+        <span class="pv-big">${hi ? `${esc(fmtFt(hi.v).replace(' ft', ''))}<small>ft</small>` : ''}</span></div>
+      <div class="pv-row"><span class="pv-ic" style="--tint:var(--orange)"><span class="ms fill" aria-hidden="true">thermostat</span></span>
+        <span class="pv-main"><span class="pv-t1">${esc(t('weather'))}</span><span class="pv-t2 tnum">${b.nws?.heatIndexF != null ? `${esc(t('heat_index'))} ${esc(fmtF(b.nws.heatIndexF))}` : esc(b.nws?.station ?? '')}</span></span>
+        <span class="pv-big">${b.nws?.tempF != null ? `${esc(fmtF(b.nws.tempF).replace(' °F', ''))}<small>°F</small>` : ''}</span></div>
     </div>
 
-    <div class="section-h"><h2>${esc(t('fema'))}</h2></div>
-    ${fema.length ? `<div class="list">${fema.slice(0, 5).map((d) => `<div class="row"><span class="ico"><span class="ms" aria-hidden="true">assignment</span></span><span class="main"><span class="t1">${esc(d.title)}</span><span class="t2" style="display:block">${esc(d.type)}-${esc(d.number)}</span></span><span class="end tnum" style="font-weight:500;color:var(--text-2)">${esc(d.date)}</span></div>`).join('')}</div>` : '<div class="empty">—</div>'}
-    <p class="src-line">${esc(t('fema_register'))} · ${esc(b.fema?._source ?? 'OpenFEMA')}</p>
+    ${label('FEMA')}
+    ${fema.length ? `<div class="pv-list">${fema.slice(0, 3).map((d) => `<div class="pv-row"><span class="pv-ic" style="--tint:var(--grey)"><span class="ms" aria-hidden="true">assignment</span></span><span class="pv-main"><span class="pv-t1">${esc(d.title)}</span><span class="pv-t2 tnum">${esc(d.type)}-${esc(d.number)}</span></span><span class="pv-mi">${esc(d.date)}</span></div>`).join('')}</div>` : `<div class="pv-empty-row"><span class="ms" aria-hidden="true">assignment</span>${esc(t('fema'))}</div>`}
 
-    <div class="grid2" style="margin-top:18px">
-      <div class="card">
-        <h3><span class="ms" aria-hidden="true">medication</span>${esc(t('statute'))}</h3>
-        <div class="small tnum" style="color:var(--rausch);font-weight:700">${esc(b.statute?.number ?? 'F.S. 252.358')}</div>
-        <p style="margin-top:6px">${esc(usText(b.statute?.summary ?? '—'))}</p>
-        ${b.statute?.url ? `<div class="src-line"><a href="${esc(b.statute.url)}" target="_blank" rel="noopener">${esc(b.statute.url)}</a></div>` : ''}
-      </div>
-      <div class="card">
-        <h3><span class="ms" aria-hidden="true">vaccines</span>${esc(t('insulin'))}</h3>
-        <p>${esc(usText(b.fdaEmergencyInsulin?.summary ?? '—'))}</p>
-        ${b.fdaEmergencyInsulin?.url ? `<div class="src-line"><a href="${esc(b.fdaEmergencyInsulin.url)}" target="_blank" rel="noopener">fda.gov</a></div>` : ''}
-      </div>
-      <div class="card">
-        <h3><span class="ms" aria-hidden="true">kitchen</span>${esc(t('food_rules'))}</h3>
-        <p>${esc(usText(b.foodRules?.headline ?? '—'))}</p>
-        ${b.foodRules?.url ? `<div class="src-line"><a href="${esc(b.foodRules.url)}" target="_blank" rel="noopener">FoodSafety.gov</a></div>` : ''}
-      </div>
+    ${label(t('know_rules'))}
+    <div class="pv-list">
+      <div class="pv-row top"><span class="pv-ic" style="--tint:var(--rausch)"><span class="ms fill" aria-hidden="true">medication</span></span><span class="pv-main"><span class="pv-t1">${esc(t('statute'))} <span class="pv-tag tnum">${esc(b.statute?.number ?? 'F.S. 252.358')}</span></span><span class="pv-t3">${esc(usText(b.statute?.summary ?? ''))}</span></span></div>
+      <div class="pv-row top"><span class="pv-ic" style="--tint:var(--blue)"><span class="ms fill" aria-hidden="true">vaccines</span></span><span class="pv-main"><span class="pv-t1">${esc(t('insulin'))}</span><span class="pv-t3">${esc(usText(b.fdaEmergencyInsulin?.summary ?? ''))}</span></span></div>
+      <div class="pv-row top"><span class="pv-ic" style="--tint:var(--green)"><span class="ms fill" aria-hidden="true">kitchen</span></span><span class="pv-main"><span class="pv-t1">${esc(t('food_rules'))}</span><span class="pv-t3">${esc(usText(b.foodRules?.headline ?? ''))}</span></span></div>
     </div>`}
-    ${canInstall ? `<button type="button" class="card install-card" id="prep-install" style="width:100%;margin-top:18px;border:0;text-align:left;font:inherit;color:inherit;cursor:pointer">
-      <img src="/icons/apple-touch-icon-180.png" alt=""><span style="flex:1;min-width:0"><b style="display:block;font-size:17px">${esc(t('install_title'))}</b><span class="muted small">${esc(t('install_why'))}</span></span><span class="ms chev" aria-hidden="true">chevron_right</span></button>` : ''}`
+    ${canInstall ? `<button type="button" class="pv-install" id="prep-install">
+      <img src="/icons/apple-touch-icon-180.png" alt=""><span class="pv-main"><b>${esc(t('install_title'))}</b><span>${esc(t('install_why'))}</span></span><span class="ms chev" aria-hidden="true">chevron_right</span></button>` : ''}
+    ${sourcesHtml(b, z, groups, placesNote)}
+  </div>`
 
   root.querySelector('#prep-go')?.addEventListener('click', () => { haptic(); void pack() })
-  root.querySelectorAll('a.pp-dir, a.pp-call, a.pp-911').forEach((a) => a.addEventListener('click', () => haptic()))
+  root.querySelectorAll('a.pv-dir, a.pv-tile, a.pv-911').forEach((a) => a.addEventListener('click', () => haptic()))
   root.querySelector('#prep-install')?.addEventListener('click', () => window.dispatchEvent(new Event('bb-open-install')))
 }

@@ -15,6 +15,7 @@ export const providerStatus = () => ({ lastOk, lastError });
 export const isConfigured = claudeConfigured;
 
 const CHAT_PRIMARY_TIMEOUT = 35_000;
+const TRANSLATE_PRIMARY_TIMEOUT = 20_000; // Gemma first; give up after 20 s and fall back to the chat model
 const FALLBACK_TIMEOUT = 45_000;
 const retryable = (e: unknown) => e instanceof ProviderError && (e.status === 504 || e.status === 429 || e.status === 0 || e.status >= 500);
 
@@ -26,7 +27,8 @@ export async function callModel(req: ModelRequest): Promise<ModelResult> {
       ? [{ model: config.visionModel, timeout: req.timeoutMs ?? config.modelTimeoutMs }]
       : req.task === 'translate'
       ? [
-          { model: config.translateModel, timeout: req.timeoutMs ?? CHAT_PRIMARY_TIMEOUT },
+          { model: config.translateModel, timeout: req.timeoutMs ?? TRANSLATE_PRIMARY_TIMEOUT },
+          // a timeout (status 0/504) is retryable, so the chat model gets the next turn
           { model: config.chatModel, timeout: FALLBACK_TIMEOUT },
         ]
       : [

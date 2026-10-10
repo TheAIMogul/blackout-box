@@ -17,7 +17,7 @@ const FROZEN_DISCARD = words('ice cream|helado|helados|krem glase|frozen yogurt|
 const FROZEN_CONTEXT = words('frozen|congelado|congelada|congelados|congeladas|glase')
 const FROZEN_VEG = words('vegetable|vegetables|veggies|veg|peas|corn|broccoli|spinach|green beans|carrots|vegetales|verduras|legumbres|legim|maiz|guisantes|espinaca')
 const MAYO = words('mayo|mayonnaise|mayonesa|mayonez|tartar|tartar sauce|horseradish|aioli')
-const FORMULA = words('formula|baby formula|infant formula|formula de bebe|let bebe')
+const FORMULA = words('formula|formulas|baby formula|infant formula|formula de bebe|formula infantil|let bebe|enfamil|similac|gerber good start')
 const OPENED = words('opened|open|abierto|abierta|louvri|mixed|prepared|preparada')
 const UNOPENED = words('unopened|sealed|sin abrir|cerrado|cerrada')
 const POWDER = words('powder|polvo|poud')
@@ -58,7 +58,9 @@ const DISCARD_FIRST = words(
     'seafood|mariscos|deli|lunch meat|lunchmeat|cold cuts|fiambre|ham|jamon|janbon|hot dog|salchicha|sosis|sausage|chorizo|bacon|tocino|' +
     'salami|pepperoni|bologna|leftover|leftovers|sobras|takeout|rice|arroz|diri|pasta|spaghetti|noodles|fideos|macaroni|cooked|cocido|' +
     'cocinado|kwit|soup|sopa|stew|guiso|estofado|casserole|pizza|gravy|broth|caldo|stuffing|tofu|sushi|empanada|empanadas|croquetas|' +
-    'tamales|quiche|custard|flan|pudding|budin',
+    'tamales|quiche|custard|flan|pudding|budin|' +
+    // dairy that carries a fruit or flavor word ("Yogurt (Peach)", "Strawberry milk")
+    'yogurt|yoghurt|yogurts|yogur|yogures|yogourt|yogurth|yaout|kefir|milk|leche|whipped cream|half and half|creamer',
 )
 const DISCARD = words(
   'milk|leche|let|cream|crema|half and half|yogurt|yoghurt|yogur|yaout|cheese|queso|fromaj|mozzarella|brie|ricotta|cottage|feta|salad|' +
@@ -80,7 +82,9 @@ export function classifyFoodDetailed(name: string, opts: ClassifyOptions = {}): 
   if (has(q, MAYO)) return kw('mayo_8h_50f')
   if (has(q, FORMULA)) {
     // "Baby formula, opened" is a Discard row; unopened or dry powder is shelf stable.
-    const opened = opts.opened === true || has(q, OPENED)
+    // Formula kept in the fridge has been opened or mixed: that is the Discard row, whatever the photo says about the seal.
+    const inFridge = opts.location === 'fridge' || opts.location === 'door'
+    const opened = opts.opened === true || has(q, OPENED) || inFridge
     if (has(q, POWDER) || (!opened && (opts.opened === false || has(q, UNOPENED)))) return kw('shelf_stable')
     return kw('discard_4h')
   }

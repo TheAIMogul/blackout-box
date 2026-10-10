@@ -82,10 +82,11 @@ function paint(): void {
   const z = zoneOf(state.prep)
   zoneTxt.textContent = state.prep ? (z.letter ? `${t('zone_short')} ${z.letter}` : t('zone_none_short')) : t('picker_none')
   const h = state.health
-  const netUp = navigator.onLine
+  // The 'offline' event (netDown) wins over navigator.onLine, which some browsers and emulators leave true.
+  const netUp = navigator.onLine && !netDown
   pill.classList.remove('ok', 'off', 'down')
-  if (!netUp) { pill.classList.add('off'); txt.textContent = t('st_offline') }
-  if (!h) { if (netUp) txt.textContent = t('st_checking'); return }
+  if (!netUp) { pill.classList.add('off'); txt.textContent = t('st_offline'); pill.title = txt.textContent; return }
+  if (!h) { txt.textContent = t('st_checking'); return }
   if (h._fallback) {
     pill.classList.add(netUp ? 'down' : 'off')
     txt.textContent = netUp ? t('st_noserver') : t('st_offline')

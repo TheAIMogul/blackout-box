@@ -98,10 +98,11 @@ const C = 2 * Math.PI * 50 // ring circumference (r = 50 in a 120 viewBox)
 
 function renderShell(): void {
   root.innerHTML = `
-    <div class="card hero" id="fh-hero"></div>
+    <div class="fh-top" id="fh-hero"></div>
     <input type="file" accept="image/*" capture="environment" id="fh-file" class="hidden">
     <input type="file" accept="image/*" capture="environment" id="fh-file-frz" class="hidden">
-    <div id="fh-status" style="margin-top:12px"></div>
+    <input type="file" accept="image/*" capture="environment" id="fh-file-med" class="hidden">
+    <div id="fh-status" class="fh-status"></div>
     <div class="card outage" id="fh-outage" role="group" aria-label="${esc(t('outage_title'))}"></div>
     <nav class="cats" id="fh-cats" aria-label="${esc(t('items'))}"></nav>
     <div class="cards" id="fh-cards" aria-live="off"></div>
@@ -111,6 +112,8 @@ function renderShell(): void {
   file.addEventListener('change', () => { const f = file.files?.[0]; file.value = ''; if (f) void readPhoto(f) })
   const frz = root.querySelector<HTMLInputElement>('#fh-file-frz')!
   frz.addEventListener('change', () => { const f = frz.files?.[0]; frz.value = ''; if (f) void readPhoto(f, true) })
+  const med = root.querySelector<HTMLInputElement>('#fh-file-med')!
+  med.addEventListener('change', () => { const f = med.files?.[0]; med.value = ''; if (f) void readPhoto(f, false, true) })
   root.querySelector('#fh-cards')!.addEventListener('click', (e) => {
     const card = (e.target as HTMLElement).closest<HTMLElement>('.cd')
     if (card?.dataset.id) openDetail(card.dataset.id)
@@ -136,24 +139,31 @@ function renderHero(): void {
   const head = !items.length ? esc(t('hero_none'))
     : need ? esc(t(need === 1 ? 'need_action_one' : 'need_action_other', { n: '\u0000' })).replace('\u0000', `<em>${need}</em>`) : esc(t('all_clear'))
   const stack = items.length ? `<div class="stack" role="img" aria-label="${esc(ORDER.filter((s) => counts.get(s)).map((s) => `${counts.get(s)} ${t('status.' + s)}`).join(', '))}">${ORDER.filter((s) => counts.get(s)).map((s) => `<i class="st-${s}" style="flex-grow:${counts.get(s)}"></i>`).join('')}</div>
-    <div class="legend">${ORDER.filter((s) => counts.get(s)).map((s) => `<span class="st-${s}"><i></i><b>${counts.get(s)}</b> ${esc(t('status.' + s).split(':')[0])}</span>`).join('')}</div>` : ''
+    <div class="legend fh-legend">${ORDER.filter((s) => counts.get(s)).map((s) => `<span class="st-${s}"><i></i><b>${counts.get(s)}</b> ${esc(t('status.' + s).split(':')[0])}</span>`).join('')}</div>` : ''
   let model = ''
   if (items.length && lastRead) {
     model = lastRead.fallback
       ? `<div class="model-line"><span class="ms" aria-hidden="true">science</span><b>${esc(t('demo_items_fallback'))}</b></div>`
       : `<div class="model-line"><span class="ms fill" aria-hidden="true">${lastRead.model === 'demo' ? 'science' : 'photo_camera'}</span>${esc(lastRead.model === 'demo' ? t('demo_items') : t('read_from_photo'))}${lastRead.unreadable ? ` · ${lastRead.unreadable} ${esc(t('unreadable'))}` : ''}</div>`
   }
+  const tile = (id: string, uses: string[], fb: string, lab: string) =>
+    `<button type="button" class="fh-tile" id="${id}" ${busy ? 'disabled' : ''}>${iconHTML(uses, fb, 'mi fh-tile-mi')}<span class="fh-tile-l">${esc(t(lab))}</span><span class="fh-tile-cam"><span class="ms fill" aria-hidden="true">photo_camera</span></span></button>`
   el.innerHTML = `
-    <div class="big" aria-live="polite">${head}</div>
-    <div class="sub">${items.length ? esc(t('hero_sub', { n: items.length, h: '\u0001' })).replace('\u0001', `<span data-hrs-h>${hoursOut().toFixed(1)}</span>`) : esc(t('fh_sub'))}</div>
-    ${stack}${model}
-    <div class="btn-row scan-row">
-      <button type="button" class="btn primary" id="fh-photo" ${busy ? 'disabled' : ''}><span class="ms" aria-hidden="true">photo_camera</span><span>${esc(t('fh_photo'))}</span></button>
-      <button type="button" class="btn primary" id="fh-photo-frz" ${busy ? 'disabled' : ''}><span class="ms" aria-hidden="true">ac_unit</span><span>${esc(t('fh_photo_freezer'))}</span></button>
-      <button type="button" class="btn demo-btn" id="fh-demo" ${busy ? 'disabled' : ''}>${busy ? '<span class="spinner" aria-hidden="true"></span>' : '<span class="ms" aria-hidden="true">photo_library</span>'}<span>${esc(t('fh_demo'))}</span></button>
-    </div>`
+    <section class="fh-sum">
+      <div class="fh-eyebrow">${items.length ? esc(t('hero_sub', { n: items.length, h: '\u0001' })).replace('\u0001', `<span data-hrs-h>${hoursOut().toFixed(1)}</span>`) : esc(t('fh_sub'))}</div>
+      <div class="big" aria-live="polite">${head}</div>
+      ${stack}${model}
+    </section>
+    <div class="fh-label">${esc(t('scan_section'))}</div>
+    <div class="fh-tiles scan-row" role="group" aria-label="${esc(t('scan_section'))}">
+      ${tile('fh-photo', ['icon.fridge', 'icon.cat.fridge'], 'kitchen', 'cat_fridge')}
+      ${tile('fh-photo-frz', ['icon.freezer', 'icon.cat.freezer'], 'ac_unit', 'cat_freezer')}
+      ${tile('fh-photo-med', ['icon.medicine', 'icon.cat.medicine'], 'medication', 'cat_meds')}
+    </div>
+    <button type="button" class="btn text fh-demo demo-btn" id="fh-demo" ${busy ? 'disabled' : ''}>${busy ? '<span class="spinner" aria-hidden="true"></span>' : '<span class="ms" aria-hidden="true">photo_library</span>'}<span>${esc(t('fh_demo'))}</span></button>`
   el.querySelector('#fh-photo')!.addEventListener('click', () => { haptic(); root.querySelector<HTMLInputElement>('#fh-file')!.click() })
   el.querySelector('#fh-photo-frz')!.addEventListener('click', () => { haptic(); root.querySelector<HTMLInputElement>('#fh-file-frz')!.click() })
+  el.querySelector('#fh-photo-med')!.addEventListener('click', () => { haptic(); root.querySelector<HTMLInputElement>('#fh-file-med')!.click() })
   el.querySelector('#fh-demo')!.addEventListener('click', () => { haptic(); openSamples() })
 }
 
@@ -192,17 +202,19 @@ function renderControls(): void {
   if (el) {
     const h = hoursOut()
     const room = roomC()
+    const v = Math.min(72, h)
     el.innerHTML = `
-      <div class="o-top">
-        <div class="o-ico"><span class="ms fill" aria-hidden="true">power_off</span></div>
-        <div style="flex:1;min-width:0"><div class="o-label">${esc(t('power_out'))}</div><div class="o-val" id="fh-hrs-val">${esc(t('power_out_for', { h: h.toFixed(1) }))}</div></div>
-        <button type="button" class="btn small" id="fh-adjust"><span class="ms" aria-hidden="true">tune</span>${esc(t('adjust'))}</button>
+      <div class="o-head">
+        <span class="o-ico"><span class="ms fill" aria-hidden="true">power_off</span></span>
+        <span class="o-label">${esc(t('power_out'))}</span>
+        <button type="button" class="o-adj" id="fh-adjust"><span class="ms" aria-hidden="true">tune</span>${esc(t('adjust'))}</button>
       </div>
-      <input type="range" id="fh-hrs" min="0" max="72" step="0.25" value="${Math.min(72, h).toFixed(2)}" aria-label="${esc(t('power_out'))} · ${esc(t('hours_ago'))}">
+      <div class="o-val" id="fh-hrs-val">${esc(t('power_out_for', { h: h.toFixed(1) }))}</div>
+      <input type="range" class="o-range" id="fh-hrs" min="0" max="72" step="0.25" value="${v.toFixed(2)}" style="--p:${(v / 72 * 100).toFixed(2)}%" aria-label="${esc(t('power_out'))} · ${esc(t('hours_ago'))}">
       <div class="o-meta">
-        <button type="button" class="pill" data-open><span class="ms" aria-hidden="true">door_open</span>${esc(t('door_n', { n: outage.doorOpenedAt.length }))}</button>
+        <button type="button" class="pill" data-open><span class="ms" aria-hidden="true">door_open</span><span class="tnum">${esc(t('door_n', { n: outage.doorOpenedAt.length }))}</span></button>
         <button type="button" class="pill" data-open><span class="ms" aria-hidden="true">ac_unit</span>${esc(t('freezer'))} · ${esc(outage.freezerFull ? t('full') : t('half'))}</button>
-        <button type="button" class="pill" data-open><span class="ms" aria-hidden="true">thermostat</span>${esc(t('room', { t: room.c != null ? `${room.estimated ? '≈ ' : ''}${room.c} °F` : '—' }))}${room.estimated && room.c != null ? ` <span class="est">${esc(t('estimated'))}</span>` : ''}</button>
+        <button type="button" class="pill" data-open><span class="ms" aria-hidden="true">thermostat</span><span class="tnum">${esc(t('room', { t: room.c != null ? `${room.estimated ? '≈ ' : ''}${room.c} °F` : '—' }))}</span>${room.estimated && room.c != null ? ` <span class="est">${esc(t('estimated'))}</span>` : ''}</button>
       </div>`
     el.querySelector('#fh-adjust')!.addEventListener('click', openControls)
     el.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', openControls))
@@ -217,7 +229,7 @@ function bindSlider(scope: HTMLElement): void {
   hrs.addEventListener('input', () => {
     const v = parseFloat(hrs.value)
     outage.startedAt = new Date(Date.now() - v * 36e5).toISOString()
-    document.querySelectorAll<HTMLInputElement>('#fh-hrs, [data-hrs]').forEach((x) => { if (x !== hrs) x.value = hrs.value })
+    document.querySelectorAll<HTMLInputElement>('#fh-hrs, [data-hrs]').forEach((x) => { if (x !== hrs) x.value = hrs.value; x.style.setProperty('--p', `${(v / 72 * 100).toFixed(2)}%`) })
     paintHours()
     const st = document.querySelector<HTMLInputElement>('[data-start]')
     if (st) st.value = toLocalInput(Date.parse(outage.startedAt))
@@ -340,13 +352,13 @@ function ringInner(v: NV, now: number): string {
   return `${m ? `<span class="dd">${m[1]}</span>` : ''}<span class="clk" data-clk>${m ? m[2] : s}</span><span class="lbl">${esc(t('time_left'))}</span>`
 }
 
-function ringHTML(v: NV, now: number, start = true): string {
+function ringHTML(v: NV, now: number, start = true, mini = false): string {
   const p = pct(v, now)
   const off = start ? C : C * (1 - p / 100)
-  return `<div class="ring" data-ring="${esc(v.itemId)}" data-p="${p.toFixed(2)}">
+  return `<div class="ring${mini ? ' mini' : ''}" data-ring="${esc(v.itemId)}" data-p="${p.toFixed(2)}">
     <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="trk" cx="60" cy="60" r="50" fill="none" stroke-width="11"/>
     <circle class="val" cx="60" cy="60" r="50" fill="none" stroke-width="11" stroke-linecap="round" stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${off.toFixed(2)}"/></svg>
-    <div class="in">${ringInner(v, now)}</div></div>`
+    <div class="in">${mini ? `<span class="ms fill" aria-hidden="true">${ICON[v.status]}</span>` : ringInner(v, now)}</div></div>`
 }
 
 /** Animate rings from empty to their value (Apple Watch style) on the next frames. */
@@ -388,17 +400,23 @@ function renderCards(): void {
     el.innerHTML = shown.map((v, i) => {
       const it = byId.get(v.itemId)!
       const c = it.category === 'med' ? 'med' : 'food'
-      return `<article class="cd s-${v.status}" data-id="${esc(v.itemId)}" tabindex="0" role="button" aria-label="${esc(it.name)}: ${esc(t('status.' + v.status))}" style="animation-delay:${Math.min(i, 8) * 40}ms">
+      const over = OVER.includes(v.status)
+      const clk = v.deadlineMs == null ? '' : fmtClock(v.deadlineMs - now)
+      const dm = /^(\d+d) (.*)$/.exec(clk)
+      const big = over ? `<span class="cd-over">${esc(t('over_limit'))}</span>`
+        : v.deadlineMs == null ? `<span class="cd-over muted">${esc(t('no_clock'))}</span>`
+        : `${dm ? `<span class="cd-dd">${dm[1]}</span>` : ''}<span data-clk-id="${esc(v.itemId)}">${dm ? dm[2] : clk}</span><span class="cd-left">${esc(t('time_left'))}</span>`
+      return `<article class="cd v8 s-${v.status}" data-id="${esc(v.itemId)}" tabindex="0" role="button" aria-label="${esc(it.name)}: ${esc(t('status.' + v.status))}" style="animation-delay:${Math.min(i, 8) * 40}ms">
         <div class="cd-main">
-          ${ringHTML(v, now)}
+          ${ringHTML(v, now, true, true)}
           <div class="info">
             <div class="nm">${esc(it.name)}</div>
             <div class="kind">${esc(kindLine(it))}</div>
+            <div class="cd-clock">${big}</div>
             <span class="stpill"><span class="ms" aria-hidden="true">${ICON[v.status]}</span><span>${esc(t('status.' + v.status))}</span></span>
-            <div class="act">${esc(t(actKey(it, c, v.status)))}</div>
           </div>
         </div>
-        <div class="src-row"><span class="ms" aria-hidden="true">verified</span><span class="s">${esc(t('cite'))} · <b>${esc(usText(v.source) || '—')}</b></span><span class="ms chev" aria-hidden="true">chevron_right</span></div>
+        <div class="cd-foot"><span class="act">${esc(t(actKey(it, c, v.status)))}</span><span class="cd-why">${esc(t('why'))}<span class="ms" aria-hidden="true">chevron_right</span></span></div>
       </article>`
     }).join('')
     settleRings(el)
@@ -421,11 +439,17 @@ function tickClocks(): void {
       if (ck.textContent !== s) ck.textContent = s
     }
   })
+  document.querySelectorAll<HTMLElement>('[data-clk-id]').forEach((x) => {
+    const v = byId.get(x.dataset.clkId ?? '')
+    if (!v || v.deadlineMs == null) return
+    const s = fmtClock(v.deadlineMs - now).replace(/^\d+d /, '')
+    if (x.textContent !== s) x.textContent = s
+  })
   paintHours()
   if (Math.floor(now / 1000) % 30 === 0) {
     const h = hoursOut()
     const active = document.activeElement
-    document.querySelectorAll<HTMLInputElement>('#fh-hrs, [data-hrs]').forEach((x) => { if (x !== active) x.value = Math.min(72, h).toFixed(2) })
+    document.querySelectorAll<HTMLInputElement>('#fh-hrs, [data-hrs]').forEach((x) => { if (x !== active) { x.value = Math.min(72, h).toFixed(2); x.style.setProperty('--p', `${(Math.min(72, h) / 72 * 100).toFixed(2)}%`) } })
   }
 }
 
@@ -543,11 +567,11 @@ async function lookupMed(it: WebItem): Promise<void> {
 }
 
 // ---------- photo → items ----------
-async function readPhoto(file: File, freezer = false): Promise<void> {
+async function readPhoto(file: File, freezer = false, meds = false): Promise<void> {
   busy = true; note = null; renderStatus()
   try {
     const { base64, mime } = await downscale(file, 1280, 0.85)
-    const r = await visionItems(base64, mime, freezer ? 'fridge' : 'any')
+    const r = await visionItems(base64, mime, freezer ? 'fridge' : meds ? 'meds' : 'any')
     await ingest([freezer ? toFreezer(r) : r])
   } catch (e) {
     console.error(e)

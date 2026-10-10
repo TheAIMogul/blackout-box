@@ -67,7 +67,7 @@ export function limitForMed(label: OpenFdaLabel): Limit | null {
   // the upper bound of the "Store at" range. Suspension labels' "Store dry powder at…" is not a
   // limit for the mixed liquid, so it is skipped.
   let maxTempF: number | undefined
-  const ceiling = hit(new RegExp(String.raw`(?:up to|not to exceed|not exceeding|no (?:higher|warmer) than)\s*` + F, 'i'))
+  const ceiling = hit(new RegExp(String.raw`(?:up to|not to exceed|not exceeding|no (?:higher|warmer) than|maximum (?:temperature )?of)\s*(?:a\s+)?(?:maximum (?:temperature )?(?:of\s+)?)?` + F, 'i'))
   if (ceiling) maxTempF = Number(ceiling[1])
   if (maxTempF == null) {
     const exc = /excursions?[^.;]*/i.exec(core)

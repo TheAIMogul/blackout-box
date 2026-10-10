@@ -19,7 +19,7 @@ const en: Dict = {
   pack_box: 'Save for offline',
   open_clocks: 'Open Clocks',
   drill_title: 'SIMULATED STORM',
-  drill_sub: 'Hurricane drill — practice mode',
+  drill_sub: 'Storm drill — practice mode',
   lang_name: 'English',
   tagline: 'The app that works when nothing else does.',
   tab_fourhour: 'Clocks',
@@ -168,7 +168,7 @@ const en: Dict = {
   title_map: 'Map',
   title_ask: 'Ask',
   now_sub: 'Conditions and warnings, at a glance.',
-  intro_head: 'Your hurricane kit for the fridge and medicine cabinet.',
+  intro_head: 'Your storm and flood kit for the fridge and medicine cabinet.',
   intro_1t: 'Before the storm',
   intro_1b: 'Snap your fridge, freezer and medicine.',
   intro_2t: 'When the power goes out',
@@ -288,7 +288,7 @@ const en: Dict = {
   why_sub: 'Who this is for, and why Miami needs it.',
   why_k1: 'The problem',
   why_h1: 'When the power goes out, a clock starts.',
-  why_p1a: 'After a hurricane, Miami can lose power for days, in 90 °F heat.',
+  why_p1a: 'After a storm or a flood, Miami can lose power for days, in 90 °F heat.',
   why_p1b: 'Nobody knows if the food or the insulin is still safe.',
   why_p1c: 'And most apps die when the internet does.',
   why_k2: 'Who it helps',
@@ -308,8 +308,8 @@ const en: Dict = {
   why_f3s: 'National Weather Service and National Hurricane Center.',
   why_f4: 'Your evacuation zone',
   why_f4s: 'From the Miami-Dade zone map.',
-  why_f5: 'Places with power',
-  why_f5s: 'Charging, libraries and fire stations near you.',
+  why_f5: 'Help nearby',
+  why_f5s: 'Hospitals, open pharmacies, libraries, fire stations and shelters near you.',
   why_f6: 'Flood map',
   why_f6s: 'Real ground elevation, block by block.',
   why_f7: 'English, Español, Kreyòl',
@@ -341,7 +341,7 @@ const en: Dict = {
   why_h6: 'From photo to countdown in seconds.',
   why_st1: 'Your photo',
   why_st1s: 'Snap the fridge, freezer or medicine shelf.',
-  why_st2: 'Gemini reads it',
+  why_st2: 'A vision model reads it',
   why_st2s: 'Names every item in about 3 seconds.',
   why_st3: 'Open rules engine',
   why_st3s: 'FDA and USDA rules, 64 tests, no AI guessing.',
@@ -351,10 +351,10 @@ const en: Dict = {
   why_t1s: 'An installable web app. Your data and clocks live on your phone.',
   why_t2: 'Runs on Cloudflare',
   why_t2s: "Served from Cloudflare's global network, close to every phone.",
-  why_t3: 'Gemini reads photos',
-  why_t3s: 'Google Gemini 3.5 Flash through Cloudflare AI Gateway.',
-  why_t4: 'Claude answers questions',
-  why_t4s: 'In English, Spanish and Haitian Creole.',
+  why_t3: 'AI reads photos',
+  why_t3s: 'Through Cloudflare AI Gateway.',
+  why_t4: 'AI answers questions',
+  why_t4s: 'In three languages: English, Spanish and Haitian Creole.',
   why_t5: 'The math is never AI',
   why_t5s: 'An open-source rules engine does every countdown, citing FDA or USDA.',
   why_t6: 'Grok painted it',
@@ -405,6 +405,9 @@ const en: Dict = {
   call911_v8: 'Call 911',
   life_threat: 'Life-threatening emergency',
   open_now: 'Open now',
+  know_rules: 'Know the rules',
+  sample_data: 'Sample data',
+  next_high_at: 'Next high {v} ft · {t}',
 }
 
 const es: Dict = {
@@ -418,7 +421,7 @@ const es: Dict = {
   pack_box: 'Guardar sin conexión', // MT
   open_clocks: 'Abrir Relojes', // MT
   drill_title: 'TORMENTA SIMULADA', // MT
-  drill_sub: 'Simulacro de huracán — modo práctica', // MT
+  drill_sub: 'Simulacro de tormenta — modo práctica', // MT
   lang_name: 'Español',
   tagline: 'La app que funciona cuando nada más funciona.', // MT
   tab_fourhour: 'Relojes', // MT
@@ -562,7 +565,7 @@ const es: Dict = {
   title_map: 'Mapa',
   title_ask: 'Preguntar',
   now_sub: 'Condiciones y alertas de un vistazo.',
-  intro_head: 'Su kit de huracán para el refrigerador y el botiquín.', // MT
+  intro_head: 'Su kit para tormentas e inundaciones: refrigerador y botiquín.', // MT
   intro_1t: 'Antes de la tormenta', // MT
   intro_1b: 'Tome fotos de su refrigerador, congelador y medicinas.', // MT
   intro_2t: 'Cuando se vaya la luz', // MT
@@ -682,7 +685,7 @@ const es: Dict = {
   why_sub: 'Para quién es, y por qué Miami lo necesita.', // MT
   why_k1: 'El problema', // MT
   why_h1: 'Cuando se va la luz, empieza un reloj.', // MT
-  why_p1a: 'Después de un huracán, Miami puede quedarse sin luz por días, con 90 °F de calor.', // MT
+  why_p1a: 'Después de una tormenta o una inundación, Miami puede quedarse sin luz por días, con 90 °F de calor.', // MT
   why_p1b: 'Nadie sabe si la comida o la insulina siguen seguras.', // MT
   why_p1c: 'Y la mayoría de las apps mueren cuando se cae el internet.', // MT
   why_k2: 'A quién ayuda', // MT
@@ -702,8 +705,8 @@ const es: Dict = {
   why_f3s: 'Servicio Meteorológico Nacional y Centro Nacional de Huracanes.', // MT
   why_f4: 'Su zona de evacuación', // MT
   why_f4s: 'Del mapa de zonas de Miami-Dade.', // MT
-  why_f5: 'Lugares con electricidad', // MT
-  why_f5s: 'Carga, bibliotecas y estaciones de bomberos cerca de usted.', // MT
+  why_f5: 'Ayuda cerca', // MT
+  why_f5s: 'Hospitales, farmacias abiertas, bibliotecas, bomberos y refugios cerca de usted.', // MT
   why_f6: 'Mapa de inundaciones', // MT
   why_f6s: 'Elevación real del terreno, cuadra por cuadra.', // MT
   why_f7: 'English, Español, Kreyòl', // MT
@@ -735,7 +738,7 @@ const es: Dict = {
   why_h6: 'De la foto a la cuenta regresiva en segundos.', // MT
   why_st1: 'Su foto', // MT
   why_st1s: 'Fotografíe el refrigerador, el congelador o las medicinas.', // MT
-  why_st2: 'Gemini la lee', // MT
+  why_st2: 'Un modelo de visión la lee', // MT
   why_st2s: 'Nombra cada artículo en unos 3 segundos.', // MT
   why_st3: 'Motor de reglas abierto', // MT
   why_st3s: 'Reglas de la FDA y el USDA, 64 pruebas, sin adivinanzas de IA.', // MT
@@ -745,10 +748,10 @@ const es: Dict = {
   why_t1s: 'Una app web instalable. Sus datos y relojes viven en su teléfono.', // MT
   why_t2: 'Funciona en Cloudflare', // MT
   why_t2s: 'Servida desde la red global de Cloudflare, cerca de cada teléfono.', // MT
-  why_t3: 'Gemini lee las fotos', // MT
-  why_t3s: 'Google Gemini 3.5 Flash a través de Cloudflare AI Gateway.', // MT
-  why_t4: 'Claude responde preguntas', // MT
-  why_t4s: 'En inglés, español y criollo haitiano.', // MT
+  why_t3: 'La IA lee las fotos', // MT
+  why_t3s: 'A través de Cloudflare AI Gateway.', // MT
+  why_t4: 'La IA responde preguntas', // MT
+  why_t4s: 'En tres idiomas: inglés, español y criollo haitiano.', // MT
   why_t5: 'Los cálculos nunca son IA', // MT
   why_t5s: 'Un motor de reglas de código abierto hace cada cuenta regresiva, citando a la FDA o el USDA.', // MT
   why_t6: 'Grok lo pintó', // MT
@@ -799,6 +802,9 @@ const es: Dict = {
   call911_v8: 'Llame al 911', // MT
   life_threat: 'Emergencia de vida o muerte', // MT
   open_now: 'Abierto', // MT
+  know_rules: 'Conozca las reglas', // MT
+  sample_data: 'Datos de ejemplo', // MT
+  next_high_at: 'Próxima pleamar {v} ft · {t}', // MT
 }
 
 const ht: Dict = {
@@ -812,7 +818,7 @@ const ht: Dict = {
   pack_box: 'Sove pou san entènèt', // MT
   open_clocks: 'Louvri Revèy', // MT
   drill_title: 'TANPÈT SIMILE', // MT
-  drill_sub: 'Egzèsis siklòn — mòd pratik', // MT
+  drill_sub: 'Egzèsis tanpèt — mòd pratik', // MT
   lang_name: 'Kreyòl',
   tagline: 'Aplikasyon ki mache lè anyen pa mache.', // MT
   tab_fourhour: 'Revèy', // MT
@@ -956,7 +962,7 @@ const ht: Dict = {
   title_map: 'Kat',
   title_ask: 'Mande',
   now_sub: 'Kondisyon ak avètisman, yon sèl kou.',
-  intro_head: 'Twous siklòn ou pou frijidè ak armwa medikaman.', // MT
+  intro_head: 'Twous tanpèt ak inondasyon ou pou frijidè ak armwa medikaman.', // MT
   intro_1t: 'Anvan tanpèt la', // MT
   intro_1b: 'Pran foto frijidè, frizè ak medikaman ou.', // MT
   intro_2t: 'Lè kouran an koupe', // MT
@@ -1076,7 +1082,7 @@ const ht: Dict = {
   why_sub: 'Pou ki moun li ye, ak poukisa Miami bezwen l.', // MT
   why_k1: 'Pwoblèm nan', // MT
   why_h1: 'Lè kouran an koupe, yon revèy kòmanse.', // MT
-  why_p1a: 'Apre yon siklòn, Miami ka rete san kouran pandan plizyè jou, nan chalè 90 °F.', // MT
+  why_p1a: 'Apre yon tanpèt oswa yon inondasyon, Miami ka rete san kouran pandan plizyè jou, nan chalè 90 °F.', // MT
   why_p1b: 'Pèsonn pa konnen si manje a oswa ensilin nan toujou bon.', // MT
   why_p1c: 'Epi pifò aplikasyon mouri lè entènèt la tonbe.', // MT
   why_k2: 'Ki moun li ede', // MT
@@ -1096,8 +1102,8 @@ const ht: Dict = {
   why_f3s: 'Sèvis Meteyo Nasyonal ak Sant Nasyonal Siklòn.', // MT
   why_f4: 'Zòn evakyasyon ou', // MT
   why_f4s: 'Soti nan kat zòn Miami-Dade.', // MT
-  why_f5: 'Kote ki gen kouran', // MT
-  why_f5s: 'Chaj, bibliyotèk ak estasyon ponpye toupre ou.', // MT
+  why_f5: 'Èd toupre ou', // MT
+  why_f5s: 'Lopital, famasi ki louvri, bibliyotèk, estasyon ponpye ak abri toupre ou.', // MT
   why_f6: 'Kat inondasyon', // MT
   why_f6s: 'Vrè wotè tè a, blòk pa blòk.', // MT
   why_f7: 'English, Español, Kreyòl', // MT
@@ -1129,7 +1135,7 @@ const ht: Dict = {
   why_h6: 'Soti nan foto rive nan kont a rebou an kèk segonn.', // MT
   why_st1: 'Foto ou', // MT
   why_st1s: 'Pran foto frijidè a, frizè a oswa etajè medikaman an.', // MT
-  why_st2: 'Gemini li l', // MT
+  why_st2: 'Yon modèl vizyon li l', // MT
   why_st2s: 'Li nonmen chak atik nan anviwon 3 segonn.', // MT
   why_st3: 'Motè règ louvri', // MT
   why_st3s: 'Règ FDA ak USDA, 64 tès, pa gen AI k ap devine.', // MT
@@ -1139,10 +1145,10 @@ const ht: Dict = {
   why_t1s: 'Yon app wèb ou ka enstale. Done ou ak revèy ou rete sou telefòn ou.', // MT
   why_t2: 'Mache sou Cloudflare', // MT
   why_t2s: 'Sèvi depi rezo mondyal Cloudflare, pre chak telefòn.', // MT
-  why_t3: 'Gemini li foto yo', // MT
-  why_t3s: 'Google Gemini 3.5 Flash atravè Cloudflare AI Gateway.', // MT
-  why_t4: 'Claude reponn kesyon', // MT
-  why_t4s: 'An angle, panyòl ak kreyòl ayisyen.', // MT
+  why_t3: 'AI li foto yo', // MT
+  why_t3s: 'Atravè Cloudflare AI Gateway.', // MT
+  why_t4: 'AI reponn kesyon', // MT
+  why_t4s: 'Nan twa lang: angle, panyòl ak kreyòl ayisyen.', // MT
   why_t5: 'Kalkil yo pa janm AI', // MT
   why_t5s: 'Yon motè règ sous louvri fè chak kont a rebou, li site FDA oswa USDA.', // MT
   why_t6: 'Grok pentire l', // MT
@@ -1193,6 +1199,9 @@ const ht: Dict = {
   call911_v8: 'Rele 911', // MT
   life_threat: 'Ijans ki an danje lavi', // MT
   open_now: 'Louvri', // MT
+  know_rules: 'Konnen règ yo', // MT
+  sample_data: 'Done egzanp', // MT
+  next_high_at: 'Pwochen mare wo {v} ft · {t}', // MT
 }
 
 const DICTS: Record<Lang, Dict> = { en, es, ht }

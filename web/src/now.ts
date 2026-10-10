@@ -58,11 +58,11 @@ async function refresh(): Promise<void> {
 }
 
 // ---------- helpers ----------
-const LOC = () => ({ en: 'en-GB', es: 'es-ES', ht: 'fr-FR' })[getLang()] // 24-hour clocks
+const LOC = () => ({ en: 'en-US', es: 'es-US', ht: 'en-US' })[getLang()] // 12-hour clocks ("9:33 PM"), same as the map
 function hhmm(iso?: string | null): string {
   if (!iso) return ''
   const d = new Date(String(iso).replace(' ', 'T'))
-  return Number.isFinite(d.getTime()) ? d.toLocaleTimeString(LOC(), { hour: '2-digit', minute: '2-digit', hour12: false }) : ''
+  return Number.isFinite(d.getTime()) ? d.toLocaleTimeString(LOC(), { hour: 'numeric', minute: '2-digit', hour12: true }) : ''
 }
 function dayTime(iso?: string | null): string {
   if (!iso) return ''
@@ -295,7 +295,9 @@ function tileAir(): string {
 function tileTide(): string {
   const td = data?.tide
   if (!td || td.latestM == null) return ''
-  const king = td.kingTideM, flood = td.minorFloodM
+  // Same thresholds as the map (2.90 ft king tide, 3.53 ft NWS minor flood); /api/now sends them in feet.
+  const tf = td as typeof td & { kingTideFt?: number | null; minorFloodFt?: number | null }
+  const king = tf.kingTideFt != null ? tf.kingTideFt * 0.3048 : td.kingTideM, flood = tf.minorFloodFt != null ? tf.minorFloodFt * 0.3048 : td.minorFloodM
   const top = Math.max(1.2, (flood ?? 0) + 0.15, (td.nextHigh?.m ?? 0) + 0.2)
   const y = (m: number) => (60 - (m / top) * 56).toFixed(1)
   // a gentle sine through now → next high (shape only; labels are in feet)
@@ -307,7 +309,7 @@ function tileTide(): string {
       ${king != null ? `<line x1="0" x2="160" y1="${y(king)}" y2="${y(king)}" class="king"/>` : ''}
       ${flood != null ? `<line x1="0" x2="160" y1="${y(flood)}" y2="${y(flood)}" class="flood"/>` : ''}
     </svg>
-    <div class="tf">${td.nextHigh ? esc(t('tide_next', { m: `${ft2(td.nextHigh.m)} ft`, t: dayTime(td.nextHigh.t) })) : ''}${king != null ? `<br>${esc(t('king_tide', { m: `${ft2(king)} ft` }))}${td.kingTide ? ' ⚠' : ''}` : ''}</div>`, 'wide-sm')
+    <div class="tf">${td.nextHigh ? esc(t('tide_next', { m: `${ft2(td.nextHigh.m)} ft`, t: dayTime(td.nextHigh.t) })) : ''}${king != null ? `<br>${esc(t('king_tide', { m: `${tf.kingTideFt != null ? Number(tf.kingTideFt).toFixed(2) : ft2(king)} ft` }))}${td.kingTide ? ' ⚠' : ''}` : ''}</div>`, 'wide-sm')
 }
 
 function tileDaylight(): string {

@@ -87,6 +87,8 @@ export const SOURCES: SourceGroup[] = [
   ] },
   { group: 'why_g_mdc', icon: 'location_city', items: [
     { name: 'Hurricane evacuation zones', url: 'https://gis-mdc.opendata.arcgis.com' },
+    { name: 'Hospitals', url: 'https://gis-mdc.opendata.arcgis.com' },
+    { name: 'Open pharmacies & grocery stores', url: 'https://gis-mdc.opendata.arcgis.com' },
     { name: 'Libraries', url: 'https://gis-mdc.opendata.arcgis.com' },
     { name: 'Fire stations', url: 'https://gis-mdc.opendata.arcgis.com' },
     { name: '311 flooding & drainage requests (2023)', url: 'https://gis-mdc.opendata.arcgis.com' },

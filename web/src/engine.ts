@@ -50,7 +50,13 @@ export function runAssess(items: WebItem[], outage: WebOutage, env: WebEnv, now:
   // Pass both naming conventions; engines ignore fields they do not know.
   const o = { ...outage, doorOpens: outage.doorOpenedAt, freezerDoorOpens: [] as string[] }
   const e = { ...env, indoorSource: env.indoorTempF == null ? null : env.estimated ? 'estimate' : 'user' }
+  // A food class the server picked at photo time can be stale (saved before a classifier fix, or before the item was
+  // moved to the fridge/freezer). Re-classify vision items here with their current name + location; hand-set classes stay.
+  const fresh = items.map((it) =>
+    it.category === 'food' && typeof it.source === 'string' && it.source.startsWith('vision') && it.foodClass
+      ? (({ foodClass: _fc, ...rest }) => rest as WebItem)(it)
+      : it)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const out = (engineAssess as any)(items, o, e, now) as unknown[]
+  const out = (engineAssess as any)(fresh, o, e, now) as unknown[]
   return (Array.isArray(out) ? out : []).map((v) => norm(v, now.getTime()))
 }

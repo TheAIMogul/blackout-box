@@ -232,6 +232,11 @@ function medDraft(it: Item, c: Ctx): Draft {
       return unknown('Enter the indoor temperature (a thermometer reading is best) to check the label limit.', ['need_indoor_temp', ...frozenNote])
     }
     if (tempOver) return overTemp()
+    // A refrigerated drug whose label gives room-temperature days but no °F ceiling: "room temperature" is USP
+    // controlled room temperature (up to 77°F). Above that we cannot say it is fine, so it is UNKNOWN, never SAFE.
+    if (max == null && L.storage === 'refrigerated' && temp != null && temp > R.USP_ROOM_TEMP_MAX_F) {
+      return unknown(`The label allows ${roomDays} days at room temperature but gives no heat limit, and the room is ${temp}°F. Keep it as cool as possible and ask your pharmacist.`, ['no_heat_limit_on_label', 'room_above_usp_room_temp', 'ask_pharmacist', ...frozenNote])
+    }
     a.push('safety_margin_0_9', 'outage_hours_count_as_room_temp')
     const roomAllow = roomDays * 24 * R.MED_SAFETY_MARGIN
     let left = roomAllow - c.hoursOut

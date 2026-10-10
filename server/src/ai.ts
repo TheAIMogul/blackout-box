@@ -38,7 +38,45 @@ export function readImage(body: any): { imageBase64: string; mime: string } {
 
 /* ---------- P1: vision -> items ---------- */
 const CONTAINERS = ['carton', 'bottle', 'jar', 'bag', 'box', 'tub', 'pen', 'vial', 'blister', 'other'];
-const LOCATIONS = ['fridge', 'freezer', 'door', 'shelf', 'cabinet'];
+const LOCATIONS = ['fridge', 'freezer', 'door', 'pantry', 'cabinet'];
+/** The model says "shelf" for a fridge shelf; only an explicit pantry/cabinet/cupboard/counter means pantry. */
+function readLocation(v: unknown, category: 'food' | 'med'): string | null {
+  if (typeof v !== 'string') return null;
+  const l = v.trim().toLowerCase();
+  if (LOCATIONS.includes(l)) return l;
+  if (/freez|congel/.test(l)) return 'freezer';
+  if (/door|puerta/.test(l)) return 'door';
+  if (/pantry|cupboard|counter|despensa|gabinete|alacena/.test(l)) return 'pantry';
+  if (/cabinet/.test(l)) return 'cabinet';
+  if (/fridge|refrig|shelf|drawer|crisper|bin|nevera/.test(l)) return category === 'food' ? 'fridge' : 'cabinet';
+  return null;
+}
+const normName = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\(([^)]*)\)/g, ' $1 ').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+const countOf = (q: string | null) => {
+  const m = q ? /^\s*(\d{1,3})\b/.exec(q) : null;
+  return m ? Math.max(1, Number(m[1])) : 1;
+};
+
+/** One row per product: same normalized name + category + location are merged and their counts summed. */
+export function dedupeItems(items: Item[]): Item[] {
+  const byKey = new Map<string, Item>();
+  for (const it of items) {
+    const key = `${it.category}|${it.location ?? ''}|${normName(it.name)}`;
+    const prev = byKey.get(key);
+    if (!prev) {
+      byKey.set(key, { ...it });
+      continue;
+    }
+    prev.quantity = String(countOf(prev.quantity) + countOf(it.quantity));
+    prev.confidence = Math.max(prev.confidence, it.confidence);
+    if (it.opened === true) prev.opened = true;
+    prev.brandText ??= it.brandText;
+    prev.container ??= it.container;
+  }
+  let f = 0;
+  let m = 0;
+  return [...byKey.values()].map((it) => ({ ...it, id: it.category === 'med' ? `m${++m}` : `f${++f}` }));
+}
 const oneOf = (v: unknown, list: string[]) => (typeof v === 'string' && list.includes(v.toLowerCase()) ? v.toLowerCase() : null);
 const str = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, 300) : null);
 
@@ -76,7 +114,7 @@ export async function normalizeItems(raw: unknown, provider: string): Promise<It
       quantity: str(x?.quantity),
       opened: typeof x?.opened === 'boolean' ? x.opened : null,
       brandText: str(x?.brand_text),
-      location: oneOf(x?.location, LOCATIONS),
+      location: readLocation(x?.location, category),
       confidence,
       source: `vision:${provider}`,
     };
@@ -92,7 +130,7 @@ export async function normalizeItems(raw: unknown, provider: string): Promise<It
     }
     out.push(item);
   }
-  return out;
+  return dedupeItems(out);
 }
 
 export async function visionItems(body: any) {
@@ -169,7 +207,7 @@ export async function describe(body: any) {
 const EMERGENCY = /downed (power )?(wire|line)|power line down|gas (smell|leak)|smell(s)? (of )?gas|chest pain|can'?t breathe|trouble breathing|not breathing|water near (the )?(outlet|electric)|cable caído|olor a gas|dolor (en el|de) pecho|no puede respirar|fil kouran (ki )?tonbe|sant gaz|doulè nan pwatrin|pa ka respire/i;
 
 const RX = {
-  places: /where|power|charg|librar|fire ?station|shelter|cool|outlet|plug|d[oó]nde|luz|electric|corriente|cargar|biblioteca|bomber|refugio|kote|kouran|chaje|bibliyot|ponpye|abri/i,
+  places: /where|power|charg|librar|fire ?station|shelter|hospital|pharmac|drug ?store|clinic|emergency room|\ber\b|closest|nearest|near me|nearby|cool|outlet|plug|d[oó]nde|cerca|m[aá]s cercan|hospitales|farmacia|cl[ií]nica|luz|electric|corriente|cargar|biblioteca|bomber|refugio|albergue|kote|lopital|famasi|kliniks?|pi pre|toupre|kouran|chaje|bibliyot|ponpye|abri/i,
   fema: /fema|insur|aid|assist|claim|help|seguro|ayuda|asistencia|reclam|asirans|èd|sekou/i,
   nws: /weather|hot|heat|temp|rain|storm|forecast|clima|calor|lluvia|tormenta|temperatura|tan an|chal[eè]|lapli|tanp[eè]t/i,
   statute: /refill|pharm|prescri|insur|law|receta|farmac|seguro|ley|famasi|preskripsyon|lwa|renouv/i,
@@ -192,7 +230,17 @@ export function buildContext(bundle: any, question: string): Record<string, unkn
   for (const k of ['items', 'verdicts', 'outage', 'env', 'profile']) if (bundle[k]) ctx[k] = top(bundle[k], 20);
   if (RX.places.test(question) && bundle.places) {
     const p = bundle.places;
-    ctx.places = { power: top(p.power, 3), library: top(p.library, 3), fire: top(p.fire, 3), note: p.note, _source: p._source };
+    ctx.places = {
+      hospital: top(p.hospital, 3),
+      pharmacy: top(p.pharmacy, 3),
+      shelter: top(p.shelter ?? bundle.shelters?.shelters, 3),
+      shelterNote: bundle.shelters?.note,
+      library: top(p.library, 3),
+      fire: top(p.fire, 3),
+      ...(p.power ? { power: top(p.power, 3) } : {}),
+      note: p.note,
+      _source: p._source,
+    };
   }
   if (RX.fema.test(question)) {
     ctx.fema = bundle.fema ? { ...bundle.fema, declarations: top(bundle.fema.declarations, 3) } : null;

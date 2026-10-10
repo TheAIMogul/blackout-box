@@ -19,7 +19,7 @@ export default defineConfig({
       manifest: {
         name: 'Blackout Box',
         short_name: 'Blackout Box',
-        description: 'The hurricane app that works when nothing else does.',
+        description: 'The storm and flood app that works when nothing else does.',
         theme_color: '#FFFFFF',
         background_color: '#000000',
         display: 'standalone',

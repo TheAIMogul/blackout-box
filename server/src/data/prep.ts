@@ -6,6 +6,7 @@ import { CACHE_DIR } from '../config.js';
 import { femaDeclarations } from './fema.js';
 import { evacZone, mdcPlaces } from './mdc.js';
 import { nws } from './nws.js';
+import { shelters } from './shelters.js';
 import { FDA_EMERGENCY_INSULIN, FEMA_REGISTER, FOOD_RULES, STATUTE } from './static.js';
 import { tide } from './tide.js';
 
@@ -27,11 +28,12 @@ export async function prepBundle(lat: number, lon: number) {
     settle(femaDeclarations(10), 'fema', errors),
     settle(tide('8723214'), 'tide', errors),
   ]);
-  const [hospital, pharmacy, library, fire] = await Promise.all([
+  const [hospital, pharmacy, library, fire, shelter] = await Promise.all([
     settle(mdcPlaces('hospital', lat, lon, 10), 'places.hospital', errors),
     settle(mdcPlaces('pharmacy', lat, lon), 'places.pharmacy', errors),
     settle(mdcPlaces('library', lat, lon), 'places.library', errors),
     settle(mdcPlaces('fire', lat, lon), 'places.fire', errors),
+    settle(shelters(lat, lon), 'shelters', errors),
   ]);
   const bundle = {
     generatedAt: new Date().toISOString(),
@@ -43,9 +45,11 @@ export async function prepBundle(lat: number, lon: number) {
       pharmacy: pharmacy?.features ?? null,
       library: library?.features ?? null,
       fire: fire?.features ?? null,
-      note: 'Hospitals, open pharmacies, libraries and fire stations near you, from Miami-Dade County data. Call before you go; hours change after a storm.',
-      _source: 'Miami-Dade County Hospital_gdb + GroceryandDrugStores_Open + Library_gdb + FireStation_gdb',
+      shelter: shelter?.shelters ?? null,
+      note: 'Hospitals, open pharmacies, libraries, fire stations and hurricane shelters near you, from Miami-Dade County and FEMA data. Call before you go; hours change after a storm.',
+      _source: 'Miami-Dade County Hospital_gdb + GroceryandDrugStores_Open + Library_gdb + FireStation_gdb; FEMA ESF#6 Shelter System (NSS)',
     },
+    shelters: shelter,
     fema,
     femaRegister: FEMA_REGISTER,
     tide: tides,
@@ -53,7 +57,7 @@ export async function prepBundle(lat: number, lon: number) {
     fdaEmergencyInsulin: FDA_EMERGENCY_INSULIN,
     foodRules: FOOD_RULES,
     errors,
-    _source: 'Miami-Dade ArcGIS, NWS, OpenFEMA, NOAA CO-OPS, NREL/NLR, FDA, FoodSafety.gov/USDA, flsenate.gov',
+    _source: 'Miami-Dade ArcGIS, FEMA NSS shelters, NWS, OpenFEMA, NOAA CO-OPS, FDA, FoodSafety.gov/USDA, flsenate.gov',
   };
   lastBundle = bundle;
   await fs.mkdir(CACHE_DIR, { recursive: true });

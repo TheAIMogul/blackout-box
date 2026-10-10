@@ -10,10 +10,19 @@ const fToC = (f: number | null | undefined) => (typeof f === 'number' ? Math.rou
 const FT_TO_M = 0.3048;
 const KT_TO_KMH = 1.852; // NHC JSON `intensity` is knots (Isaias 30 → advisory "35 MPH...55 KM/H")
 const MPH_TO_KMH = 1.609344; // NHC JSON `movementSpeed` is mph (Isaias 10 → advisory "10 MPH...17 KM/H")
-// NOAA Virginia Key (8723214): NWS minor coastal flood 4.163 − 3.089 = 1.074 m above MLLW (floodlevels/datums, units=metric),
-// matching the map; 2.9 ft is our king-tide demo heuristic.
-const MINOR_FLOOD_M = 1.07;
-const KING_TIDE_M = Math.round(2.9 * FT_TO_M * 100) / 100;
+// NOAA Virginia Key (8723214), same constants as the map (web/src/map/flood.ts THRESHOLDS): king tide 2.90 ft MLLW
+// (our demo heuristic) and NWS minor coastal flood 3.53 ft MLLW (4.163 − 3.089 = 1.074 m). Metres are unrounded.
+const KING_TIDE_FT = 2.9;
+const MINOR_FLOOD_FT = 3.53;
+const KING_TIDE_M = KING_TIDE_FT * FT_TO_M;
+const MINOR_FLOOD_M = MINOR_FLOOD_FT * FT_TO_M;
+/** "2026-10-10 21:33" (station local) -> "9:33 PM" */
+const time12 = (t: string) => {
+  const m = /(\d{1,2}):(\d{2})/.exec(t.slice(11));
+  if (!m) return t.slice(11);
+  const h = Number(m[1]);
+  return `${h % 12 || 12}:${m[2]} ${h < 12 ? 'AM' : 'PM'}`;
+};
 
 export type Level = 'red' | 'orange' | 'yellow' | 'blue' | 'green';
 export type Warning = { level: Level; icon: string; title: string; detail: string; source: string; url?: string; until?: string | null };
@@ -173,7 +182,11 @@ export async function now(lat: number, lon: number) {
         nextHigh: nextHigh ? { t: nextHigh.t, m: Math.round(nextHigh.v * FT_TO_M * 100) / 100 } : null,
         kingTideM: KING_TIDE_M,
         minorFloodM: MINOR_FLOOD_M,
-        kingTide: !!nextHigh && nextHigh.v * FT_TO_M >= KING_TIDE_M,
+        kingTideFt: KING_TIDE_FT,
+        minorFloodFt: MINOR_FLOOD_FT,
+        nextHighFt: nextHigh ? nextHigh.v : null,
+        kingTide: !!nextHigh && nextHigh.v >= KING_TIDE_FT,
+        minorFlood: !!nextHigh && nextHigh.v >= MINOR_FLOOD_FT,
       }
     : null;
   if (!tideRes) errors.push('noaa-tide');
@@ -200,7 +213,7 @@ export async function now(lat: number, lon: number) {
     warnings.push({ level: lvl, icon: 'wb_sunny', title: `UV ${weather.uvIndex >= 11 ? 'extreme' : weather.uvIndex >= 8 ? 'very high' : 'high'} (${Math.round(weather.uvIndex)})`, detail: 'Shade, hat and sunscreen between 10:00 and 16:00.', source: 'Open-Meteo UV index', until: null });
   }
   if (tideOut?.kingTide && tideOut.nextHigh) {
-    warnings.push({ level: 'yellow', icon: 'tsunami', title: 'King tide', detail: `Next high ${tideOut.nextHigh.m.toFixed(2)} m at ${tideOut.nextHigh.t.slice(11)}. Low streets near the bay can flood; don't drive through water.`, source: 'NOAA Virginia Key 8723214', until: tideOut.nextHigh.t });
+    warnings.push({ level: 'yellow', icon: 'tsunami', title: 'King tide', detail: `Next high ${(tideOut.nextHighFt ?? tideOut.nextHigh.m / FT_TO_M).toFixed(2)} ft at ${time12(tideOut.nextHigh.t)} (king-tide line ${KING_TIDE_FT.toFixed(2)} ft, minor flood ${MINOR_FLOOD_FT.toFixed(2)} ft). Low streets near the bay can flood; don't drive through water.`, source: 'NOAA Virginia Key 8723214', until: tideOut.nextHigh.t });
   }
   if (air && air.usAqi > 100) {
     warnings.push({ level: air.usAqi > 150 ? 'red' : 'orange', icon: 'air', title: `Air quality ${air.usAqi > 150 ? 'unhealthy' : 'unhealthy for sensitive groups'}`, detail: `US AQI ${air.usAqi}. Limit time outdoors if you have asthma.`, source: 'Open-Meteo air quality', until: null });
