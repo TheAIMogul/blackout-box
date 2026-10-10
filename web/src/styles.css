@@ -1315,9 +1315,8 @@ html.is-offline #fh-demo, html.is-offline #smp-go, html.is-offline .smp-tile, ht
 html[data-theme="dark"] .why-model:not(.gemma), html[data-blackout="1"] .why-model:not(.gemma) { background: rgba(255,255,255,.06); }
 
 /* ---- Language circle: in the top bar, next to the light/dark button ---- */
-.lang-fab { position: relative; width: 40px; height: 40px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; flex: none;
+.lang-fab { flex: none;
   display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
-  background: #FF385C !important; color: #fff !important; box-shadow: 0 4px 12px rgba(255,56,92,.35);
   transition: transform .15s cubic-bezier(.2,.8,.2,1); -webkit-tap-highlight-color: transparent; }
 .lang-fab:active { transform: scale(.9); }
 .lang-fab-c { font-size: 14px; font-weight: 800; letter-spacing: .02em; line-height: 1; }
