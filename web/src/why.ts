@@ -14,6 +14,7 @@ const REPO = 'https://github.com/TheAIMogul/blackout-box'
 
 let host: HTMLElement
 let io: IntersectionObserver | null = null
+let revealIo: IntersectionObserver | null = null
 
 export function mountWhy(el: HTMLElement): void {
   host = el
@@ -157,12 +158,16 @@ function observe(): void {
     for (const e of entries) {
       if (!e.isIntersecting) continue
       io?.unobserve(e.target)
-      if ((e.target as HTMLElement).dataset.reveal !== undefined) e.target.classList.add('in')
-      else countUp(e.target as HTMLElement)
+      countUp(e.target as HTMLElement)
     }
-  }, { threshold: 0.25 })
+  }, { threshold: 0.5 })
   nums.forEach((n) => io!.observe(n))
-  reveals.forEach((r) => io!.observe(r))
+  // Tall blocks (pipeline, chip wall): light up as soon as their top clears the lower fifth of the screen.
+  revealIo?.disconnect()
+  revealIo = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) { revealIo?.unobserve(e.target); e.target.classList.add('in') }
+  }, { threshold: 0, rootMargin: '0px 0px -20% 0px' })
+  reveals.forEach((r) => revealIo!.observe(r))
 }
 
 function countUp(el: HTMLElement): void {
