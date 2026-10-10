@@ -245,12 +245,22 @@ export function mountMap(el: HTMLElement, opts: MountOpts): { destroy(): void } 
     if (map.getLayer(ids.hill)) map.setLayoutProperty(ids.hill, 'visibility', vis.terrain ? 'visible' : 'none')
     applyTerrain()
   }
+  /** setTerrain throws "Style is not done loading" before 'style.load' (first load or mid setStyle swap). */
+  const styleLoaded = (m: MLMap) => !!(m.style as unknown as { _loaded?: boolean } | undefined)?._loaded
   const applyTerrain = () => {
-    if (!map || !styleReady || !map.getSource(ids.dem3d)) return
+    if (!map || !styleReady) return
+    const m = map
+    if (!styleLoaded(m)) { m.once('style.load', () => applyTerrain()); return }
+    if (!m.getSource(ids.dem3d)) return
     const want = vis.terrain && terrainWanted
-    const has = !!map.getTerrain()
-    if (want && !has) map.setTerrain({ source: ids.dem3d, exaggeration: 1.5 })
-    else if (!want && has) map.setTerrain(null)
+    const has = !!m.getTerrain()
+    try {
+      if (want && !has) m.setTerrain({ source: ids.dem3d, exaggeration: 1.5 })
+      else if (!want && has) m.setTerrain(null)
+    } catch (e) {
+      console.warn('[map] terrain deferred:', (e as Error).message)
+      m.once('style.load', () => applyTerrain())
+    }
   }
 
   // ---------- water level ----------
@@ -592,7 +602,8 @@ export function mountMap(el: HTMLElement, opts: MountOpts): { destroy(): void } 
   })()
 
   // ---------- Blackout / dark scheme: swap the basemap live ----------
-  const onTheme = async () => {
+  const onTheme = () => swapTheme().catch((e) => console.warn('[map] theme swap failed:', (e as Error).message))
+  const swapTheme = async () => {
     const d = wantsDark()
     if (d === dark || destroyed) return
     dark = d
@@ -604,7 +615,8 @@ export function mountMap(el: HTMLElement, opts: MountOpts): { destroy(): void } 
     if (!picked || destroyed || !map || wantsDark() !== dark) return
     styleUrl = picked.url
     styleReady = false
-    map.setTerrain(null)
+    // Only drop terrain on a loaded style; mid-load setTerrain throws (the old uncaught promise error).
+    if (styleLoaded(map) && map.getTerrain()) { try { map.setTerrain(null) } catch { /* style swapping */ } }
     map.setStyle(picked.style, { diff: false }) // full reload → 'style.load' → onStyle re-adds our layers
   }
   const mo = new MutationObserver(() => void onTheme())
