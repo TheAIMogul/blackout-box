@@ -16,7 +16,7 @@ const en: Dict = {
   items_saved: '{n} items saved',
   item_saved: '1 item saved',
   power_went_out: 'The power just went out',
-  pack_box: 'Pack my box',
+  pack_box: 'Save for offline',
   open_clocks: 'Open Clocks',
   drill_title: 'SIMULATED STORM',
   drill_sub: 'Hurricane drill — practice mode',
@@ -93,15 +93,15 @@ const en: Dict = {
   'act.med.DISCARD': 'Ask your pharmacist.',
   doubt: 'When in doubt, throw it out.',
   // Prep
-  prep_title: 'Pack my box',
-  prep_sub: 'Before the storm: save your zone, places with power, FEMA, and the rules onto this device.',
-  prep_btn: 'Pack my box',
+  prep_title: 'Get ready',
+  prep_sub: 'Before the storm, save everything you’ll need onto this phone: your evacuation zone, nearest shelters, places with power and emergency numbers. It all keeps working when the power and internet go out.',
+  prep_btn: 'Save to my phone for offline use',
   prep_locating: 'Finding your location…',
   prep_fallback_loc: 'Location not available. Using downtown Miami (25.77, -80.19).',
   prep_loading: 'Downloading…',
-  prep_done: 'Prep complete. This works offline.',
+  prep_done: 'Saved to this phone. It works without internet now.',
   prep_cached: 'Saved on this device',
-  prep_none: 'Nothing saved yet. Tap Pack my box while you have service.',
+  prep_none: 'Nothing saved yet. Tap “Save to my phone for offline use” while you still have internet.',
   prep_fail: 'Could not reach the server. Showing what is saved.',
   prep_demo: 'Sample data (server unreachable). Not live.',
   zone: 'Evacuation zone',
@@ -381,7 +381,7 @@ const es: Dict = {
   items_saved: '{n} artículos guardados', // MT
   item_saved: '1 artículo guardado', // MT
   power_went_out: 'Se acaba de ir la luz', // MT
-  pack_box: 'Preparar mi caja', // MT
+  pack_box: 'Guardar sin conexión', // MT
   open_clocks: 'Abrir Relojes', // MT
   drill_title: 'TORMENTA SIMULADA', // MT
   drill_sub: 'Simulacro de huracán — modo práctica', // MT
@@ -455,15 +455,15 @@ const es: Dict = {
   'act.med.UNKNOWN': 'Desconocido. Consulte a su farmacéutico.',
   'act.med.DISCARD': 'Consulte a su farmacéutico.', // MT
   doubt: 'Ante la duda, deséchelo.',
-  prep_title: 'Preparar mi caja', // MT
-  prep_sub: 'Antes de la tormenta: guarde su zona, lugares con electricidad, FEMA y las reglas en este dispositivo.', // MT
-  prep_btn: 'Preparar mi caja', // MT
+  prep_title: 'Prepárese', // MT
+  prep_sub: 'Antes de la tormenta, guarde en este teléfono todo lo que necesitará: su zona de evacuación, los refugios más cercanos, lugares con electricidad y números de emergencia. Todo sigue funcionando sin luz ni internet.', // MT
+  prep_btn: 'Guardar en mi teléfono para usar sin internet', // MT
   prep_locating: 'Buscando su ubicación…', // MT
   prep_fallback_loc: 'Ubicación no disponible. Usando el centro de Miami (25.77, -80.19).', // MT
   prep_loading: 'Descargando…', // MT
-  prep_done: 'Listo. Esto funciona sin conexión.', // MT
+  prep_done: 'Guardado en este teléfono. Ya funciona sin internet.', // MT
   prep_cached: 'Guardado en este dispositivo', // MT
-  prep_none: 'Nada guardado aún. Toque Preparar mi caja mientras tenga servicio.', // MT
+  prep_none: 'Nada guardado aún. Toque “Guardar en mi teléfono” mientras tenga internet.', // MT
   prep_fail: 'No se pudo conectar al servidor. Mostrando lo guardado.', // MT
   prep_demo: 'Datos de ejemplo (servidor no disponible). No es en vivo.', // MT
   zone: 'Zona de evacuación', // MT
@@ -741,7 +741,7 @@ const ht: Dict = {
   items_saved: '{n} bagay sove', // MT
   item_saved: '1 bagay sove', // MT
   power_went_out: 'Kouran an fèk koupe', // MT
-  pack_box: 'Prepare bwat mwen', // MT
+  pack_box: 'Sove pou san entènèt', // MT
   open_clocks: 'Louvri Revèy', // MT
   drill_title: 'TANPÈT SIMILE', // MT
   drill_sub: 'Egzèsis siklòn — mòd pratik', // MT
@@ -815,15 +815,15 @@ const ht: Dict = {
   'act.med.UNKNOWN': 'Nou pa konnen. Mande famasyen ou.',
   'act.med.DISCARD': 'Mande famasyen ou.', // MT
   doubt: 'Si ou pa sèten, jete l.',
-  prep_title: 'Ranje bwat mwen', // MT
-  prep_sub: 'Anvan tanpèt la: sove zòn ou, kote ki gen kouran, FEMA, ak règ yo sou aparèy sa a.', // MT
-  prep_btn: 'Ranje bwat mwen', // MT
+  prep_title: 'Pare w', // MT
+  prep_sub: 'Anvan tanpèt la, sove sou telefòn sa a tout sa w ap bezwen: zòn evakyasyon ou, abri ki pi pre yo, kote ki gen kouran ak nimewo ijans. Tout bagay kontinye mache san kouran ak san entènèt.', // MT
+  prep_btn: 'Sove sou telefòn mwen pou san entènèt', // MT
   prep_locating: 'N ap chèche kote ou ye…', // MT
   prep_fallback_loc: 'Nou pa jwenn kote ou ye. N ap sèvi ak anba lavil Miami (25.77, -80.19).', // MT
   prep_loading: 'N ap telechaje…', // MT
-  prep_done: 'Fini. Sa a mache san entènèt.', // MT
+  prep_done: 'Sove sou telefòn sa a. Li mache san entènèt kounye a.', // MT
   prep_cached: 'Sove sou aparèy sa a', // MT
-  prep_none: 'Pa gen anyen ki sove. Peze Ranje bwat mwen pandan ou gen sèvis.', // MT
+  prep_none: 'Pa gen anyen ki sove. Peze “Sove sou telefòn mwen” pandan ou gen entènèt.', // MT
   prep_fail: 'Nou pa ka jwenn sèvè a. Men sa ki sove.', // MT
   prep_demo: 'Done egzanp (sèvè a pa reponn). Se pa an dirèk.', // MT
   zone: 'Zòn evakyasyon', // MT
