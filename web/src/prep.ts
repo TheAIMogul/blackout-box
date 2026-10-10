@@ -121,7 +121,7 @@ type Group = { kind: string; items: Place[]; source?: string }
 export function placeGroups(b: PrepBundle | null): Group[] {
   const p = b?.places as unknown
   if (!p) return []
-  const kinds = ['power', 'library', 'fire', 'shelter']
+  const kinds = ['hospital', 'pharmacy', 'library', 'fire', 'power', 'shelter']
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const asList = (v: any): Place[] => (Array.isArray(v) ? v : Array.isArray(v?.features) ? v.features : [])
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -168,8 +168,8 @@ function nextHigh(b: PrepBundle | null): { t: string; v: string } | null {
   return null
 }
 
-const kindLabel = (k: string) => (k === 'power' ? t('place_power') : k === 'library' ? t('place_library') : k === 'fire' ? t('place_fire') : k)
-const kindIcon = (k: string) => (k === 'power' ? 'ev_station' : k === 'library' ? 'local_library' : k === 'fire' ? 'fire_truck' : 'home')
+const kindLabel = (k: string) => (k === 'hospital' ? t('place_hospital') : k === 'pharmacy' ? t('place_pharmacy') : k === 'power' ? t('place_power') : k === 'library' ? t('place_library') : k === 'fire' ? t('place_fire') : k)
+const kindIcon = (k: string) => (k === 'hospital' ? 'local_hospital' : k === 'pharmacy' ? 'local_pharmacy' : k === 'power' ? 'ev_station' : k === 'library' ? 'local_library' : k === 'fire' ? 'fire_truck' : 'home')
 const banner = (kind: '' | 'ok' | 'warn' | 'error', icon: string, html: string) => `<div class="banner ${kind}"><span class="ms" aria-hidden="true">${icon}</span><span>${html}</span></div>`
 
 // ---------- render ----------
@@ -215,7 +215,7 @@ function render(): void {
   const placesNote = (b?.places as any)?.note as string | undefined
   // 5 places, mixed so it isn't all chargers in one garage: the 2 nearest charging sites, 2 libraries, 1 fire station.
   // Numbered/lettered chargers at one site ("ICON GARAGE 1…4", "OBE 500 BRICKELL R/L") count once.
-  const CAP: Record<string, number> = { power: 2, library: 2, fire: 1 }
+  const CAP: Record<string, number> = { hospital: 2, pharmacy: 1, library: 1, fire: 1, power: 0 }
   const seenSite = new Set<string>()
   const taken: Record<string, number> = {}
   const rows = groups.flatMap((g) => g.items.map((p) => ({ g, p })))

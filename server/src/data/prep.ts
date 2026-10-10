@@ -5,7 +5,6 @@ import path from 'node:path';
 import { CACHE_DIR } from '../config.js';
 import { femaDeclarations } from './fema.js';
 import { evacZone, mdcPlaces } from './mdc.js';
-import { evChargers } from './nrel.js';
 import { nws } from './nws.js';
 import { FDA_EMERGENCY_INSULIN, FEMA_REGISTER, FOOD_RULES, STATUTE } from './static.js';
 import { tide } from './tide.js';
@@ -28,8 +27,9 @@ export async function prepBundle(lat: number, lon: number) {
     settle(femaDeclarations(10), 'fema', errors),
     settle(tide('8723214'), 'tide', errors),
   ]);
-  const [power, library, fire] = await Promise.all([
-    settle(evChargers(lat, lon), 'places.power', errors),
+  const [hospital, pharmacy, library, fire] = await Promise.all([
+    settle(mdcPlaces('hospital', lat, lon, 10), 'places.hospital', errors),
+    settle(mdcPlaces('pharmacy', lat, lon), 'places.pharmacy', errors),
     settle(mdcPlaces('library', lat, lon), 'places.library', errors),
     settle(mdcPlaces('fire', lat, lon), 'places.fire', errors),
   ]);
@@ -39,11 +39,12 @@ export async function prepBundle(lat: number, lon: number) {
     zone,
     nws: weather,
     places: {
-      power: power?.features ?? null,
+      hospital: hospital?.features ?? null,
+      pharmacy: pharmacy?.features ?? null,
       library: library?.features ?? null,
       fire: fire?.features ?? null,
-      note: 'Libraries, fire stations and EV chargers are places that likely have power. They are not designated cooling centers or shelters.',
-      _source: 'NREL/NLR AFDC + Miami-Dade Library_gdb + FireStation_gdb',
+      note: 'Hospitals, open pharmacies, libraries and fire stations near you, from Miami-Dade County data. Call before you go; hours change after a storm.',
+      _source: 'Miami-Dade County Hospital_gdb + GroceryandDrugStores_Open + Library_gdb + FireStation_gdb',
     },
     fema,
     femaRegister: FEMA_REGISTER,

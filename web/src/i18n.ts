@@ -110,6 +110,8 @@ const en: Dict = {
   zone_check: 'Check whether your zone has been ordered to evacuate (miamidade.gov or 311).',
   places: 'Places likely to have power',
   places_note: 'A hint, not a promise. Shelters show only when the county opens them.',
+  place_hospital: 'Hospital',
+  place_pharmacy: 'Pharmacy, open',
   place_power: 'EV charger (24 h power)',
   place_library: 'Library',
   place_fire: 'Fire station',
@@ -472,6 +474,8 @@ const es: Dict = {
   zone_check: 'Verifique si su zona tiene orden de evacuación (miamidade.gov o 311).', // MT
   places: 'Lugares que probablemente tienen electricidad', // MT
   places_note: 'Una pista, no una promesa. Los refugios aparecen solo cuando el condado los abre.', // MT
+  place_hospital: 'Hospital', // MT
+  place_pharmacy: 'Farmacia abierta', // MT
   place_power: 'Cargador eléctrico (24 h)', // MT
   place_library: 'Biblioteca', // MT
   place_fire: 'Estación de bomberos', // MT
@@ -832,6 +836,8 @@ const ht: Dict = {
   zone_check: 'Tcheke si yo bay lòd pou evakye zòn ou (miamidade.gov oswa 311).', // MT
   places: 'Kote ki ka gen kouran', // MT
   places_note: 'Se yon endikasyon, se pa yon garanti. Abri yo parèt sèlman lè konte a louvri yo.', // MT
+  place_hospital: 'Lopital', // MT
+  place_pharmacy: 'Famasi louvri', // MT
   place_power: 'Chajè machin elektrik (24 è)', // MT
   place_library: 'Bibliyotèk', // MT
   place_fire: 'Estasyon ponpye', // MT

@@ -105,7 +105,7 @@ const L: Record<string, Record<Lang, string>> = {
   title: { en: 'Emergency contacts', es: 'Contactos de emergencia', ht: 'Kontak ijans' },
   e911: { en: 'Life-threatening emergency? Call 911.', es: '¿Emergencia de vida o muerte? Llame al 911.', ht: 'Ijans ki an danje lavi? Rele 911.' },
   note: { en: 'Saved in the app, works offline. Numbers checked on official sites Oct 10, 2026.', es: 'Guardado en la app, funciona sin conexión. Números verificados en sitios oficiales el 10 oct 2026.', ht: 'Sere nan app la, mache san entènèt. Nimewo verifye sou sit ofisyèl 10 okt 2026.' },
-  power: { en: 'Places likely to have power', es: 'Lugares que probablemente tengan luz', ht: 'Kote ki gen chans gen kouran' },
+  power: { en: 'Help nearby: hospitals, pharmacies, cooling', es: 'Ayuda cercana: hospitales, farmacias, lugares frescos', ht: 'Èd tou pre: lopital, famasi, kote ki fre' },
   shelters: { en: 'Shelters', es: 'Refugios', ht: 'Abri' },
   source: { en: 'source', es: 'fuente', ht: 'sous' },
 }
