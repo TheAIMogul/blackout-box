@@ -12,6 +12,7 @@ import { loadPrepFromCache, mountPrep } from './prep'
 import { openSheet } from './sheet'
 import { mountStatus } from './status'
 import { mountWhy } from './why'
+import { startTour } from './tutorial'
 import { isBlackout, onTheme, toggleBlackout } from './theme'
 import { esc, haptic, state, withTransition } from './util'
 
@@ -203,6 +204,8 @@ onLang(() => { renderNav(); renderDrill(); renderFooter(); if (!mapMounted && cu
 window.addEventListener('hashchange', route)
 route()
 mountStatus(document.getElementById('status-pills')!, () => { location.hash = 'prep' })
+// First-screen tour on every load (skip with ?tour=0); targets that mount later are awaited per step.
+startTour()
 
 // Load the saved box first so every screen renders from IndexedDB, then mount the screens.
 void (async () => {

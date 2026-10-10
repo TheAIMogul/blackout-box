@@ -373,6 +373,26 @@ const en: Dict = {
   why_g_wx: 'Weather & air',
   why_g_maps: 'Maps & terrain',
   why_g_law: 'Florida law',
+  // ---------- first-screen tour (tutorial.ts) ----------
+  tour_skip: 'Skip',
+  tour_back: 'Back',
+  tour_next: 'Next',
+  tour_start: 'Start',
+  tour_of: '{n} of {total}',
+  tour_1_t: 'Welcome to Blackout Box',
+  tour_1_b: 'Blackout Box keeps your family safe when the power goes out. 30-second tour.',
+  tour_2_t: 'Snap your food and medicine',
+  tour_2_b: 'Before the storm, snap your fridge, freezer and medicine. We list every item.',
+  tour_3_t: 'When the power goes out',
+  tour_3_b: 'When the power goes out, tap this. Every item gets its own clock.',
+  tour_4_t: 'Every item gets a clock',
+  tour_4_b: "Each item shows how long it's safe, from FDA and USDA rules. Try a sample photo here.",
+  tour_5_t: 'Save it for offline',
+  tour_5_b: 'Save your zone, shelters, hospitals and emergency numbers. It all works offline.',
+  tour_6_t: 'Map and Ask',
+  tour_6_b: 'See flood risk, evacuation zones and the tide. Ask anything in English, Spanish or Haitian Creole.',
+  tour_7_t: "You're ready.",
+  tour_7_b: 'Tap Start to go back to Now. Stay safe.',
 }
 
 const es: Dict = {
@@ -735,6 +755,26 @@ const es: Dict = {
   why_g_wx: 'Clima y aire', // MT
   why_g_maps: 'Mapas y terreno', // MT
   why_g_law: 'Ley de Florida', // MT
+  // ---------- first-screen tour (tutorial.ts) ----------
+  tour_skip: 'Omitir', // MT
+  tour_back: 'Atrás', // MT
+  tour_next: 'Siguiente', // MT
+  tour_start: 'Empezar', // MT
+  tour_of: '{n} de {total}', // MT
+  tour_1_t: 'Bienvenido a Blackout Box', // MT
+  tour_1_b: 'Blackout Box protege a tu familia cuando se va la luz. Recorrido de 30 segundos.', // MT
+  tour_2_t: 'Fotografía tu comida y medicinas', // MT
+  tour_2_b: 'Antes de la tormenta, toma una foto de tu refrigerador, congelador y medicinas. Anotamos cada artículo.', // MT
+  tour_3_t: 'Cuando se va la luz', // MT
+  tour_3_b: 'Cuando se vaya la luz, toca aquí. Cada artículo recibe su propio reloj.', // MT
+  tour_4_t: 'Cada artículo tiene un reloj', // MT
+  tour_4_b: 'Cada artículo muestra cuánto tiempo es seguro, según las reglas de la FDA y el USDA. Prueba una foto de ejemplo aquí.', // MT
+  tour_5_t: 'Guárdalo para usar sin conexión', // MT
+  tour_5_b: 'Guarda tu zona, refugios, hospitales y números de emergencia. Todo funciona sin conexión.', // MT
+  tour_6_t: 'Mapa y Preguntar', // MT
+  tour_6_b: 'Mira el riesgo de inundación, las zonas de evacuación y la marea. Pregunta lo que quieras en inglés, español o criollo haitiano.', // MT
+  tour_7_t: 'Ya estás listo.', // MT
+  tour_7_b: 'Toca Empezar para volver a Ahora. Cuídate.', // MT
 }
 
 const ht: Dict = {
@@ -1097,6 +1137,26 @@ const ht: Dict = {
   why_g_wx: 'Tan ak lè', // MT
   why_g_maps: 'Kat ak teren', // MT
   why_g_law: 'Lwa Florid', // MT
+  // ---------- first-screen tour (tutorial.ts) ----------
+  tour_skip: 'Sote', // MT
+  tour_back: 'Retounen', // MT
+  tour_next: 'Swivan', // MT
+  tour_start: 'Kòmanse', // MT
+  tour_of: '{n} sou {total}', // MT
+  tour_1_t: 'Byenvini nan Blackout Box', // MT
+  tour_1_b: 'Blackout Box pwoteje fanmi w lè kouran an koupe. Yon ti vizit 30 segonn.', // MT
+  tour_2_t: 'Pran foto manje ak medikaman w', // MT
+  tour_2_b: 'Anvan tanpèt la, pran foto frijidè w, konjelatè w ak medikaman w. Nou fè lis chak bagay.', // MT
+  tour_3_t: 'Lè kouran an koupe', // MT
+  tour_3_b: 'Lè kouran an koupe, peze isit la. Chak bagay gen pwòp revèy li.', // MT
+  tour_4_t: 'Chak bagay gen yon revèy', // MT
+  tour_4_b: 'Chak bagay montre konbyen tan li an sekirite, dapre règ FDA ak USDA. Eseye yon foto egzanp isit la.', // MT
+  tour_5_t: 'Sere l pou san entènèt', // MT
+  tour_5_b: 'Sere zòn ou, abri, lopital ak nimewo ijans yo. Tout bagay mache san entènèt.', // MT
+  tour_6_t: 'Kat ak Mande', // MT
+  tour_6_b: 'Gade risk inondasyon, zòn evakyasyon ak mare a. Mande nenpòt bagay an angle, panyòl oswa kreyòl ayisyen.', // MT
+  tour_7_t: 'Ou pare.', // MT
+  tour_7_b: 'Peze Kòmanse pou retounen nan Kounye a. Rete an sekirite.', // MT
 }
 
 const DICTS: Record<Lang, Dict> = { en, es, ht }

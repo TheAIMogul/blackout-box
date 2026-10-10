@@ -1,0 +1,1 @@
+{"ok":true,"online":true,"demo":false,"provider":"claude","models":{"vision":"google/gemini-3.5-flash","chat":"anthropic/claude-fable-5.1"},"configured":true,"modelReachable":true,"gateway":"Cloudflare AI Gateway","lastOk":{"at":"2026-10-10T19:59:54.262Z","model":"anthropic/claude-fable-5.1"},"lastError":null,"_model":"anthropic/claude-fable-5.1","_cachedAgeMs":42833}

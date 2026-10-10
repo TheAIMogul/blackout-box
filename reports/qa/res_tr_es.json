@@ -1,0 +1,1 @@
+{"text":"Mantenga la puerta de la nevera cerrada. La comida se mantiene fría por unas 4 horas.","to":"es","_model":"anthropic/claude-fable-5.1","_provider":"claude","_latencyMs":38769,"_fellBack":true,"_fellBackErrors":["@cf/google/gemma-4-26b-a4b-it: timed out after 35s"]}
