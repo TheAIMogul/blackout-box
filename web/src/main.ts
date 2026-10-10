@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-pwa/vanillajs" />
 // App shell, "Apple meets Airbnb": frosted top bar (small title fades in on scroll), large title + status pills,
-// iOS bottom tab bar (Now, Clocks, Prep, Map, Ask), drill banner on every tab, safety footer at the end of each page, Blackout mode, Add to Home Screen sheet.
+// iOS bottom tab bar (Now, Clocks, Prep, Map, Ask, Why), drill banner on every tab, safety footer at the end of each page, Blackout mode, Add to Home Screen sheet.
 import './styles.css'
 import { registerSW } from 'virtual:pwa-register'
 import { mountAsk } from './ask'
@@ -11,13 +11,14 @@ import { mountNow } from './now'
 import { loadPrepFromCache, mountPrep } from './prep'
 import { openSheet } from './sheet'
 import { mountStatus } from './status'
+import { mountWhy } from './why'
 import { isBlackout, onTheme, toggleBlackout } from './theme'
 import { esc, haptic, state, withTransition } from './util'
 
-type Tab = 'now' | 'fourhour' | 'prep' | 'map' | 'ask'
-const TABS: Tab[] = ['now', 'fourhour', 'prep', 'map', 'ask']
-const ICON: Record<Tab, string> = { now: 'partly_cloudy_day', fourhour: 'timer', prep: 'inventory_2', map: 'map', ask: 'forum' }
-const SUB: Record<Tab, string> = { now: 'now_sub', fourhour: 'fh_sub', prep: 'prep_sub', map: 'map_sub', ask: 'ask_sub' }
+type Tab = 'now' | 'fourhour' | 'prep' | 'map' | 'ask' | 'why'
+const TABS: Tab[] = ['now', 'fourhour', 'prep', 'map', 'ask', 'why']
+const ICON: Record<Tab, string> = { now: 'partly_cloudy_day', fourhour: 'timer', prep: 'inventory_2', map: 'map', ask: 'forum', why: 'volunteer_activism' }
+const SUB: Record<Tab, string> = { now: 'now_sub', fourhour: 'fh_sub', prep: 'prep_sub', map: 'map_sub', ask: 'ask_sub', why: 'why_sub' }
 
 const app = document.getElementById('app')!
 app.innerHTML = `
@@ -47,6 +48,7 @@ app.innerHTML = `
       <div class="map-host" id="map-host"><div class="map-msg" id="map-msg"></div></div>
     </section>
     <section class="view" id="v-ask"></section>
+    <section class="view" id="v-why"></section>
   </main>
   <footer class="safety" id="safety" role="contentinfo"></footer>
   <nav class="tabbar" id="tabbar" aria-label="Main"></nav>`
@@ -209,6 +211,7 @@ void (async () => {
   mountPrep(document.getElementById('v-prep')!)
   await mountFourHour(document.getElementById('v-fourhour')!)
   await mountAsk(document.getElementById('v-ask')!)
+  mountWhy(document.getElementById('v-why')!)
 })()
 
 // Service worker: precached app shell so a reload with no network still loads.

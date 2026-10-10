@@ -2,11 +2,12 @@
 // "Apple meets Airbnb" (CONTRACT.md "Visual style"): hero summary + stacked status bar, a compact outage card
 // that opens a bottom sheet, Airbnb category pills, and countdown cards with Apple Watch-style rings. Items, outage and indoor temp live in
 // IndexedDB, so an offline reload still shows the clocks.
-import { demoItems, openfdaLabel, placeholderJpeg, visionItems } from './api'
+import { demoItems, openfdaLabel, visionItems } from './api'
 import { itemsAll, itemsReplace, kvGet, kvSet } from './db'
 import { runAssess, type NV, type Status, type WebEnv, type WebItem, type WebOutage } from './engine'
 import { onLang, t } from './i18n'
 import { emptyArt, iconHTML, onMedia } from './media'
+import { openSamples } from './samples'
 import { openSheet, type Sheet } from './sheet'
 import { emit, esc, fmtClock, haptic, usText, on, state, toLocalInput, uid, withTransition } from './util'
 
@@ -99,6 +100,7 @@ function renderShell(): void {
   root.innerHTML = `
     <div class="card hero" id="fh-hero"></div>
     <input type="file" accept="image/*" capture="environment" id="fh-file" class="hidden">
+    <input type="file" accept="image/*" capture="environment" id="fh-file-frz" class="hidden">
     <div id="fh-status" style="margin-top:12px"></div>
     <div class="card outage" id="fh-outage" role="group" aria-label="${esc(t('outage_title'))}"></div>
     <nav class="cats" id="fh-cats" aria-label="${esc(t('items'))}"></nav>
@@ -107,6 +109,8 @@ function renderShell(): void {
 
   const file = root.querySelector<HTMLInputElement>('#fh-file')!
   file.addEventListener('change', () => { const f = file.files?.[0]; file.value = ''; if (f) void readPhoto(f) })
+  const frz = root.querySelector<HTMLInputElement>('#fh-file-frz')!
+  frz.addEventListener('change', () => { const f = frz.files?.[0]; frz.value = ''; if (f) void readPhoto(f, true) })
   root.querySelector('#fh-cards')!.addEventListener('click', (e) => {
     const card = (e.target as HTMLElement).closest<HTMLElement>('.cd')
     if (card?.dataset.id) openDetail(card.dataset.id)
@@ -141,14 +145,16 @@ function renderHero(): void {
   }
   el.innerHTML = `
     <div class="big" aria-live="polite">${head}</div>
-    <div class="sub">${items.length ? esc(t('hero_sub', { n: items.length, h: hoursOut().toFixed(1) })) : esc(t('fh_sub'))}</div>
+    <div class="sub">${items.length ? esc(t('hero_sub', { n: items.length, h: '\u0001' })).replace('\u0001', `<span data-hrs-h>${hoursOut().toFixed(1)}</span>`) : esc(t('fh_sub'))}</div>
     ${stack}${model}
-    <div class="btn-row">
+    <div class="btn-row scan-row">
       <button type="button" class="btn primary" id="fh-photo" ${busy ? 'disabled' : ''}><span class="ms" aria-hidden="true">photo_camera</span><span>${esc(t('fh_photo'))}</span></button>
-      <button type="button" class="btn" id="fh-demo" ${busy ? 'disabled' : ''}>${busy ? '<span class="spinner" aria-hidden="true"></span>' : '<span class="ms" aria-hidden="true">auto_awesome</span>'}<span>${esc(t('fh_demo'))}</span></button>
+      <button type="button" class="btn primary" id="fh-photo-frz" ${busy ? 'disabled' : ''}><span class="ms" aria-hidden="true">ac_unit</span><span>${esc(t('fh_photo_freezer'))}</span></button>
+      <button type="button" class="btn demo-btn" id="fh-demo" ${busy ? 'disabled' : ''}>${busy ? '<span class="spinner" aria-hidden="true"></span>' : '<span class="ms" aria-hidden="true">photo_library</span>'}<span>${esc(t('fh_demo'))}</span></button>
     </div>`
   el.querySelector('#fh-photo')!.addEventListener('click', () => { haptic(); root.querySelector<HTMLInputElement>('#fh-file')!.click() })
-  el.querySelector('#fh-demo')!.addEventListener('click', () => { haptic(); void demoPhoto() })
+  el.querySelector('#fh-photo-frz')!.addEventListener('click', () => { haptic(); root.querySelector<HTMLInputElement>('#fh-file-frz')!.click() })
+  el.querySelector('#fh-demo')!.addEventListener('click', () => { haptic(); openSamples() })
 }
 
 function renderStatus(): void {
@@ -211,8 +217,8 @@ function bindSlider(scope: HTMLElement): void {
   hrs.addEventListener('input', () => {
     const v = parseFloat(hrs.value)
     outage.startedAt = new Date(Date.now() - v * 36e5).toISOString()
-    document.querySelectorAll<HTMLElement>('#fh-hrs-val, [data-hrs-val]').forEach((x) => { x.textContent = t('power_out_for', { h: v.toFixed(1) }) })
     document.querySelectorAll<HTMLInputElement>('#fh-hrs, [data-hrs]').forEach((x) => { if (x !== hrs) x.value = hrs.value })
+    paintHours()
     const st = document.querySelector<HTMLInputElement>('[data-start]')
     if (st) st.value = toLocalInput(Date.parse(outage.startedAt))
     recompute(true)
@@ -376,7 +382,8 @@ function renderCards(): void {
   if (!items.length) {
     el.innerHTML = `<div class="empty">${emptyArt('empty.clocks') || '<span class="ms" aria-hidden="true">kitchen</span>'}${esc(t('fh_empty'))}</div>`
   } else if (!shown.length) {
-    el.innerHTML = `<div class="empty"><span class="ms" aria-hidden="true">${CATS.find((c) => c.k === cat)?.icon ?? 'apps'}</span>—</div>`
+    const label = t(CATS.find((c) => c.k === cat)?.label ?? 'cat_all')
+    el.innerHTML = `<div class="empty">${emptyArt('empty.clocks') || `<span class="ms" aria-hidden="true">${CATS.find((c) => c.k === cat)?.icon ?? 'apps'}</span>`}<b class="empty-h">${esc(t('cat_empty_h', { cat: label }))}</b><span>${esc(t('cat_empty'))}</span></div>`
   } else {
     el.innerHTML = shown.map((v, i) => {
       const it = byId.get(v.itemId)!
@@ -414,12 +421,20 @@ function tickClocks(): void {
       if (ck.textContent !== s) ck.textContent = s
     }
   })
+  paintHours()
   if (Math.floor(now / 1000) % 30 === 0) {
     const h = hoursOut()
     const active = document.activeElement
     document.querySelectorAll<HTMLInputElement>('#fh-hrs, [data-hrs]').forEach((x) => { if (x !== active) x.value = Math.min(72, h).toFixed(2) })
-    document.querySelectorAll<HTMLElement>('#fh-hrs-val, [data-hrs-val]').forEach((x) => { x.textContent = t('power_out_for', { h: h.toFixed(1) }) })
   }
+}
+
+/** One value, every place: the hero summary and the outage control both read hoursOut() each second. */
+function paintHours(): void {
+  const h = hoursOut().toFixed(1)
+  document.querySelectorAll<HTMLElement>('[data-hrs-h]').forEach((x) => { if (x.textContent !== h) x.textContent = h })
+  const txt = t('power_out_for', { h })
+  document.querySelectorAll<HTMLElement>('#fh-hrs-val, [data-hrs-val]').forEach((x) => { if (x.textContent !== txt) x.textContent = txt })
 }
 
 // ---------- item detail sheet (ring, what to do, why in metric, verbatim source) ----------
@@ -528,11 +543,12 @@ async function lookupMed(it: WebItem): Promise<void> {
 }
 
 // ---------- photo → items ----------
-async function readPhoto(file: File): Promise<void> {
+async function readPhoto(file: File, freezer = false): Promise<void> {
   busy = true; note = null; renderStatus()
   try {
     const { base64, mime } = await downscale(file, 1280, 0.85)
-    await ingest([await visionItems(base64, mime, 'any')])
+    const r = await visionItems(base64, mime, freezer ? 'fridge' : 'any')
+    await ingest([freezer ? toFreezer(r) : r])
   } catch (e) {
     console.error(e)
     note = { text: t('fh_read_fail'), kind: 'error' }
@@ -542,34 +558,51 @@ async function readPhoto(file: File): Promise<void> {
   }
 }
 
-/** "Try demo photo". Demo server: placeholder image, answered by hint. Live server: the vision model reads the bundled
- *  pharmacy-label photo for real, and the sample fridge items fill in the food side. */
-async function demoPhoto(): Promise<void> {
-  busy = true; note = null; renderStatus()
-  try {
-    if (state.health?.provider && state.health.provider !== 'demo') {
-      const label = await fetch('/demo/meds-label.png').then((r) => r.blob()).then(blobToBase64).catch(() => null)
-      if (label) {
-        const meds = await visionItems(label, 'image/png', 'meds')
-        if (!meds._fallback && meds.items.length) {
-          const fridge = { items: demoItems().filter((x) => x.category === 'food'), _model: meds._model, _provider: meds._provider }
-          await ingest([fridge, meds], true)
-          return
-        }
-      }
-    }
-    const img = placeholderJpeg()
-    const fridge = await visionItems(img, 'image/jpeg', 'fridge')
-    if (fridge._fallback) { await ingest([fridge], true); return } // offline: local demo list already has fridge + meds
-    const meds = await visionItems(img, 'image/jpeg', 'meds')
-    await ingest([fridge, meds], true)
-  } finally {
-    busy = false
-    renderStatus(); renderEditor(); recompute(true)
+export type SampleKind = 'fridge' | 'freezer' | 'meds'
+
+/** Every food item read from a freezer photo is in the freezer: the engine then runs the freezer clock (48 h full / 24 h half).
+ *  Fridge-style food classes are dropped so the engine re-classifies the name with location = freezer. */
+function toFreezer(r: Awaited<ReturnType<typeof visionItems>>): Awaited<ReturnType<typeof visionItems>> {
+  return {
+    ...r,
+    items: r.items.map((it) => {
+      if (it.category === 'med' || /med/i.test(String(it.category))) return it
+      const fc = String(it.foodClass ?? '')
+      const out: WebItem = { ...it, location: 'freezer', frozen: true }
+      if (!fc.startsWith('frozen')) delete out.foodClass
+      return out
+    }),
   }
 }
 
-function blobToBase64(blob: Blob): Promise<string> {
+/** "Try demo photo" sheet: send one bundled sample photo through /api/vision/items for real. Scanning a sample replaces only
+ *  that sample's own category (fridge items, freezer items, or medicines); everything else stays. Returns the item names. */
+export async function scanSample(kind: SampleKind, base64: string, mime: string): Promise<{ names: string[]; fallback: boolean }> {
+  busy = true; note = null; if (root) renderStatus()
+  try {
+    let r = await visionItems(base64, mime, kind === 'meds' ? 'meds' : 'fridge')
+    if (r._fallback) {
+      // offline / no server: the bundled demo list, cut to this sample's category
+      const all = demoItems()
+      const pick = all.filter((x) => kind === 'meds' ? x.category === 'med' : x.category === 'food' && (kind === 'freezer') === (catOf(x) === 'freezer'))
+      r = { ...r, items: pick }
+    }
+    if (kind === 'freezer') r = toFreezer(r)
+    if (kind === 'fridge') r = { ...r, items: r.items.map((it) => (it.category === 'med' || it.location ? it : { ...it, location: 'fridge' })) }
+    const drop = (it: WebItem) => kind === 'meds' ? it.category === 'med' : kind === 'freezer' ? catOf(it) === 'freezer' : it.category !== 'med' && catOf(it) === 'fridge'
+    items = items.filter((x) => !drop(x))
+    const before = new Set(items.map((x) => x.id))
+    await ingest([r])
+    if (r._fallback) note = { text: t('demo_items_fallback'), kind: 'warn' }
+    const names = items.filter((x) => !before.has(x.id)).map((x) => x.name)
+    return { names, fallback: !!r._fallback }
+  } finally {
+    busy = false
+    if (root) { renderStatus(); renderEditor(); recompute(true) }
+  }
+}
+
+export function blobToBase64(blob: Blob): Promise<string> {
   return new Promise((res, rej) => {
     const r = new FileReader()
     r.onload = () => res(String(r.result).split(',')[1] ?? '')
@@ -631,11 +664,12 @@ async function downscale(file: File, maxPx: number, quality: number): Promise<{ 
 export type Snap = { thumb: string | null; count: number; at: string }
 
 /** Read one Home-card photo with the fridge/meds hint. Items from an earlier photo of the same card are replaced. */
-export async function captureFromHome(file: File, hint: 'fridge' | 'meds'): Promise<Snap> {
+export async function captureFromHome(file: File, hint: 'fridge' | 'meds' | 'freezer'): Promise<Snap> {
   busy = true; note = null; if (root) renderStatus()
   try {
     const [{ base64, mime }, small] = await Promise.all([downscale(file, 1280, 0.85), downscale(file, 360, 0.7)])
-    const r = await visionItems(base64, mime, hint)
+    const raw = await visionItems(base64, mime, hint === 'freezer' ? 'fridge' : hint)
+    const r = hint === 'freezer' ? toFreezer(raw) : raw
     const before = new Set(items.map((x) => x.id))
     items = items.filter((x) => (x as WebItem & { capture?: string }).capture !== hint)
     await ingest([r])

@@ -262,6 +262,72 @@ const en: Dict = {
   time_left: 'left',
   read_from_photo: 'Read from your photo',
   unreadable: 'unreadable',
+
+  // v5: freezer scan, sample photos, Pantry empty state, Why tab
+  fh_photo_freezer: 'Scan freezer',
+  snap_freezer: 'Snap your freezer',
+  cat_empty_h: 'Nothing in {cat} yet',
+  cat_empty: 'Scan it with the camera, try a sample photo, or add an item by hand below.',
+  samples_title: 'Sample photos',
+  samples_lead: 'Pick a photo. We read it for real, the same way we read yours.',
+  samples_none: 'Sample photos are not available right now.',
+  samples_back: 'All sample photos',
+  scan_this: 'Scan this photo',
+  scan_again: 'Try again',
+  tab_why: 'Why',
+  title_why: 'Why it matters',
+  why_sub: 'Who this is for, and why Miami needs it.',
+  why_k1: 'The problem',
+  why_h1: 'When the power goes out, a clock starts.',
+  why_p1a: 'After a hurricane, Miami can lose power for days, in 90 °F heat.',
+  why_p1b: 'Nobody knows if the food or the insulin is still safe.',
+  why_p1c: 'And most apps die when the internet does.',
+  why_k2: 'Who it helps',
+  why_h2: 'The people who can least afford a guess.',
+  why_w1: 'Seniors living alone',
+  why_w2: 'People on insulin and refrigerated medicine',
+  why_w3: 'Parents with baby formula',
+  why_w4: 'Spanish and Haitian Creole speakers',
+  why_w5: 'Families in evacuation zones A–E',
+  why_k3: 'What it does',
+  why_h3: 'Snap it. Every item gets a clock.',
+  why_f1: 'Snap your fridge, freezer or medicine',
+  why_f1s: 'Every item gets a countdown from FDA labels and USDA food rules.',
+  why_f2: 'Works offline',
+  why_f2s: 'Blackout mode keeps your clocks and plan with no signal.',
+  why_f3: 'Live alerts',
+  why_f3s: 'National Weather Service and National Hurricane Center.',
+  why_f4: 'Your evacuation zone',
+  why_f4s: 'From the Miami-Dade zone map.',
+  why_f5: 'Places with power',
+  why_f5s: 'Charging, libraries and fire stations near you.',
+  why_f6: 'Flood map',
+  why_f6s: 'Real ground elevation, block by block.',
+  why_f7: 'English, Español, Kreyòl',
+  why_f7s: 'Ask anything, in your language.',
+  why_k4: 'Why Miami',
+  why_h4: 'The numbers.',
+  why_k5: 'Blackout Box',
+  why_h5: 'Built for the hours after the storm.',
+  why_p5: 'It works when nothing else does.',
+  why_src: 'Source',
+  shelter_title: 'Closest shelter',
+  shelter_open: 'OPEN',
+  shelter_not_open: 'Not open yet',
+  shelter_pets: 'Pets OK',
+  shelter_special: 'Special needs',
+  shelter_saved: 'saved',
+  shelter_none: 'No shelter data yet. Check miamidade.gov/hurricane.',
+  directions: 'Directions',
+  why_s_irma_fl: 'Florida electricity customers lost power in Hurricane Irma (2017), 64% of all accounts',
+  why_s_irma_md: 'Miami-Dade FPL customers were affected by Irma',
+  why_s_lang: 'of Miami-Dade residents speak a language other than English at home',
+  why_s_diabetes: 'of Florida adults have been told they have diabetes',
+  why_s_pop: 'people live in Miami-Dade County',
+  why_s_evac: 'Miami-Dade residents were under evacuation orders for Irma',
+  why_s_heat_days: 'days a year above 90 °F in Miami-Dade, up from 84 since 1970',
+  why_s_heat_streak: 'days in a row the heat index hit 100 °F or more in Miami (2023)',
+  why_s_heat_deaths: 'estimated excess deaths a year during extreme heat in Miami-Dade',
 }
 
 const es: Dict = {
@@ -513,6 +579,72 @@ const es: Dict = {
   time_left: 'restante',
   read_from_photo: 'Leído de su foto',
   unreadable: 'ilegibles',
+
+  // v5 // MT (all lines in this block are machine-translated)
+  fh_photo_freezer: 'Escanear congelador', // MT
+  snap_freezer: 'Foto del congelador', // MT
+  cat_empty_h: 'Nada en {cat} todavía', // MT
+  cat_empty: 'Escanéelo con la cámara, pruebe una foto de ejemplo o agregue un artículo a mano abajo.', // MT
+  samples_title: 'Fotos de ejemplo', // MT
+  samples_lead: 'Elija una foto. La leemos de verdad, igual que la suya.', // MT
+  samples_none: 'Las fotos de ejemplo no están disponibles ahora.', // MT
+  samples_back: 'Todas las fotos de ejemplo', // MT
+  scan_this: 'Escanear esta foto', // MT
+  scan_again: 'Intentar de nuevo', // MT
+  tab_why: 'Por qué', // MT
+  title_why: 'Por qué importa', // MT
+  why_sub: 'Para quién es, y por qué Miami lo necesita.', // MT
+  why_k1: 'El problema', // MT
+  why_h1: 'Cuando se va la luz, empieza un reloj.', // MT
+  why_p1a: 'Después de un huracán, Miami puede quedarse sin luz por días, con 90 °F de calor.', // MT
+  why_p1b: 'Nadie sabe si la comida o la insulina siguen seguras.', // MT
+  why_p1c: 'Y la mayoría de las apps mueren cuando se cae el internet.', // MT
+  why_k2: 'A quién ayuda', // MT
+  why_h2: 'A quienes menos pueden darse el lujo de adivinar.', // MT
+  why_w1: 'Personas mayores que viven solas', // MT
+  why_w2: 'Personas con insulina y medicinas refrigeradas', // MT
+  why_w3: 'Padres con fórmula para bebé', // MT
+  why_w4: 'Hablantes de español y criollo haitiano', // MT
+  why_w5: 'Familias en zonas de evacuación A–E', // MT
+  why_k3: 'Qué hace', // MT
+  why_h3: 'Tome una foto. Cada artículo recibe un reloj.', // MT
+  why_f1: 'Fotografíe su refrigerador, congelador o medicinas', // MT
+  why_f1s: 'Cada artículo recibe una cuenta regresiva de etiquetas de la FDA y reglas del USDA.', // MT
+  why_f2: 'Funciona sin conexión', // MT
+  why_f2s: 'El modo Apagón guarda sus relojes y su plan sin señal.', // MT
+  why_f3: 'Alertas en vivo', // MT
+  why_f3s: 'Servicio Meteorológico Nacional y Centro Nacional de Huracanes.', // MT
+  why_f4: 'Su zona de evacuación', // MT
+  why_f4s: 'Del mapa de zonas de Miami-Dade.', // MT
+  why_f5: 'Lugares con electricidad', // MT
+  why_f5s: 'Carga, bibliotecas y estaciones de bomberos cerca de usted.', // MT
+  why_f6: 'Mapa de inundaciones', // MT
+  why_f6s: 'Elevación real del terreno, cuadra por cuadra.', // MT
+  why_f7: 'English, Español, Kreyòl', // MT
+  why_f7s: 'Pregunte lo que sea, en su idioma.', // MT
+  why_k4: 'Por qué Miami', // MT
+  why_h4: 'Los números.', // MT
+  why_k5: 'Blackout Box', // MT
+  why_h5: 'Hecho para las horas después de la tormenta.', // MT
+  why_p5: 'Funciona cuando nada más funciona.', // MT
+  why_src: 'Fuente', // MT
+  shelter_title: 'Refugio más cercano', // MT
+  shelter_open: 'ABIERTO', // MT
+  shelter_not_open: 'Aún no abre', // MT
+  shelter_pets: 'Acepta mascotas', // MT
+  shelter_special: 'Necesidades especiales', // MT
+  shelter_saved: 'guardado', // MT
+  shelter_none: 'Aún no hay datos de refugios. Consulte miamidade.gov/hurricane.', // MT
+  directions: 'Cómo llegar', // MT
+  why_s_irma_fl: 'clientes eléctricos de Florida se quedaron sin luz con el huracán Irma (2017), 64% de todas las cuentas', // MT
+  why_s_irma_md: 'clientes de FPL en Miami-Dade afectados por Irma', // MT
+  why_s_lang: 'de los residentes de Miami-Dade hablan en casa un idioma distinto del inglés', // MT
+  why_s_diabetes: 'de los adultos de Florida han sido diagnosticados con diabetes', // MT
+  why_s_pop: 'personas viven en el condado de Miami-Dade', // MT
+  why_s_evac: 'residentes de Miami-Dade estuvieron bajo orden de evacuación por Irma', // MT
+  why_s_heat_days: 'días al año por encima de 90 °F en Miami-Dade, antes eran 84 (desde 1970)', // MT
+  why_s_heat_streak: 'días seguidos con índice de calor de 100 °F o más en Miami (2023)', // MT
+  why_s_heat_deaths: 'muertes en exceso estimadas al año durante calor extremo en Miami-Dade', // MT
 }
 
 const ht: Dict = {
@@ -764,6 +896,72 @@ const ht: Dict = {
   time_left: 'ki rete',
   read_from_photo: 'Li nan foto ou',
   unreadable: 'pa ka li',
+
+  // v5 // MT (all lines in this block are machine-translated; have a Kreyòl speaker check)
+  fh_photo_freezer: 'Eskane frizè', // MT
+  snap_freezer: 'Foto frizè ou', // MT
+  cat_empty_h: 'Poko gen anyen nan {cat}', // MT
+  cat_empty: 'Eskane l ak kamera a, eseye yon foto egzanp, oswa ajoute youn ak men anba a.', // MT
+  samples_title: 'Foto egzanp', // MT
+  samples_lead: 'Chwazi yon foto. Nou li l tout bon, menm jan ak pa w la.', // MT
+  samples_none: 'Foto egzanp yo pa disponib kounye a.', // MT
+  samples_back: 'Tout foto egzanp yo', // MT
+  scan_this: 'Eskane foto sa a', // MT
+  scan_again: 'Eseye ankò', // MT
+  tab_why: 'Poukisa', // MT
+  title_why: 'Poukisa sa enpòtan', // MT
+  why_sub: 'Pou ki moun li ye, ak poukisa Miami bezwen l.', // MT
+  why_k1: 'Pwoblèm nan', // MT
+  why_h1: 'Lè kouran an koupe, yon revèy kòmanse.', // MT
+  why_p1a: 'Apre yon siklòn, Miami ka rete san kouran pandan plizyè jou, nan chalè 90 °F.', // MT
+  why_p1b: 'Pèsonn pa konnen si manje a oswa ensilin nan toujou bon.', // MT
+  why_p1c: 'Epi pifò aplikasyon mouri lè entènèt la tonbe.', // MT
+  why_k2: 'Ki moun li ede', // MT
+  why_h2: 'Moun ki pa ka pèmèt yo devine.', // MT
+  why_w1: 'Granmoun ki viv pou kont yo', // MT
+  why_w2: 'Moun ki pran ensilin ak medikaman nan frijidè', // MT
+  why_w3: 'Paran ki gen lèt tibebe', // MT
+  why_w4: 'Moun ki pale panyòl ak kreyòl ayisyen', // MT
+  why_w5: 'Fanmi nan zòn evakyasyon A–E', // MT
+  why_k3: 'Sa li fè', // MT
+  why_h3: 'Pran yon foto. Chak bagay jwenn yon revèy.', // MT
+  why_f1: 'Pran foto frijidè, frizè oswa medikaman ou', // MT
+  why_f1s: 'Chak bagay jwenn yon kontwa ki soti nan etikèt FDA ak règ USDA.', // MT
+  why_f2: 'Mache san entènèt', // MT
+  why_f2s: 'Mòd Blakout kenbe revèy ou ak plan ou san siyal.', // MT
+  why_f3: 'Alèt an dirèk', // MT
+  why_f3s: 'Sèvis Meteyo Nasyonal ak Sant Nasyonal Siklòn.', // MT
+  why_f4: 'Zòn evakyasyon ou', // MT
+  why_f4s: 'Soti nan kat zòn Miami-Dade.', // MT
+  why_f5: 'Kote ki gen kouran', // MT
+  why_f5s: 'Chaj, bibliyotèk ak estasyon ponpye toupre ou.', // MT
+  why_f6: 'Kat inondasyon', // MT
+  why_f6s: 'Vrè wotè tè a, blòk pa blòk.', // MT
+  why_f7: 'English, Español, Kreyòl', // MT
+  why_f7s: 'Mande nenpòt bagay, nan lang ou.', // MT
+  why_k4: 'Poukisa Miami', // MT
+  why_h4: 'Chif yo.', // MT
+  why_k5: 'Blackout Box', // MT
+  why_h5: 'Fèt pou lè yo apre tanpèt la.', // MT
+  why_p5: 'Li mache lè anyen pa mache.', // MT
+  why_src: 'Sous', // MT
+  shelter_title: 'Abri ki pi pre a', // MT
+  shelter_open: 'OUVÈ', // MT
+  shelter_not_open: 'Poko ouvè', // MT
+  shelter_pets: 'Bèt aksepte', // MT
+  shelter_special: 'Bezwen espesyal', // MT
+  shelter_saved: 'anrejistre', // MT
+  shelter_none: 'Poko gen done sou abri. Gade miamidade.gov/hurricane.', // MT
+  directions: 'Direksyon', // MT
+  why_s_irma_fl: 'kliyan elektrisite nan Florid te pèdi kouran nan siklòn Irma (2017), 64% tout kont yo', // MT
+  why_s_irma_md: 'kliyan FPL nan Miami-Dade Irma te afekte', // MT
+  why_s_lang: 'moun nan Miami-Dade pale yon lòt lang pase angle lakay yo', // MT
+  why_s_diabetes: 'granmoun nan Florid yo te di yo gen dyabèt', // MT
+  why_s_pop: 'moun ap viv nan konte Miami-Dade', // MT
+  why_s_evac: 'moun Miami-Dade te anba lòd evakyasyon pou Irma', // MT
+  why_s_heat_days: 'jou pa ane plis pase 90 °F nan Miami-Dade, te 84 depi 1970', // MT
+  why_s_heat_streak: 'jou youn dèyè lòt endèks chalè a te rive 100 °F oswa plis nan Miami (2023)', // MT
+  why_s_heat_deaths: 'lanmò anplis estime chak ane pandan gwo chalè nan Miami-Dade', // MT
 }
 
 const DICTS: Record<Lang, Dict> = { en, es, ht }

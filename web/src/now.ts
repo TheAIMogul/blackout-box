@@ -6,6 +6,7 @@ import { getLang, onLang, t } from './i18n'
 import { onTheme, isBlackout } from './theme'
 import { backdropHTML, iconHTML, loadMedia, media, onMedia, playLightsOut, prefetch, prefetchClip } from './media'
 import { paintOut, paintSnaps } from './capture'
+import { paintShelter } from './shelter'
 import { cToF, esc, haptic, kmhToMph, mToFt, on, state, usText } from './util'
 
 const REFRESH_MS = 5 * 60_000
@@ -22,7 +23,8 @@ export async function mountNow(hero: HTMLElement, view: HTMLElement, stage: HTML
   // Mockup 1:52 PM, top to bottom: power-out pill → hero temp → snap cards (in the hero); mini map → warnings → tiles.
   // The slots are built once so the snap buttons and the MapLibre mini map survive every re-render.
   heroEl.innerHTML = '<div class="nh-out"></div><div class="now-hero nh-main"></div><div class="nh-snaps"></div>'
-  viewEl.innerHTML = '<div class="mini-map" id="now-minimap"></div><div class="nv-warn"></div><div class="nv-tiles"></div>'
+  viewEl.innerHTML = '<div class="mini-map" id="now-minimap"></div><div class="nv-shelter"></div><div class="nv-warn"></div><div class="nv-tiles"></div>'
+  paintShelter(viewEl.querySelector<HTMLElement>('.nv-shelter')!)
   paintOut(heroEl.querySelector<HTMLElement>('.nh-out')!)
   paintSnaps(heroEl.querySelector<HTMLElement>('.nh-snaps')!)
   const rec = await kvGet<NowData>('now')

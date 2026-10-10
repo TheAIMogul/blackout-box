@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "web-preview-5178", "runtimeExecutable": "npx", "runtimeArgs": ["--prefix", "web", "vite", "preview", "web", "--port", "5178", "--strictPort"], "port": 5178 }
+  ]
+}
