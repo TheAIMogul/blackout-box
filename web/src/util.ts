@@ -41,31 +41,6 @@ export function uid(prefix = 'i'): string {
   return prefix + Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-3)
 }
 
-/** Friendly model label from an exact model id, e.g. "anthropic/claude-sonnet-5.5" → "Claude Sonnet 5.5". */
-export function friendlyModel(model: string | undefined): string {
-  const m = (model ?? '').trim()
-  if (!m || m === 'demo') return ''
-  const id = m.replace(/^.*\//, '') // drop "anthropic/"
-  const c = /^claude-([a-z]+)-(\d+(?:[.-]\d+)*)/i.exec(id)
-  if (c) return `Claude ${c[1][0].toUpperCase()}${c[1].slice(1)} ${c[2].replace(/-/g, '.')}`
-  return id
-}
-
-/** "Claude Sonnet 5.5 · 6.0 s" */
-export function modelMeta(model: string | undefined, latencyMs?: number): string {
-  const m = (model ?? '').trim()
-  const name = !m || m === 'demo' ? 'demo fixtures' : friendlyModel(m) || m
-  return name + (typeof latencyMs === 'number' && latencyMs > 0 ? ` · ${(latencyMs / 1000).toFixed(1)} s` : '')
-}
-
-/** "Claude Sonnet 5.5 (anthropic/claude-sonnet-5.5)"; demo fixtures are labeled as such. */
-export function describeModel(model: string | undefined, provider?: string | undefined): string {
-  const m = (model ?? '').trim()
-  if (!m || m === 'demo' || (provider ?? '').toLowerCase() === 'demo' && !m) return 'demo fixtures'
-  const f = friendlyModel(m)
-  return f && f !== m ? `${f} (${m})` : m
-}
-
 // ---- tiny shared app state ----
 type AppState = { lastModel: string | null; health: Health | null; prep: PrepBundle | null; prepAt: string | null; items: WebItem[]; verdicts: NV[]; lat: number; lon: number }
 export const state: AppState = { lastModel: null, health: null, prep: null, prepAt: null, items: [], verdicts: [], lat: 25.77, lon: -80.19 }
@@ -74,3 +49,60 @@ type Ev = 'health' | 'prep' | 'items'
 const subs: Record<Ev, Set<() => void>> = { health: new Set(), prep: new Set(), items: new Set() }
 export function on(ev: Ev, fn: () => void): void { subs[ev].add(fn) }
 export function emit(ev: Ev): void { subs[ev].forEach((fn) => fn()) }
+
+// ---- US units at the edge (CONTRACT "US units everywhere"): °F, mph, miles, feet. /api/now speaks metric, so convert it here ----
+export const cToF = (c: number): number => (c * 9) / 5 + 32
+export const kmhToMph = (kmh: number): number => kmh / 1.609344
+export const kmToMi = (km: number): number => km / 1.609344
+export const mToFt = (m: number): number => m / 0.3048
+const r0 = (n: number): string => String(Math.round(n))
+const r1 = (n: number): string => (Math.round(n * 10) / 10).toFixed(1)
+const r2 = (n: number): string => (Math.round(n * 100) / 100).toFixed(2)
+/** "88 °F" from °F */
+export function fmtF(f: number | null | undefined): string { return f == null || !Number.isFinite(f) ? '—' : `${r0(f)} °F` }
+/** "0.4 mi" from miles */
+export function fmtMi(mi: number | null | undefined): string { return mi == null || !Number.isFinite(Number(mi)) ? '—' : `${r1(Number(mi))} mi` }
+/** "2.41 ft" from feet */
+export function fmtFt(ft: number | string | null | undefined): string { const n = Number(ft); return ft == null || ft === '' || !Number.isFinite(n) ? '—' : `${r2(n)} ft` }
+/** "2.41 ft" from metres */
+export function fmtFtFromM(m: number | null | undefined): string { return m == null || !Number.isFinite(m) ? '—' : `${r2(mToFt(m))} ft` }
+
+const N = '(-?\\d[\\d,]*(?:\\.\\d+)?)'
+const num = (s: string): number => Number(s.replace(/,/g, ''))
+const comma = (n: number): string => Math.round(n).toLocaleString('en-US')
+/** Rewrite every metric number in text (server warnings, model answers) to US units; imperial text passes through.
+ *  "40°F (4°C)" keeps only the °F. Verbatim FDA/USDA quotes are NOT passed through this. */
+export function usText(s: string): string {
+  if (!s) return s
+  return s
+    // drop a metric echo in parentheses right after an imperial value: "40°F (4°C)", "59–86°F (15–30°C)", "1 mile (1.6 km)"
+    .replace(/(°\s?F|\bmiles?|\bmi|\bft|\bfeet|\bmph)\s*\(\s*[^()]*?(?:°\s?C|km\/h|km|metres?|meters?|\bm)\s*\)/g, '$1')
+    .replace(new RegExp(`${N}\\s?[–-]\\s?${N}\\s?°\\s?C\\b`, 'g'), (_m, a, b) => `${r0(cToF(num(a)))}–${r0(cToF(num(b)))} °F`)
+    .replace(new RegExp(`${N}\\s?°\\s?C\\b`, 'g'), (_m, a) => `${r0(cToF(num(a)))} °F`)
+    .replace(new RegExp(`${N}\\s?km\\/h`, 'g'), (_m, a) => `${r0(kmhToMph(num(a)))} mph`)
+    .replace(new RegExp(`${N}\\s?km\\b`, 'g'), (_m, a) => `${comma(kmToMi(num(a)))} mi`)
+    .replace(new RegExp(`${N}\\s?(?:metres|meters|metre|meter)\\b`, 'g'), (_m, a) => `${r2(mToFt(num(a)))} ft`)
+    .replace(/(-?\d+\.\d+)\s?m\b/g, (_m, a) => `${r2(mToFt(Number(a)))} ft`)
+}
+
+// ---- haptics + motion ----
+export const reducedMotion = (): boolean => !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+export function haptic(): void { try { if (!reducedMotion()) navigator.vibrate?.(10) } catch { /* unsupported */ } }
+/** Run a DOM update inside a View Transition when supported (crossfade); plain update otherwise. */
+export function withTransition(update: () => void, kind: 'tab' | 'theme' = 'tab'): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const d = document as any
+  if (typeof d.startViewTransition !== 'function' || reducedMotion() || document.visibilityState !== 'visible') { update(); return }
+  const root = document.documentElement
+  if (kind === 'theme') root.classList.add('vt-theme')
+  // The DOM update must never wait on rendering (background tabs, headless, a skipped transition):
+  // run it at most once, from the transition callback or from a 150 ms fallback, whichever comes first.
+  let done = false
+  const run = () => { if (!done) { done = true; update() } }
+  try {
+    const vt = d.startViewTransition(run)
+    vt.finished.catch(() => {}).finally(() => root.classList.remove('vt-theme'))
+    vt.ready?.catch?.(() => {})
+    setTimeout(run, 150)
+  } catch { root.classList.remove('vt-theme'); run() }
+}

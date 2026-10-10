@@ -10,6 +10,7 @@ import { femaDeclarations } from './data/fema.js';
 import { flood311 } from './data/flood311.js';
 import { evacZone, mdcPlaces } from './data/mdc.js';
 import { evChargers } from './data/nrel.js';
+import { now } from './data/now.js';
 import { nws } from './data/nws.js';
 import { openFdaLabel } from './data/openfda.js';
 import { lastPrep, prepBundle } from './data/prep.js';
@@ -181,6 +182,11 @@ app.get('/api/tide', async (req, res) => {
 app.get('/api/flood311', async (req, res) => {
   const year = String(req.query.year ?? '2023');
   res.json(DEMO ? asDemo(await fixture('flood311')) : await flood311(year));
+});
+
+app.get('/api/now', async (req, res) => {
+  const { lat, lon } = latLon(req);
+  res.json(DEMO ? asDemo({ ...(await fixture('now')), generatedAt: new Date().toISOString() }) : await now(lat, lon));
 });
 
 app.get('/api/prep', async (req, res) => {

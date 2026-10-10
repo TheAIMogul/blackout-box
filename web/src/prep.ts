@@ -1,9 +1,10 @@
 // Prep ("Pack my box"): geolocation (fallback 25.77,-80.19) → GET /api/prep → IndexedDB → render.
-// Console style: page header + primary action, notices as banners, places and FEMA as console tables.
+// "Apple meets Airbnb": zone hero card + Pack my box pill, places and FEMA as iOS grouped lists. US units: mi, ft, °F.
 import { getPrep, type Place, type PrepBundle } from './api'
 import { kvGet, kvSet } from './db'
+import { onMedia } from './media'
 import { onLang, t } from './i18n'
-import { emit, esc, fmtWhen, on, state } from './util'
+import { emit, esc, fmtF, fmtMi, fmtFt, fmtWhen, haptic, usText, on, state } from './util'
 
 const FALLBACK = { lat: 25.77, lon: -80.19 }
 let root: HTMLElement
@@ -22,6 +23,8 @@ export function mountPrep(host: HTMLElement): void {
   render()
   onLang(render)
   on('prep', render)
+  window.addEventListener('bb-installable', render)
+  onMedia(render)
 }
 
 function locate(): Promise<{ lat: number; lon: number; fallback: boolean }> {
@@ -128,6 +131,7 @@ function render(): void {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const placesNote = (b?.places as any)?.note as string | undefined
   const rows = groups.flatMap((g) => g.items.slice(0, 5).map((p) => ({ g, p })))
+    .sort((a, c) => (a.p.distanceMi ?? 1e9) - (c.p.distanceMi ?? 1e9))
 
   const status =
     phase === 'locating' ? `<div class="progress"><i></i></div>${banner('', 'my_location', esc(t('prep_locating')))}` :
@@ -135,73 +139,67 @@ function render(): void {
     phase === 'done' ? banner('ok', 'check_circle', `<b>${esc(t('prep_done'))}</b>`) :
     phase === 'fail' ? banner('error', 'error', esc(t('prep_fail'))) :
     phase === 'demo' ? banner('warn', 'warning', esc(t('prep_demo'))) : ''
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const canInstall = (window as any).bbCanInstall?.() === true
 
   root.innerHTML = `
-    <div class="page-head">
-      <h1>${esc(t('prep_title'))}</h1>
-      <div class="actions"><button type="button" class="btn primary" id="prep-go" ${busy ? 'disabled' : ''}><span class="ms" aria-hidden="true">download</span>${esc(t('prep_btn'))}</button></div>
+    <div class="card hero">
+      <div class="zone-hero">
+        <div class="zone-letter${z.letter ? '' : ' none'}" aria-label="${esc(t('zone'))} ${esc(z.letter ?? '—')}">${esc(z.letter ?? '—')}</div>
+        <div style="min-width:0;flex:1">
+          <div class="what">${!b ? esc(t('prep_title')) : z.letter ? `${esc(t('zone'))} ${esc(z.letter)}` : esc(z.known ? t('zone_none') : t('zone_unknown'))}</div>
+          <div class="why">${!b ? esc(t('prep_none')) : z.letter ? esc(t('zone_check')) : ''}</div>
+        </div>
+      </div>
+      <button type="button" class="btn primary block" id="prep-go" style="margin-top:16px" ${busy ? 'disabled' : ''}>${busy ? '<span class="spinner" aria-hidden="true"></span>' : '<span class="ms" aria-hidden="true">download</span>'}${esc(t('prep_btn'))}</button>
+      <div class="src-line">${b && !b._fallback ? `${esc(t('prep_cached'))} · ${esc(stamp)} · ` : ''}<span class="tnum">${esc(state.lat)}, ${esc(state.lon)}</span>${z.source ? ' · ' + esc(z.source) : ''}</div>
     </div>
-    <p class="page-sub">${esc(t('prep_sub'))}${b && !b._fallback ? ` · ${esc(t('prep_cached'))}, ${esc(stamp)}` : ''}</p>
-    ${locNote ? banner('', 'info', esc(locNote)) : ''}
-    ${status}
-    ${!b ? `<div class="empty"><span class="ms" aria-hidden="true">inventory_2</span>${esc(t('prep_none'))}</div>` : `
-    <div class="grid">
+    <div style="margin-top:12px">${locNote ? banner('', 'info', esc(locNote)) : ''}${status}</div>
+    ${!b ? '' : `
+    <div class="section-h"><h2>${esc(t('places'))}</h2><span class="muted">${esc(t('distance'))}</span></div>
+    ${rows.length ? `<div class="list">${rows.map(({ g, p }) => `
+      <div class="row"><span class="ico"><span class="ms" aria-hidden="true">${kindIcon(g.kind)}</span></span>
+        <span class="main"><span class="t1">${esc(p.name)}</span><span class="t2" style="display:block">${esc(kindLabel(g.kind))}${p.open24h ? ' · 24 h' : ''}${p.address ? ' · ' + esc(p.address) : ''}</span></span>
+        <span class="end">${p.distanceMi != null ? esc(fmtMi(p.distanceMi)) : '—'}</span></div>`).join('')}</div>` : `<div class="empty">—</div>`}
+    <p class="src-line">${esc(placesNote || t('places_note'))}${groups.map((g) => g.source).filter(Boolean).length ? ' · ' + esc([...new Set(groups.map((g) => g.source).filter(Boolean))].join(', ')) : ''}</p>
+
+    <div class="grid2" style="margin-top:18px">
       <div class="card">
-        <h2><span class="ms" aria-hidden="true">flood</span>${esc(t('zone'))}</h2>
-        <div class="zone">
-          <div class="zone-letter${z.letter ? '' : ' none'}" aria-label="${esc(t('zone'))} ${esc(z.letter ?? '—')}">${esc(z.letter ?? '—')}</div>
-          <div style="min-width:0;flex:1">
-            <div class="what">${z.letter ? `${esc(t('zone'))} ${esc(z.letter)}` : esc(z.known ? t('zone_none') : t('zone_unknown'))}</div>
-            ${z.letter ? `<div>${esc(t('zone_check'))}</div>` : ''}
-            <div class="src-line"><span class="mono">${esc(state.lat)}, ${esc(state.lon)}</span>${z.source ? ' · ' + esc(z.source) : ''}</div>
-          </div>
-        </div>
+        <h3><span class="ms" aria-hidden="true">waves</span>${esc(t('tide'))}</h3>
+        ${hi ? `<div class="muted small">${esc(t('tide_next_high'))}</div><div class="stat">${esc(fmtFt(hi.v).replace(' ft', ''))}<small> ft</small></div><div class="small muted tnum">${esc(hi.t)} · MLLW</div>` : `<p class="muted">${esc(t('tide_none'))}</p>`}
+        ${b.tide?.latest ? `<div class="src-line">${esc(fmtWhen(String(b.tide.latest.t).replace(' ', 'T')))} · ${esc(fmtFt(b.tide.latest.v))}${b.tide._source ? ' · ' + esc(b.tide._source) : ''}</div>` : ''}
       </div>
-
       <div class="card">
-        <h2><span class="ms" aria-hidden="true">bolt</span>${esc(t('places'))}</h2>
-        ${banner('', 'info', esc(placesNote || t('places_note')))}
-        ${rows.length ? `<div class="table-wrap"><table>
-          <thead><tr><th>${esc(t('place_name'))}</th><th>${esc(t('place_type'))}</th><th>${esc(t('distance'))}</th></tr></thead>
-          <tbody>${rows.map(({ g, p }) => `<tr><td><b style="font-weight:500">${esc(p.name)}</b>${p.address ? `<div class="small muted">${esc(p.address)}</div>` : ''}</td><td><span class="trow" style="flex-wrap:nowrap;gap:6px"><span class="ms" aria-hidden="true" style="color:var(--text-2)">${kindIcon(g.kind)}</span>${esc(kindLabel(g.kind))}${p.open24h ? ' · 24 h' : ''}</span></td><td class="num">${p.distanceMi != null ? `${Number(p.distanceMi).toFixed(2)} ${esc(t('mi'))}` : '—'}</td></tr>`).join('')}</tbody>
-        </table></div>` : `<div class="muted">—</div>`}
-        <div class="src-line">${esc(stamp)}${groups.map((g) => g.source).filter(Boolean).length ? ' · ' + esc([...new Set(groups.map((g) => g.source).filter(Boolean))].join(', ')) : ''}</div>
+        <h3><span class="ms" aria-hidden="true">thermostat</span>${esc(t('weather'))}</h3>
+        ${b.nws?.tempF != null ? `<div class="stat">${esc(fmtF(b.nws.tempF).replace(' °F', ''))}<small> °F</small></div>${b.nws.heatIndexF != null ? `<div class="small muted">${esc(t('heat_index'))} ${esc(fmtF(b.nws.heatIndexF))}</div>` : ''}<div class="src-line">${esc(b.nws.station ?? '')} ${esc(fmtWhen(b.nws.observedAt))}${b.nws._source ? ' · ' + esc(b.nws._source) : ''}</div>` : '<p class="muted">—</p>'}
       </div>
+    </div>
 
-      <div class="grid two">
-        <div class="card">
-          <h2><span class="ms" aria-hidden="true">assignment</span>${esc(t('fema'))}</h2>
-          ${fema.length ? `<div class="table-wrap"><table>
-            <thead><tr><th>ID</th><th>${esc(t('fema_title'))}</th><th>${esc(t('fema_date'))}</th></tr></thead>
-            <tbody>${fema.slice(0, 5).map((d) => `<tr><td class="num">${esc(d.type)}-${esc(d.number)}</td><td>${esc(d.title)}</td><td class="num">${esc(d.date)}</td></tr>`).join('')}</tbody>
-          </table></div>` : '<div class="muted">—</div>'}
-          <p style="margin:12px 0 0">${esc(t('fema_register'))}</p>
-          <div class="src-line">${esc(b.fema?._source ?? 'OpenFEMA')}</div>
-        </div>
-        <div class="card">
-          <h2><span class="ms" aria-hidden="true">waves</span>${esc(t('tide'))}</h2>
-          ${hi ? `<div class="zone"><div><div class="small muted">${esc(t('tide_next_high'))}</div><div style="font:400 32px/1.2 var(--head)">${esc(hi.v)} ft</div><div class="mono small">${esc(hi.t)} · MLLW</div></div></div>` : `<div class="muted">${esc(t('tide_none'))}</div>`}
-          ${b.tide?.latest ? `<div class="src-line">latest ${esc(b.tide.latest.t)} · ${esc(b.tide.latest.v)} ft${b.tide._source ? ' · ' + esc(b.tide._source) : ''}</div>` : ''}
-          ${b.nws?.tempF != null ? `<h3 style="margin-top:16px">${esc(t('weather'))}</h3><div><span style="font:400 24px var(--head)">${esc(Math.round(b.nws.tempF))}°F</span>${b.nws.heatIndexF != null ? ` · ${esc(t('heat_index'))} ${esc(Math.round(b.nws.heatIndexF))}°F` : ''}</div><div class="src-line">${esc(b.nws.station ?? '')} ${esc(fmtWhen(b.nws.observedAt))}${b.nws._source ? ' · ' + esc(b.nws._source) : ''}</div>` : ''}
-        </div>
-        <div class="card">
-          <h2><span class="ms" aria-hidden="true">medication</span>${esc(t('statute'))}</h2>
-          <div class="mono small" style="color:var(--blue)">${esc(b.statute?.number ?? 'F.S. 252.358')}</div>
-          <p style="margin:6px 0 0">${esc(b.statute?.summary ?? '—')}</p>
-          ${b.statute?.url ? `<div class="src-line"><a href="${esc(b.statute.url)}" target="_blank" rel="noopener">${esc(b.statute.url)}</a></div>` : ''}
-        </div>
-        <div class="card">
-          <h2><span class="ms" aria-hidden="true">vaccines</span>${esc(t('insulin'))}</h2>
-          <p style="margin:0">${esc(b.fdaEmergencyInsulin?.summary ?? '—')}</p>
-          ${b.fdaEmergencyInsulin?.url ? `<div class="src-line"><a href="${esc(b.fdaEmergencyInsulin.url)}" target="_blank" rel="noopener">fda.gov</a></div>` : ''}
-        </div>
-        <div class="card">
-          <h2><span class="ms" aria-hidden="true">kitchen</span>${esc(t('food_rules'))}</h2>
-          <p style="margin:0">${esc(b.foodRules?.headline ?? '—')}</p>
-          ${b.foodRules?.url ? `<div class="src-line"><a href="${esc(b.foodRules.url)}" target="_blank" rel="noopener">FoodSafety.gov</a></div>` : ''}
-        </div>
+    <div class="section-h"><h2>${esc(t('fema'))}</h2></div>
+    ${fema.length ? `<div class="list">${fema.slice(0, 5).map((d) => `<div class="row"><span class="ico"><span class="ms" aria-hidden="true">assignment</span></span><span class="main"><span class="t1">${esc(d.title)}</span><span class="t2" style="display:block">${esc(d.type)}-${esc(d.number)}</span></span><span class="end tnum" style="font-weight:500;color:var(--text-2)">${esc(d.date)}</span></div>`).join('')}</div>` : '<div class="empty">—</div>'}
+    <p class="src-line">${esc(t('fema_register'))} · ${esc(b.fema?._source ?? 'OpenFEMA')}</p>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="card">
+        <h3><span class="ms" aria-hidden="true">medication</span>${esc(t('statute'))}</h3>
+        <div class="small tnum" style="color:var(--rausch);font-weight:700">${esc(b.statute?.number ?? 'F.S. 252.358')}</div>
+        <p style="margin-top:6px">${esc(usText(b.statute?.summary ?? '—'))}</p>
+        ${b.statute?.url ? `<div class="src-line"><a href="${esc(b.statute.url)}" target="_blank" rel="noopener">${esc(b.statute.url)}</a></div>` : ''}
       </div>
-    </div>`}`
+      <div class="card">
+        <h3><span class="ms" aria-hidden="true">vaccines</span>${esc(t('insulin'))}</h3>
+        <p>${esc(usText(b.fdaEmergencyInsulin?.summary ?? '—'))}</p>
+        ${b.fdaEmergencyInsulin?.url ? `<div class="src-line"><a href="${esc(b.fdaEmergencyInsulin.url)}" target="_blank" rel="noopener">fda.gov</a></div>` : ''}
+      </div>
+      <div class="card">
+        <h3><span class="ms" aria-hidden="true">kitchen</span>${esc(t('food_rules'))}</h3>
+        <p>${esc(usText(b.foodRules?.headline ?? '—'))}</p>
+        ${b.foodRules?.url ? `<div class="src-line"><a href="${esc(b.foodRules.url)}" target="_blank" rel="noopener">FoodSafety.gov</a></div>` : ''}
+      </div>
+    </div>`}
+    ${canInstall ? `<button type="button" class="card install-card" id="prep-install" style="width:100%;margin-top:18px;border:0;text-align:left;font:inherit;color:inherit;cursor:pointer">
+      <img src="/icons/apple-touch-icon-180.png" alt=""><span style="flex:1;min-width:0"><b style="display:block;font-size:17px">${esc(t('install_title'))}</b><span class="muted small">${esc(t('install_why'))}</span></span><span class="ms chev" aria-hidden="true">chevron_right</span></button>` : ''}`
 
-  root.querySelector('#prep-go')?.addEventListener('click', () => void pack())
+  root.querySelector('#prep-go')?.addEventListener('click', () => { haptic(); void pack() })
+  root.querySelector('#prep-install')?.addEventListener('click', () => window.dispatchEvent(new Event('bb-open-install')))
 }

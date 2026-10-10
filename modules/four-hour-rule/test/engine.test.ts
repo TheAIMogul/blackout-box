@@ -241,6 +241,16 @@ describe('environment, forecast, door taps, other food classes', () => {
     assert.ok(v.assumptions.includes('indoor_estimate'))
   })
 
+  test('outdoor forecast just above the label max does not zero the clock early in an outage', () => {
+    // Miami 2026-10-10: 89.6 °F outside, 0.6 h after the outage. Indoor estimate is 85.6 °F (< 86), so the
+    // forecast must cross the label max only when the heuristic says the room passes it (at 4 h), not now.
+    const hourly = [0, 1, 2, 3, 4, 5, 6].map((h) => ({ t: new Date(NOW.getTime() + h * 36e5).toISOString(), tempF: 89.6 }))
+    const v = one(med('m1', 'Lantus', lantusLimit), outage(0.6), { estimated: true, outdoorTempF: 89.6, hourly })
+    assert.notEqual(v.status, 'PAST_LIMIT')
+    assert.ok(v.hoursLeft != null && v.hoursLeft >= 3 && v.hoursLeft <= 4.5, `hourly forecast, hoursLeft ${v.hoursLeft}`)
+    assert.equal(v.clock, 'label_max_temp')
+  })
+
   test('forecast crossing the label max within the clock → USE_NOW with crossAt', () => {
     const forecastIndoorF = [{ t: new Date(NOW.getTime() + 3 * 36e5).toISOString(), tempF: 88 }]
     const v = one(med('m1', 'Lantus', lantusLimit), outage(30), env(84, { forecastIndoorF }))

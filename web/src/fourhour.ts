@@ -1,12 +1,14 @@
 // The 4-Hour Rule screen: photo → /api/vision/items → assess() → live countdown cards.
-// Console-style layout (CONTRACT.md "Visual style"): page header with actions, a filter-like toolbar
-// for the outage controls, then a grid of countdown cards. Items, outage and indoor temp live in
+// "Apple meets Airbnb" (CONTRACT.md "Visual style"): hero summary + stacked status bar, a compact outage card
+// that opens a bottom sheet, Airbnb category pills, and countdown cards with Apple Watch-style rings. Items, outage and indoor temp live in
 // IndexedDB, so an offline reload still shows the clocks.
 import { demoItems, openfdaLabel, placeholderJpeg, visionItems } from './api'
 import { itemsAll, itemsReplace, kvGet, kvSet } from './db'
 import { runAssess, type NV, type Status, type WebEnv, type WebItem, type WebOutage } from './engine'
 import { onLang, t } from './i18n'
-import { emit, esc, fmtClock, modelMeta, on, state, toLocalInput, uid } from './util'
+import { emptyArt, iconHTML, onMedia } from './media'
+import { openSheet, type Sheet } from './sheet'
+import { emit, esc, fmtClock, haptic, usText, on, state, toLocalInput, uid, withTransition } from './util'
 
 type LastRead = { model: string; provider: string; latencyMs?: number; fallback?: boolean; unreadable?: number; at: string }
 
@@ -40,6 +42,7 @@ export async function mountFourHour(host: HTMLElement): Promise<void> {
 
   renderShell()
   onLang(() => renderShell())
+  onMedia(() => { renderCats(); renderCards() })
   on('prep', () => { renderControls(); recompute(true) })
   setInterval(() => recompute(false), 1000)
 }
@@ -69,32 +72,83 @@ function currentEnv(): WebEnv {
 }
 
 // ---------- rendering ----------
+type Cat = 'all' | 'fridge' | 'freezer' | 'med' | 'pantry'
+const CATS: { k: Cat; icon: string; label: string; media: string }[] = [
+  { k: 'all', icon: 'apps', label: 'cat_all', media: 'all' },
+  { k: 'fridge', icon: 'kitchen', label: 'cat_fridge', media: 'fridge' },
+  { k: 'freezer', icon: 'ac_unit', label: 'cat_freezer', media: 'freezer' },
+  { k: 'med', icon: 'medication', label: 'cat_meds', media: 'medicine' },
+  { k: 'pantry', icon: 'shelves', label: 'cat_pantry', media: 'pantry' },
+]
+let cat: Cat = (() => { try { const v = localStorage.getItem('bb.cat') as Cat | null; return v && CATS.some((c) => c.k === v) ? v : 'all' } catch { return 'all' } })()
+
+function catOf(it: WebItem): Cat {
+  if (it.category === 'med') return 'med'
+  const loc = String(it.location ?? '').toLowerCase()
+  const fc = String(it.foodClass ?? '').toLowerCase()
+  if (loc.includes('freezer') || it.frozen === true || fc.startsWith('frozen')) return 'freezer'
+  if (/shelf|cabinet|pantry|counter/.test(loc) || /shelf|pantry/.test(fc)) return 'pantry'
+  return 'fridge'
+}
+
+const ACTION: Status[] = ['USE_NOW', 'DISCARD', 'PAST_LIMIT', 'DO_NOT_USE']
+const ORDER: Status[] = ['DISCARD', 'DO_NOT_USE', 'PAST_LIMIT', 'USE_NOW', 'SAFE', 'UNKNOWN']
+const C = 2 * Math.PI * 50 // ring circumference (r = 50 in a 120 viewBox)
+
 function renderShell(): void {
   root.innerHTML = `
-    <div class="page-head">
-      <h1>${esc(t('fh_title'))}</h1>
-      <div class="actions">
-        <button type="button" class="btn primary" id="fh-photo"><span class="ms" aria-hidden="true">photo_camera</span>${esc(t('fh_photo'))}</button>
-        <button type="button" class="btn" id="fh-demo"><span class="ms" aria-hidden="true">image</span>${esc(t('fh_demo'))}</button>
-      </div>
-      <input type="file" accept="image/*" capture="environment" id="fh-file" class="hidden">
-    </div>
-    <p class="page-sub">${esc(t('fh_sub'))}</p>
-    <div id="fh-status"></div>
-    <div class="toolbar" id="fh-ctrls" role="group" aria-label="${esc(t('power_out'))}"></div>
+    <div class="card hero" id="fh-hero"></div>
+    <input type="file" accept="image/*" capture="environment" id="fh-file" class="hidden">
+    <div id="fh-status" style="margin-top:12px"></div>
+    <div class="card outage" id="fh-outage" role="group" aria-label="${esc(t('outage_title'))}"></div>
+    <nav class="cats" id="fh-cats" aria-label="${esc(t('items'))}"></nav>
     <div class="cards" id="fh-cards" aria-live="off"></div>
-    <div class="model-line" id="fh-model"></div>
-    <details class="editor card" id="fh-editor"><summary></summary><div class="ed-body" id="fh-ed-body"></div></details>`
+    <details class="list editor" id="fh-editor"><summary></summary><div class="ed-body" id="fh-ed-body"></div></details>`
 
   const file = root.querySelector<HTMLInputElement>('#fh-file')!
-  root.querySelector('#fh-photo')!.addEventListener('click', () => file.click())
   file.addEventListener('change', () => { const f = file.files?.[0]; file.value = ''; if (f) void readPhoto(f) })
-  root.querySelector('#fh-demo')!.addEventListener('click', () => void demoPhoto())
-
+  root.querySelector('#fh-cards')!.addEventListener('click', (e) => {
+    const card = (e.target as HTMLElement).closest<HTMLElement>('.cd')
+    if (card?.dataset.id) openDetail(card.dataset.id)
+  })
+  root.querySelector('#fh-cards')!.addEventListener('keydown', (e) => {
+    const ke = e as KeyboardEvent
+    const card = (ke.target as HTMLElement).closest<HTMLElement>('.cd')
+    if (card?.dataset.id && (ke.key === 'Enter' || ke.key === ' ') && ke.target === card) { ke.preventDefault(); openDetail(card.dataset.id) }
+  })
   renderStatus()
   renderControls()
+  renderCats()
   renderEditor()
   recompute(true)
+}
+
+function renderHero(): void {
+  const el = root.querySelector('#fh-hero')
+  if (!el) return
+  const counts = new Map<Status, number>()
+  verdicts.forEach((v) => counts.set(v.status, (counts.get(v.status) ?? 0) + 1))
+  const need = verdicts.filter((v) => ACTION.includes(v.status)).length
+  const head = !items.length ? esc(t('hero_none'))
+    : need ? esc(t(need === 1 ? 'need_action_one' : 'need_action_other', { n: '\u0000' })).replace('\u0000', `<em>${need}</em>`) : esc(t('all_clear'))
+  const stack = items.length ? `<div class="stack" role="img" aria-label="${esc(ORDER.filter((s) => counts.get(s)).map((s) => `${counts.get(s)} ${t('status.' + s)}`).join(', '))}">${ORDER.filter((s) => counts.get(s)).map((s) => `<i class="st-${s}" style="flex-grow:${counts.get(s)}"></i>`).join('')}</div>
+    <div class="legend">${ORDER.filter((s) => counts.get(s)).map((s) => `<span class="st-${s}"><i></i><b>${counts.get(s)}</b> ${esc(t('status.' + s).split(':')[0])}</span>`).join('')}</div>` : ''
+  let model = ''
+  if (items.length && lastRead) {
+    model = lastRead.fallback
+      ? `<div class="model-line"><span class="ms" aria-hidden="true">science</span><b>${esc(t('demo_items_fallback'))}</b></div>`
+      : `<div class="model-line"><span class="ms fill" aria-hidden="true">${lastRead.model === 'demo' ? 'science' : 'photo_camera'}</span>${esc(lastRead.model === 'demo' ? t('demo_items') : t('read_from_photo'))}${lastRead.unreadable ? ` · ${lastRead.unreadable} ${esc(t('unreadable'))}` : ''}</div>`
+  }
+  el.innerHTML = `
+    <div class="big" aria-live="polite">${head}</div>
+    <div class="sub">${items.length ? esc(t('hero_sub', { n: items.length, h: hoursOut().toFixed(1) })) : esc(t('fh_sub'))}</div>
+    ${stack}${model}
+    <div class="btn-row">
+      <button type="button" class="btn primary" id="fh-photo" ${busy ? 'disabled' : ''}><span class="ms" aria-hidden="true">photo_camera</span><span>${esc(t('fh_photo'))}</span></button>
+      <button type="button" class="btn" id="fh-demo" ${busy ? 'disabled' : ''}>${busy ? '<span class="spinner" aria-hidden="true"></span>' : '<span class="ms" aria-hidden="true">auto_awesome</span>'}<span>${esc(t('fh_demo'))}</span></button>
+    </div>`
+  el.querySelector('#fh-photo')!.addEventListener('click', () => { haptic(); root.querySelector<HTMLInputElement>('#fh-file')!.click() })
+  el.querySelector('#fh-demo')!.addEventListener('click', () => { haptic(); void demoPhoto() })
 }
 
 function renderStatus(): void {
@@ -103,92 +157,145 @@ function renderStatus(): void {
   const icon = (k: string) => (k === 'error' ? 'error' : k === 'warn' ? 'warning' : 'info')
   el.innerHTML = (busy ? `<div class="progress" role="progressbar" aria-label="${esc(t('fh_reading'))}"><i></i></div><div class="banner"><span class="ms" aria-hidden="true">photo_camera</span><span>${esc(t('fh_reading'))}</span></div>` : '') +
     (note ? `<div class="banner ${note.kind === 'info' ? '' : note.kind}"><span class="ms" aria-hidden="true">${icon(note.kind)}</span><span>${esc(note.text)}</span></div>` : '')
-  root.querySelectorAll<HTMLButtonElement>('#fh-photo, #fh-demo').forEach((b) => { b.disabled = busy })
+  renderHero()
+}
+
+function renderCats(): void {
+  const el = root.querySelector('#fh-cats')
+  if (!el) return
+  const n = (k: Cat) => (k === 'all' ? items.length : items.filter((i) => catOf(i) === k).length)
+  el.innerHTML = CATS.map((c) => `<button type="button" data-cat="${c.k}" aria-pressed="${cat === c.k}">${iconHTML([`icon.cat.${c.media}`, `icon.${c.media}`], c.icon, 'mi cat-mi')}<span>${esc(t(c.label))} <span class="n">${n(c.k) || ''}</span></span></button>`).join('')
+  el.querySelectorAll<HTMLButtonElement>('[data-cat]').forEach((b) => b.addEventListener('click', () => {
+    haptic()
+    cat = b.dataset.cat as Cat
+    try { localStorage.setItem('bb.cat', cat) } catch { /* ignore */ }
+    withTransition(() => { renderCats(); renderCards() })
+  }))
+}
+
+// ---------- outage controls: compact card + bottom sheet ----------
+let ctlSheet: Sheet | null = null
+
+function roomC(): { c: number | null; estimated: boolean } {
+  const env = currentEnv()
+  return { c: env.indoorTempF != null ? Math.round(env.indoorTempF) : null, estimated: env.estimated }
 }
 
 function renderControls(): void {
-  const el = root.querySelector('#fh-ctrls')
-  if (!el) return
-  const h = hoursOut()
-  const env = currentEnv()
-  const opens = outage.doorOpenedAt.length
-  const c = env.indoorTempF != null ? Math.round(((env.indoorTempF - 32) * 5) / 9) : null
-  el.innerHTML = `
-    <div class="tgroup t-out">
-      <div class="field">
-        <input type="datetime-local" id="fh-start" value="${toLocalInput(Date.parse(outage.startedAt))}">
-        <label for="fh-start">${esc(t('power_out'))}</label>
+  const el = root.querySelector('#fh-outage')
+  if (el) {
+    const h = hoursOut()
+    const room = roomC()
+    el.innerHTML = `
+      <div class="o-top">
+        <div class="o-ico"><span class="ms fill" aria-hidden="true">power_off</span></div>
+        <div style="flex:1;min-width:0"><div class="o-label">${esc(t('power_out'))}</div><div class="o-val" id="fh-hrs-val">${esc(t('power_out_for', { h: h.toFixed(1) }))}</div></div>
+        <button type="button" class="btn small" id="fh-adjust"><span class="ms" aria-hidden="true">tune</span>${esc(t('adjust'))}</button>
       </div>
       <input type="range" id="fh-hrs" min="0" max="72" step="0.25" value="${Math.min(72, h).toFixed(2)}" aria-label="${esc(t('power_out'))} · ${esc(t('hours_ago'))}">
-      <div class="tval" id="fh-hrs-val">${h.toFixed(1)} <span class="small muted">${esc(t('hours_ago'))}</span></div>
-    </div>
-    <div class="tgroup">
-      <div class="tlabel"><span class="ms" aria-hidden="true">kitchen</span>${esc(t('fridge_door'))}</div>
-      <div class="trow">
-        <button type="button" class="btn" id="fh-door"><span class="ms" aria-hidden="true">door_open</span>${esc(t('opened_fridge'))}</button>
-        <span class="count" aria-label="${opens} ${esc(t('door_opens'))}">${opens}×</span>
-        ${opens ? `<button type="button" class="btn text" id="fh-door-reset">${esc(t('reset'))}</button>` : ''}
-      </div>
-      <div class="tnote">${esc(t('door_penalty_note'))}</div>
-    </div>
-    <div class="tgroup">
-      <div class="tlabel"><span class="ms" aria-hidden="true">ac_unit</span>${esc(t('freezer'))}</div>
-      <div class="seg" role="group" aria-label="${esc(t('freezer'))}">
-        <button type="button" data-frz="full" aria-pressed="${outage.freezerFull}"><span class="ms" aria-hidden="true">check</span>${esc(t('full'))}</button>
-        <button type="button" data-frz="half" aria-pressed="${!outage.freezerFull}"><span class="ms" aria-hidden="true">check</span>${esc(t('half'))}</button>
-      </div>
-    </div>
-    <div class="tgroup t-temp">
-      <div class="trow" style="flex-wrap:nowrap">
-        <div class="field" style="flex:1">
-          <input type="number" inputmode="decimal" id="fh-temp" min="30" max="130" step="1" placeholder="${esc(env.estimated && env.indoorTempF != null ? '≈ ' + env.indoorTempF : t('temp_placeholder'))}" value="${indoorTempF ?? ''}">
-          <label for="fh-temp">${esc(t('indoor_temp'))}</label>
-        </div>
-        <button type="button" class="chip" data-temp="84" aria-pressed="${indoorTempF === 84}">84°F</button>
-        <button type="button" class="chip" data-temp="91" aria-pressed="${indoorTempF === 91}">91°F</button>
-      </div>
-      <div class="tnote">
-        ${env.estimated ? `<span class="estimate">${esc(t('estimated'))}</span> ` : `<span class="estimate user">${esc(t('thermometer'))}</span> `}
-        ${env.indoorTempF != null ? `${env.estimated ? '≈ ' : ''}${env.indoorTempF}°F (${c}°C)${env.estimated && state.prep?.nws?.tempF != null ? ` · NWS ${Math.round(state.prep.nws.tempF)}°F` : ''}` : esc(t('no_reading'))}
-        ${indoorTempF != null ? ` · <button type="button" class="btn text" data-temp="" style="height:24px">${esc(t('reset'))}</button>` : ''}
-      </div>
-    </div>`
+      <div class="o-meta">
+        <button type="button" class="pill" data-open><span class="ms" aria-hidden="true">door_open</span>${esc(t('door_n', { n: outage.doorOpenedAt.length }))}</button>
+        <button type="button" class="pill" data-open><span class="ms" aria-hidden="true">ac_unit</span>${esc(t('freezer'))} · ${esc(outage.freezerFull ? t('full') : t('half'))}</button>
+        <button type="button" class="pill" data-open><span class="ms" aria-hidden="true">thermostat</span>${esc(t('room', { t: room.c != null ? `${room.estimated ? '≈ ' : ''}${room.c} °F` : '—' }))}${room.estimated && room.c != null ? ` <span class="est">${esc(t('estimated'))}</span>` : ''}</button>
+      </div>`
+    el.querySelector('#fh-adjust')!.addEventListener('click', openControls)
+    el.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', openControls))
+    bindSlider(el as HTMLElement)
+  }
+  if (ctlSheet) renderSheetControls(ctlSheet.body)
+}
 
-  const start = el.querySelector<HTMLInputElement>('#fh-start')!
+function bindSlider(scope: HTMLElement): void {
+  const hrs = scope.querySelector<HTMLInputElement>('#fh-hrs, [data-hrs]')
+  if (!hrs) return
+  hrs.addEventListener('input', () => {
+    const v = parseFloat(hrs.value)
+    outage.startedAt = new Date(Date.now() - v * 36e5).toISOString()
+    document.querySelectorAll<HTMLElement>('#fh-hrs-val, [data-hrs-val]').forEach((x) => { x.textContent = t('power_out_for', { h: v.toFixed(1) }) })
+    document.querySelectorAll<HTMLInputElement>('#fh-hrs, [data-hrs]').forEach((x) => { if (x !== hrs) x.value = hrs.value })
+    const st = document.querySelector<HTMLInputElement>('[data-start]')
+    if (st) st.value = toLocalInput(Date.parse(outage.startedAt))
+    recompute(true)
+  })
+  hrs.addEventListener('change', () => { saveOutage(); haptic() })
+}
+
+function openControls(): void {
+  ctlSheet = openSheet(t('outage_title'), '', (body) => renderSheetControls(body), () => { ctlSheet = null })
+}
+
+function renderSheetControls(body: HTMLElement): void {
+  const h = hoursOut()
+  const env = currentEnv()
+  const room = roomC()
+  const opens = outage.doorOpenedAt.length
+  const userC = indoorTempF != null ? Math.round(indoorTempF) : null
+  const nwsC = state.prep?.nws?.tempF != null ? Math.round(state.prep.nws.tempF) : null
+  body.innerHTML = `
+    <div class="ctl">
+      <div class="lab"><span class="ms" aria-hidden="true">power_off</span>${esc(t('power_out'))}<span class="v" data-hrs-val>${esc(t('power_out_for', { h: h.toFixed(1) }))}</span></div>
+      <input type="range" data-hrs min="0" max="72" step="0.25" value="${Math.min(72, h).toFixed(2)}" aria-label="${esc(t('power_out'))}">
+      <input type="datetime-local" class="input" data-start value="${toLocalInput(Date.parse(outage.startedAt))}" aria-label="${esc(t('power_out'))}" style="margin-top:8px">
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="ms" aria-hidden="true">kitchen</span>${esc(t('fridge_door'))}</div>
+      <div class="line">
+        <button type="button" class="btn primary small" data-door><span class="ms" aria-hidden="true">door_open</span>${esc(t('opened_fridge'))}</button>
+        <span class="door-count" aria-label="${opens} ${esc(t('door_opens'))}">${opens}×</span>
+        ${opens ? `<button type="button" class="btn text" data-door-reset>${esc(t('reset'))}</button>` : ''}
+      </div>
+      <div class="note">${esc(t('door_penalty_note'))}</div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="ms" aria-hidden="true">ac_unit</span>${esc(t('freezer'))}</div>
+      <div class="seg" role="group" aria-label="${esc(t('freezer'))}">
+        <button type="button" data-frz="full" aria-pressed="${outage.freezerFull}">${esc(t('full'))}</button>
+        <button type="button" data-frz="half" aria-pressed="${!outage.freezerFull}">${esc(t('half'))}</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <div class="lab"><span class="ms" aria-hidden="true">thermostat</span>${esc(t('indoor_temp'))}${room.c != null ? `<span class="v">${room.estimated ? '≈ ' : ''}${room.c} °F</span>` : ''}</div>
+      <div class="line">
+        <input type="number" inputmode="decimal" class="input" data-temp-in min="32" max="130" step="1" style="flex:1;min-width:110px" placeholder="${esc(env.estimated && room.c != null ? '≈ ' + room.c : t('temp_placeholder'))}" value="${userC ?? ''}" aria-label="${esc(t('indoor_temp'))}">
+        <button type="button" class="chip" data-temp-c="84" aria-pressed="${userC === 84}">84 °F</button>
+        <button type="button" class="chip" data-temp-c="91" aria-pressed="${userC === 91}">91 °F</button>
+      </div>
+      <div class="note">
+        ${env.estimated ? `<span class="est">${esc(t('est_nws'))}</span>` : `<span class="est user">${esc(t('thermometer'))}</span>`}
+        ${room.c != null ? '' : ` ${esc(t('no_reading'))}`}${env.estimated && nwsC != null ? ` · NWS ${nwsC} °F` : ''}
+        ${indoorTempF != null ? ` · <button type="button" class="btn text" data-temp-c="" style="height:24px;padding:0 4px">${esc(t('reset'))}</button>` : ''}
+      </div>
+    </div>
+    <button type="button" class="btn block" data-done style="margin-top:12px">${esc(t('done'))}</button>`
+
+  bindSlider(body)
+  const start = body.querySelector<HTMLInputElement>('[data-start]')!
   start.addEventListener('change', () => {
     const ms = Date.parse(start.value)
     if (Number.isFinite(ms)) { outage.startedAt = new Date(ms).toISOString(); saveOutage(); renderControls(); recompute(true) }
   })
-  const hrs = el.querySelector<HTMLInputElement>('#fh-hrs')!
-  hrs.addEventListener('input', () => {
-    const v = parseFloat(hrs.value)
-    outage.startedAt = new Date(Date.now() - v * 36e5).toISOString()
-    start.value = toLocalInput(Date.parse(outage.startedAt))
-    el.querySelector('#fh-hrs-val')!.innerHTML = `${v.toFixed(1)} <span class="small muted">${esc(t('hours_ago'))}</span>`
-    recompute(true)
-  })
-  hrs.addEventListener('change', saveOutage)
-  el.querySelector('#fh-door')!.addEventListener('click', () => {
+  body.querySelector('[data-door]')!.addEventListener('click', () => {
+    haptic()
     outage.doorOpenedAt = [...outage.doorOpenedAt, new Date().toISOString()]
     saveOutage(); renderControls(); recompute(true)
   })
-  el.querySelector('#fh-door-reset')?.addEventListener('click', () => {
-    outage.doorOpenedAt = []; saveOutage(); renderControls(); recompute(true)
-  })
-  el.querySelectorAll<HTMLButtonElement>('[data-frz]').forEach((b) => b.addEventListener('click', () => {
-    outage.freezerFull = b.dataset.frz === 'full'; saveOutage(); renderControls(); recompute(true)
+  body.querySelector('[data-door-reset]')?.addEventListener('click', () => { outage.doorOpenedAt = []; saveOutage(); renderControls(); recompute(true) })
+  body.querySelectorAll<HTMLButtonElement>('[data-frz]').forEach((b) => b.addEventListener('click', () => {
+    haptic(); outage.freezerFull = b.dataset.frz === 'full'; saveOutage(); renderControls(); recompute(true)
   }))
-  const temp = el.querySelector<HTMLInputElement>('#fh-temp')!
+  const temp = body.querySelector<HTMLInputElement>('[data-temp-in]')!
   temp.addEventListener('change', () => {
-    const v = parseFloat(temp.value)
-    indoorTempF = Number.isFinite(v) ? v : null
+    const c = parseFloat(temp.value)
+    indoorTempF = Number.isFinite(c) ? Math.round(c * 10) / 10 : null // the engine works in °F natively
     saveEnv(); renderControls(); recompute(true)
   })
-  el.querySelectorAll<HTMLButtonElement>('[data-temp]').forEach((b) => b.addEventListener('click', () => {
-    const v = parseFloat(b.dataset.temp ?? '')
-    indoorTempF = Number.isFinite(v) ? v : null
+  body.querySelectorAll<HTMLButtonElement>('[data-temp-c]').forEach((b) => b.addEventListener('click', () => {
+    haptic()
+    const c = parseFloat(b.dataset.tempC ?? '')
+    indoorTempF = Number.isFinite(c) ? Math.round(c * 10) / 10 : null
     saveEnv(); renderControls(); recompute(true)
   }))
+  body.querySelector('[data-done]')!.addEventListener('click', () => ctlSheet?.close())
 }
 
 function recompute(force: boolean): void {
@@ -201,17 +308,13 @@ function recompute(force: boolean): void {
   state.verdicts = verdicts
   const sig = verdicts.map((v) => v.itemId + ':' + v.status).join('|')
   if (force || sig !== signature) {
+    const changed = sig !== signature
     signature = sig
     renderCards()
+    if (changed || force) { renderHero(); renderCats() }
   } else {
     tickClocks()
   }
-}
-
-function clockText(v: NV, now: number): { text: string; none: boolean } {
-  if (OVER.includes(v.status)) return { text: t('over_limit'), none: false }
-  if (v.deadlineMs == null) return { text: t('no_clock'), none: true }
-  return { text: fmtClock(v.deadlineMs - now), none: false }
 }
 
 function pct(v: NV, now: number): number {
@@ -222,11 +325,46 @@ function pct(v: NV, now: number): number {
   return Math.max(0, Math.min(100, (100 * (v.deadlineMs - now)) / total))
 }
 
+/** Text inside the ring: "03:14:09" (+ "2d"), "Over limit", or "No clock". */
+function ringInner(v: NV, now: number): string {
+  if (OVER.includes(v.status)) return `<span class="ms fill" aria-hidden="true">${ICON[v.status]}</span><span class="over">${esc(t('over_limit'))}</span>`
+  if (v.deadlineMs == null) return `<span class="ms fill" aria-hidden="true">${ICON[v.status]}</span><span class="over" style="color:var(--text-2)">${esc(t('no_clock'))}</span>`
+  const s = fmtClock(v.deadlineMs - now)
+  const m = /^(\d+d) (.*)$/.exec(s)
+  return `${m ? `<span class="dd">${m[1]}</span>` : ''}<span class="clk" data-clk>${m ? m[2] : s}</span><span class="lbl">${esc(t('time_left'))}</span>`
+}
+
+function ringHTML(v: NV, now: number, start = true): string {
+  const p = pct(v, now)
+  const off = start ? C : C * (1 - p / 100)
+  return `<div class="ring" data-ring="${esc(v.itemId)}" data-p="${p.toFixed(2)}">
+    <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="trk" cx="60" cy="60" r="50" fill="none" stroke-width="11"/>
+    <circle class="val" cx="60" cy="60" r="50" fill="none" stroke-width="11" stroke-linecap="round" stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${off.toFixed(2)}"/></svg>
+    <div class="in">${ringInner(v, now)}</div></div>`
+}
+
+/** Animate rings from empty to their value (Apple Watch style) on the next frames. */
+function settleRings(scope: ParentNode): void {
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    scope.querySelectorAll<HTMLElement>('.ring[data-p]').forEach((r) => {
+      const c = r.querySelector<SVGCircleElement>('.val')
+      if (c) c.style.strokeDashoffset = String(C * (1 - Number(r.dataset.p) / 100))
+    })
+  }))
+}
+
 const INSULIN = /insulin|insulina|ensilin|lantus|humalog|novolog|humulin|levemir|tresiba|basaglar|toujeo|admelog|apidra|fiasp|lyumjev/i
 /** Insulin past its label limit gets the FDA life-sustaining copy; other medicines get the generic line. */
-function actKey(it: WebItem, cat: string, s: Status): string {
-  if (cat === 'med' && s === 'PAST_LIMIT' && INSULIN.test(`${it.name} ${it.brandText ?? ''}`)) return 'act.insulin.PAST_LIMIT'
-  return `act.${cat}.${s}`
+function actKey(it: WebItem, c: string, s: Status): string {
+  if (c === 'med' && s === 'PAST_LIMIT' && INSULIN.test(`${it.name} ${it.brandText ?? ''}`)) return 'act.insulin.PAST_LIMIT'
+  return `act.${c}.${s}`
+}
+
+const LOC_KEY: Record<string, string> = { fridge: 'cat_fridge', door: 'cat_fridge', freezer: 'cat_freezer', shelf: 'cat_pantry', cabinet: 'cat_pantry' }
+function kindLine(it: WebItem): string {
+  const c = it.category === 'med' ? t('med') : t('food')
+  const loc = it.location ? t(LOC_KEY[String(it.location)] ?? '') : ''
+  return c + (loc && LOC_KEY[String(it.location)] ? ' · ' + loc : '')
 }
 
 function renderCards(): void {
@@ -234,61 +372,84 @@ function renderCards(): void {
   if (!el) return
   const byId = new Map(items.map((i) => [i.id, i]))
   const now = Date.now()
+  const shown = verdicts.filter((v) => { const it = byId.get(v.itemId); return it && (cat === 'all' || catOf(it) === cat) })
   if (!items.length) {
-    el.innerHTML = `<div class="empty" style="grid-column:1/-1"><span class="ms" aria-hidden="true">kitchen</span>${esc(t('fh_empty'))}</div>`
+    el.innerHTML = `<div class="empty">${emptyArt('empty.clocks') || '<span class="ms" aria-hidden="true">kitchen</span>'}${esc(t('fh_empty'))}</div>`
+  } else if (!shown.length) {
+    el.innerHTML = `<div class="empty"><span class="ms" aria-hidden="true">${CATS.find((c) => c.k === cat)?.icon ?? 'apps'}</span>—</div>`
   } else {
-    el.innerHTML = verdicts.map((v) => {
-      const it = byId.get(v.itemId)
-      if (!it) return ''
-      const cat = it.category === 'med' ? 'med' : 'food'
-      const c = clockText(v, now)
-      const kind = (cat === 'med' ? t('med') : t('food')) + (it.location ? ' · ' + it.location : '') + (v.hint ? ' · ' + v.hint : '')
-      const cite = v.url ? `<a href="${esc(v.url)}" target="_blank" rel="noopener">${esc(v.source || t('cite'))}</a>` : esc(v.source)
-      return `<article class="cd s-${v.status}" data-id="${esc(v.itemId)}">
-        <div class="hd"><span class="ms" aria-hidden="true">${ICON[v.status]}</span><div><div class="nm">${esc(it.name)}</div><div class="kind">${esc(kind)}</div></div></div>
-        <div class="clock${c.none ? ' none' : ''}" data-clock>${esc(c.text)}</div>
-        <div class="bar"><i data-bar style="width:${pct(v, now).toFixed(1)}%"></i></div>
-        <span class="stchip"><span class="ms" aria-hidden="true">${ICON[v.status]}</span>${esc(t('status.' + v.status))}</span>
-        <div class="act">${esc(t(actKey(it, cat, v.status)))}</div>
-        ${v.quote ? `<div class="quote">“${esc(v.quote.length > 180 ? v.quote.slice(0, 177).trimEnd() + '…' : v.quote)}”</div>` : ''}
-        <div class="src">${esc(t('cite'))}: ${cite}${v.reason ? ` · ${esc(v.reason)}` : ''}</div>
+    el.innerHTML = shown.map((v, i) => {
+      const it = byId.get(v.itemId)!
+      const c = it.category === 'med' ? 'med' : 'food'
+      return `<article class="cd s-${v.status}" data-id="${esc(v.itemId)}" tabindex="0" role="button" aria-label="${esc(it.name)}: ${esc(t('status.' + v.status))}" style="animation-delay:${Math.min(i, 8) * 40}ms">
+        <div class="cd-main">
+          ${ringHTML(v, now)}
+          <div class="info">
+            <div class="nm">${esc(it.name)}</div>
+            <div class="kind">${esc(kindLine(it))}</div>
+            <span class="stpill"><span class="ms" aria-hidden="true">${ICON[v.status]}</span><span>${esc(t('status.' + v.status))}</span></span>
+            <div class="act">${esc(t(actKey(it, c, v.status)))}</div>
+          </div>
+        </div>
+        <div class="src-row"><span class="ms" aria-hidden="true">verified</span><span class="s">${esc(t('cite'))} · <b>${esc(usText(v.source) || '—')}</b></span><span class="ms chev" aria-hidden="true">chevron_right</span></div>
       </article>`
     }).join('')
-  }
-  const ml = root.querySelector('#fh-model')
-  if (ml) {
-    if (!items.length || !lastRead) ml.innerHTML = ''
-    else if (lastRead.model === 'demo' && lastRead.fallback) ml.innerHTML = `<span class="ms" aria-hidden="true">science</span><b>${esc(t('demo_items_fallback'))}</b>`
-    else ml.innerHTML = `<span class="ms" aria-hidden="true">smart_toy</span>${esc(t('read_by'))} <b>${esc(modelMeta(lastRead.model, lastRead.latencyMs))}</b>${lastRead.unreadable ? ` · ${lastRead.unreadable} unreadable` : ''}`
+    settleRings(el)
   }
 }
 
 function tickClocks(): void {
   const now = Date.now()
   const byId = new Map(verdicts.map((v) => [v.itemId, v]))
-  root.querySelectorAll<HTMLElement>('#fh-cards .cd').forEach((card) => {
-    const v = byId.get(card.dataset.id ?? '')
+  document.querySelectorAll<HTMLElement>('.ring[data-ring]').forEach((r) => {
+    const v = byId.get(r.dataset.ring ?? '')
     if (!v) return
-    const c = clockText(v, now)
-    const ck = card.querySelector<HTMLElement>('[data-clock]')
-    if (ck && ck.textContent !== c.text) ck.textContent = c.text
-    const bar = card.querySelector<HTMLElement>('[data-bar]')
-    if (bar) bar.style.width = pct(v, now).toFixed(1) + '%'
+    const p = pct(v, now)
+    r.dataset.p = p.toFixed(2)
+    const c = r.querySelector<SVGCircleElement>('.val')
+    if (c && c.style.strokeDashoffset) c.style.strokeDashoffset = String(C * (1 - p / 100))
+    const ck = r.querySelector<HTMLElement>('[data-clk]')
+    if (ck && v.deadlineMs != null) {
+      const s = fmtClock(v.deadlineMs - now).replace(/^\d+d /, '')
+      if (ck.textContent !== s) ck.textContent = s
+    }
   })
-  const hv = root.querySelector('#fh-hrs-val')
-  const slider = root.querySelector<HTMLInputElement>('#fh-hrs')
-  if (hv && slider && document.activeElement !== slider && Math.floor(now / 1000) % 30 === 0) {
+  if (Math.floor(now / 1000) % 30 === 0) {
     const h = hoursOut()
-    slider.value = Math.min(72, h).toFixed(2)
-    hv.innerHTML = `${h.toFixed(1)} <span class="small muted">${esc(t('hours_ago'))}</span>`
+    const active = document.activeElement
+    document.querySelectorAll<HTMLInputElement>('#fh-hrs, [data-hrs]').forEach((x) => { if (x !== active) x.value = Math.min(72, h).toFixed(2) })
+    document.querySelectorAll<HTMLElement>('#fh-hrs-val, [data-hrs-val]').forEach((x) => { x.textContent = t('power_out_for', { h: h.toFixed(1) }) })
   }
+}
+
+// ---------- item detail sheet (ring, what to do, why in metric, verbatim source) ----------
+function openDetail(id: string): void {
+  const it = items.find((x) => x.id === id)
+  const v = verdicts.find((x) => x.itemId === id)
+  if (!it || !v) return
+  const c = it.category === 'med' ? 'med' : 'food'
+  const why = usText(v.reason)
+  openSheet(it.name, `
+    <div class="det-top s-${v.status} cd" style="box-shadow:none;border:0;background:transparent;animation:none;cursor:default">
+      ${ringHTML(v, Date.now())}
+      <div class="info"><div class="kind">${esc(kindLine(it))}</div>
+        <span class="stpill"><span class="ms" aria-hidden="true">${ICON[v.status]}</span><span>${esc(t('status.' + v.status))}</span></span>
+        ${v.hint ? `<div class="kind" style="white-space:normal;margin-top:8px">${esc(v.hint)}</div>` : ''}</div>
+    </div>
+    <div class="det-h">${esc(t('what_to_do'))}</div><p class="det-p">${esc(t(actKey(it, c, v.status)))}</p>
+    ${why ? `<div class="det-h">${esc(t('why'))}</div><p class="det-p">${esc(why)}</p>` : ''}
+    <div class="det-h">${esc(t('source_quote'))}</div>
+    ${v.quote ? `<div class="quote-box"><p>${esc(v.quote)}</p></div>` : ''}
+    <p class="det-p" style="margin-top:10px"><b>${esc(usText(v.source) || '—')}</b></p>
+    ${v.url ? `<a class="btn outline block" style="margin-top:14px" href="${esc(v.url)}" target="_blank" rel="noopener"><span class="ms" aria-hidden="true">open_in_new</span>${esc(t('open_source'))}</a>` : ''}`,
+  (body) => settleRings(body))
 }
 
 // ---------- item editor ----------
 function renderEditor(): void {
   const det = root.querySelector('#fh-editor')
   if (!det) return
-  det.querySelector('summary')!.innerHTML = `<span class="ms" aria-hidden="true">list</span>${esc(t('items'))} <span class="count">${items.length}</span><span class="grow" style="flex:1"></span><span class="ms chev" aria-hidden="true">expand_more</span>`
+  det.querySelector('summary')!.innerHTML = `<span class="ms" aria-hidden="true">edit_note</span>${esc(t('items'))} <span class="count">${items.length}</span><span style="flex:1"></span><span class="ms x" aria-hidden="true">chevron_right</span>`
   const body = det.querySelector('#fh-ed-body')!
   const opt = (v: string, sel: boolean) => `<option value="${v}"${sel ? ' selected' : ''}>${esc(t(v))}</option>`
   body.innerHTML = items.map((it) => `
@@ -300,7 +461,7 @@ function renderEditor(): void {
     <form class="ed-add" id="fh-add">
       <input type="text" name="name" placeholder="${esc(t('item_name'))}" aria-label="${esc(t('item_name'))}" required>
       <select name="cat" aria-label="${esc(t('food'))} / ${esc(t('med'))}">${opt('food', true)}${opt('med', false)}</select>
-      <button class="btn primary" type="submit"><span class="ms" aria-hidden="true">add</span>${esc(t('add_item'))}</button>
+      <button class="btn primary small" type="submit"><span class="ms" aria-hidden="true">add</span>${esc(t('add_item'))}</button>
     </form>
     <div class="trow" style="margin-top:12px">
       <button type="button" class="btn text" id="fh-local-demo"><span class="ms" aria-hidden="true">science</span>${esc(t('demo_local'))}</button>
@@ -381,7 +542,7 @@ async function readPhoto(file: File): Promise<void> {
   }
 }
 
-/** "Try demo photo". Demo server: placeholder image, answered by hint. Live server: Claude reads the bundled
+/** "Try demo photo". Demo server: placeholder image, answered by hint. Live server: the vision model reads the bundled
  *  pharmacy-label photo for real, and the sample fridge items fill in the food side. */
 async function demoPhoto(): Promise<void> {
   busy = true; note = null; renderStatus()
@@ -464,4 +625,35 @@ async function downscale(file: File, maxPx: number, quality: number): Promise<{ 
   } finally {
     URL.revokeObjectURL(url)
   }
+}
+
+// ---------- Home screen hooks (capture-first): the Home cards feed this same item list + IndexedDB store ----------
+export type Snap = { thumb: string | null; count: number; at: string }
+
+/** Read one Home-card photo with the fridge/meds hint. Items from an earlier photo of the same card are replaced. */
+export async function captureFromHome(file: File, hint: 'fridge' | 'meds'): Promise<Snap> {
+  busy = true; note = null; if (root) renderStatus()
+  try {
+    const [{ base64, mime }, small] = await Promise.all([downscale(file, 1280, 0.85), downscale(file, 360, 0.7)])
+    const r = await visionItems(base64, mime, hint)
+    const before = new Set(items.map((x) => x.id))
+    items = items.filter((x) => (x as WebItem & { capture?: string }).capture !== hint)
+    await ingest([r])
+    let count = 0
+    for (const it of items) if (!before.has(it.id)) { (it as WebItem & { capture?: string }).capture = hint; count++ }
+    saveItems()
+    const snap: Snap = { thumb: `data:image/jpeg;base64,${small.base64}`, count, at: new Date().toISOString() }
+    void kvSet('snap.' + hint, snap, 'user')
+    return snap
+  } finally {
+    busy = false
+    if (root) { renderStatus(); renderEditor(); recompute(true) }
+  }
+}
+
+/** "The power just went out": outage starts now, door count resets. */
+export function powerOutNow(): void {
+  outage = { ...outage, startedAt: new Date().toISOString(), doorOpenedAt: [] }
+  saveOutage()
+  if (root) { renderControls(); recompute(true) }
 }

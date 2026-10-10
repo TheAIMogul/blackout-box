@@ -38,7 +38,7 @@ async function req<T>(path: string, init: RequestInit & { timeoutMs?: number } =
 
 export async function getHealth(): Promise<Health> {
   try {
-    return await req<Health>('/health', { timeoutMs: 3500, cache: 'no-store' })
+    return await req<Health>('/health', { timeoutMs: 6000, cache: 'no-store' }) // the live Worker can take a few seconds on a cold start
   } catch {
     return { ok: false, online: false, demo: true, provider: 'demo', models: {}, _fallback: true }
   }
@@ -148,4 +148,35 @@ const DEMO_PREP: PrepBundle = {
   statute: { number: 'F.S. 252.358', summary: 'Under a hurricane warning, a Governor-declared emergency, or an activated county EOC, insurers must waive "refill too soon" limits and cover at least a 30-day supply, if refills remain. Likely applies; ask your pharmacy.', url: 'https://www.flsenate.gov/Laws/Statutes/2025/252.358' },
   fdaEmergencyInsulin: { url: 'https://www.fda.gov/drugs/emergency-preparedness-drugs/information-regarding-insulin-storage-and-switching-between-products-emergency', summary: 'Insulin may be kept at 59–86°F for up to 28 days. Above 86°F in an emergency it may still need to be used. Never use frozen insulin. Replace it when proper storage is available.' },
   foodRules: { url: 'https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage', headline: 'A closed refrigerator keeps food safe for up to 4 hours without power. Discard refrigerated perishables after that. A full freezer holds about 48 hours (24 if half full).' },
+}
+
+// ---------- GET /api/now: current conditions + warnings, already metric (coordinator, 1:10 PM) ----------
+export type NowLevel = 'red' | 'orange' | 'yellow' | 'blue' | 'green'
+export type NowWarning = { level: NowLevel; icon?: string; title: string; detail?: string; source?: string; url?: string | null; until?: string | null }
+export type NowData = {
+  generatedAt?: string
+  location?: { lat: number; lon: number }
+  overall?: NowLevel
+  weather?: {
+    tempC?: number; feelsLikeC?: number; humidity?: number; windKmh?: number; gustKmh?: number; uvIndex?: number; uvMax?: number
+    weatherCode?: number; isDay?: boolean; highC?: number; lowC?: number; rainChanceNext6h?: number[]; sunrise?: string; sunset?: string
+    daylightLeftMin?: number; station?: string; source?: string
+  } | null
+  air?: { usAqi?: number; pm25?: number } | null
+  tide?: { station?: string; latestM?: number; latestAt?: string; nextHigh?: { t: string; m: number } | null; kingTideM?: number; minorFloodM?: number; kingTide?: boolean } | null
+  zone?: { zone: string | null; category?: number | null } | null
+  alerts?: unknown[]
+  storms?: { name: string; classification?: string; basin?: string; windKmh?: number; distanceKm?: number; movement?: string; advisoryUrl?: string }[]
+  warnings?: NowWarning[]
+  errors?: unknown[]
+  _source?: string
+}
+
+export async function getNow(lat: number, lon: number): Promise<NowData | null> {
+  try {
+    const r = await req<NowData>(`/now?lat=${lat}&lon=${lon}`, { timeoutMs: 20000, cache: 'no-store' })
+    return r && typeof r === 'object' && (r.weather || r.warnings) ? r : null
+  } catch {
+    return null
+  }
 }

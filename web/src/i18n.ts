@@ -9,9 +9,20 @@ export const LANGS: Lang[] = ['en', 'es', 'ht']
 type Dict = Record<string, string>
 
 const en: Dict = {
+  snap_fridge: 'Snap your fridge',
+  snap_meds: 'Snap your medicine',
+  snap_hint: 'Opens your camera',
+  snap_reading: 'Reading your photo…',
+  items_saved: '{n} items saved',
+  item_saved: '1 item saved',
+  power_went_out: 'The power just went out',
+  pack_box: 'Pack my box',
+  open_clocks: 'Open Clocks',
+  drill_title: 'SIMULATED STORM',
+  drill_sub: 'Hurricane drill — practice mode',
   lang_name: 'English',
   tagline: 'The app that works when nothing else does.',
-  tab_fourhour: '4-Hour Rule',
+  tab_fourhour: 'Clocks',
   tab_prep: 'Prep',
   tab_ask: 'Ask',
   tab_map: 'Map',
@@ -25,7 +36,7 @@ const en: Dict = {
   // 4-Hour Rule
   fh_title: 'The 4-Hour Rule',
   fh_sub: 'Everything in your fridge and medicine cabinet has a clock.',
-  fh_photo: 'Take a photo',
+  fh_photo: 'Scan fridge',
   fh_demo: 'Try demo photo',
   demo_local: 'Load sample items (no server)',
   fh_none_found: 'No items found in that photo. Try one shelf at a time, or add items by hand.',
@@ -40,7 +51,7 @@ const en: Dict = {
   freezer: 'Freezer',
   full: 'Full',
   half: 'Half',
-  indoor_temp: 'Indoor temperature °F',
+  indoor_temp: 'Room temperature °F',
   estimated: 'estimated',
   thermometer: 'thermometer',
   temp_placeholder: 'e.g. 88',
@@ -55,7 +66,7 @@ const en: Dict = {
   fh_empty: 'No items yet. Take a photo of the open fridge or the medicine shelf, or add an item by hand.',
   read_by: 'Read by',
   via: 'via',
-  demo_items: 'Demo items (no model call)',
+  demo_items: 'Sample items',
   demo_items_fallback: 'Server unreachable: showing demo items',
   no_clock: 'No clock',
   over_limit: 'Over limit',
@@ -133,7 +144,7 @@ const en: Dict = {
   ans_zone_none: 'Your saved location is not in a Miami-Dade evacuation zone.',
   ans_places: 'Places likely to have power, saved {t}:',
   ans_food: 'USDA: a closed fridge keeps food safe for about 4 hours without power. After that, discard perishable food. A full freezer holds about 48 hours (24 hours if half full).',
-  ans_insulin: 'FDA: insulin can be kept at 59–86°F (15–30°C) for up to 28 days. In an emergency, if there is no replacement, it may still need to be used. Never use frozen insulin. Get a replacement as soon as you can.',
+  ans_insulin: 'FDA: insulin can be kept at 59–86 °F for up to 28 days. In an emergency, if there is no replacement, it may still need to be used. Never use frozen insulin. Get a replacement as soon as you can.',
   // Map
   map_loading: 'Map loading…',
   map_missing: 'Map loading… (map module not built yet)',
@@ -149,12 +160,125 @@ const en: Dict = {
   fema_title: 'Title',
   fema_date: 'Declared',
   call_911: 'Call 911.',
+  tab_now: 'Now',
+  title_now: 'Now',
+  title_prep: 'Prep',
+  title_map: 'Map',
+  title_ask: 'Ask',
+  now_sub: 'Conditions and warnings, at a glance.',
+  map_sub: 'Evacuation zones, flood reports and tides.',
+  now_watch_one: '1 thing to watch in Zone {z}',
+  now_watch_other: '{n} things to watch in Zone {z}',
+  now_watch_nozone: '{n} things to watch',
+  now_clear: 'Nothing to watch right now',
+  now_live: 'Live',
+  saved_at: 'Saved at {t}',
+  now_loading: 'Loading current conditions…',
+  now_none: 'No conditions saved yet. Connect once to load them.',
+  feels_like: 'Feels like {t}',
+  hi_lo: 'H {h}°  L {l}°',
+  until: 'until {t}',
+  lvl_red: 'Warning',
+  lvl_orange: 'Watch',
+  lvl_yellow: 'Advisory',
+  lvl_blue: 'Info',
+  lvl_green: 'All clear',
+  tile_heat: 'Feels like',
+  humidity: 'Humidity {n}%',
+  uv_low: 'Low',
+  uv_moderate: 'Moderate',
+  uv_high: 'High',
+  uv_very_high: 'Very high',
+  uv_extreme: 'Extreme',
+  uv_max: 'Max today {n}',
+  tile_wind: 'Wind',
+  gusts: 'Gusts {v}',
+  tile_rain: 'Rain, next 6 h',
+  tile_air: 'Air quality',
+  aqi_good: 'Good',
+  aqi_moderate: 'Moderate',
+  aqi_usg: 'Unhealthy for sensitive groups',
+  aqi_unhealthy: 'Unhealthy',
+  aqi_very: 'Very unhealthy',
+  aqi_hazardous: 'Hazardous',
+  tile_tide: 'Tide now',
+  tide_next: 'Next high {m} at {t}',
+  king_tide: 'King tide line {m}',
+  tile_daylight: 'Daylight',
+  daylight_left_short: 'of daylight left',
+  dark_now: 'After sunset. Use a flashlight, not candles.',
+  dark_now_short: 'Dark',
+  sunset_at: 'Sunset {t}',
+  sunrise_at: 'Sunrise {t}',
+  zone_check_short: 'Check miamidade.gov or 311',
+  tile_clocks: 'Your clocks',
+  clocks_need: '{n} need action',
+  clocks_none: 'No items yet',
+  clocks_ok: 'All clear for now',
+  clocks_open: 'Open Clocks',
+  wx_clear: 'Clear',
+  wx_mainly_clear: 'Mostly clear',
+  wx_partly: 'Partly cloudy',
+  wx_overcast: 'Cloudy',
+  wx_fog: 'Fog',
+  wx_drizzle: 'Drizzle',
+  wx_rain: 'Rain',
+  wx_snow: 'Snow',
+  wx_showers: 'Showers',
+  wx_storm: 'Thunderstorm',
+  blackout_pill: 'Blackout mode · everything here works offline',
+  blackout_on: 'Turn on Blackout mode',
+  blackout_off: 'Turn off Blackout mode',
+  st_on_device: 'On this device',
+  zone_short: 'Zone',
+  zone_none_short: 'No zone',
+  install_title: 'Add to Home Screen',
+  install_why: 'Opens full screen and works with no signal.',
+  install_ios_1: 'Tap Share',
+  install_ios_2: 'Choose Add to Home Screen',
+  install_ios_3: 'Tap Add. Blackout Box is now an app.',
+  install_btn: 'Install Blackout Box',
+  cat_all: 'All',
+  cat_fridge: 'Fridge',
+  cat_freezer: 'Freezer',
+  cat_meds: 'Medicine',
+  cat_pantry: 'Pantry',
+  need_action_one: '{n} item needs action',
+  need_action_other: '{n} items need action',
+  all_clear: 'Everything is OK for now',
+  hero_none: 'Scan your fridge to start the clocks',
+  hero_sub: '{n} items · power out {h} h',
+  adjust: 'Adjust',
+  outage_title: 'Power outage',
+  power_out_for: '{h} h ago',
+  door_n: 'Fridge opened {n}×',
+  room: 'Room {t}',
+  est_nws: 'estimated from NWS',
+  why: 'Why',
+  what_to_do: 'What to do',
+  source_quote: 'Source, word for word',
+  open_source: 'Open source',
+  done: 'Done',
+  time_left: 'left',
+  read_from_photo: 'Read from your photo',
+  unreadable: 'unreadable',
 }
 
 const es: Dict = {
+  snap_fridge: 'Foto del refrigerador', // MT
+  snap_meds: 'Foto de sus medicinas', // MT
+  snap_hint: 'Abre la cámara', // MT
+  snap_reading: 'Leyendo su foto…', // MT
+  items_saved: '{n} artículos guardados', // MT
+  item_saved: '1 artículo guardado', // MT
+  power_went_out: 'Se acaba de ir la luz', // MT
+  pack_box: 'Preparar mi caja', // MT
+  open_clocks: 'Abrir Relojes', // MT
+  drill_title: 'TORMENTA SIMULADA', // MT
+  drill_sub: 'Simulacro de huracán — modo práctica', // MT
   lang_name: 'Español',
   tagline: 'La app que funciona cuando nada más funciona.', // MT
-  tab_fourhour: 'Regla de 4 horas', // MT
+  tab_fourhour: 'Relojes', // MT
   tab_prep: 'Preparar', // MT
   tab_ask: 'Preguntar', // MT
   tab_map: 'Mapa',
@@ -166,7 +290,7 @@ const es: Dict = {
   footer: 'Esta información proviene de fuentes de la FDA, USDA, NWS, FEMA y Miami-Dade. No es consejo médico. Llame a su farmacéutico o médico. En una emergencia, llame al 911.',
   fh_title: 'La regla de 4 horas', // MT
   fh_sub: 'Todo en su refrigerador y botiquín tiene un reloj.', // MT
-  fh_photo: 'Tomar una foto', // MT
+  fh_photo: 'Escanear refrigerador', // MT
   fh_demo: 'Probar foto de ejemplo', // MT
   demo_local: 'Cargar ejemplos (sin servidor)', // MT
   fh_none_found: 'No se encontraron artículos en la foto. Pruebe un estante a la vez o agréguelos a mano.', // MT
@@ -196,7 +320,7 @@ const es: Dict = {
   fh_empty: 'Aún no hay artículos. Tome una foto del refrigerador abierto o del estante de medicinas, o agregue uno a mano.', // MT
   read_by: 'Leído por', // MT
   via: 'vía', // MT
-  demo_items: 'Artículos de ejemplo (sin modelo)', // MT
+  demo_items: 'Artículos de ejemplo', // MT
   demo_items_fallback: 'Servidor no disponible: artículos de ejemplo', // MT
   no_clock: 'Sin reloj', // MT
   over_limit: 'Fuera de límite', // MT
@@ -272,7 +396,7 @@ const es: Dict = {
   ans_zone_none: 'Su ubicación guardada no está en una zona de evacuación de Miami-Dade.', // MT
   ans_places: 'Lugares que probablemente tienen electricidad, guardado {t}:', // MT
   ans_food: 'USDA: un refrigerador cerrado mantiene la comida segura unas 4 horas sin electricidad. Después, deseche la comida perecedera. Un congelador lleno aguanta unas 48 horas (24 si está a la mitad).', // MT
-  ans_insulin: 'FDA: la insulina se puede guardar a 59–86°F (15–30°C) hasta 28 días. En una emergencia, si no hay reemplazo, puede que todavía necesite usarla. Nunca use insulina congelada. Consiga un reemplazo lo antes posible.', // MT
+  ans_insulin: 'FDA: la insulina se puede guardar a 59–86 °F hasta 28 días. En una emergencia, si no hay reemplazo, puede que todavía necesite usarla. Nunca use insulina congelada. Consiga un reemplazo lo antes posible.', // MT
   map_loading: 'Cargando mapa…', // MT
   map_missing: 'Cargando mapa… (módulo aún no listo)', // MT
   model_demo: 'demostración', // MT
@@ -287,12 +411,125 @@ const es: Dict = {
   fema_title: 'Título',
   fema_date: 'Declarada', // MT
   call_911: 'Llame al 911.',
+  tab_now: 'Ahora',
+  title_now: 'Ahora',
+  title_prep: 'Preparar',
+  title_map: 'Mapa',
+  title_ask: 'Preguntar',
+  now_sub: 'Condiciones y alertas de un vistazo.',
+  map_sub: 'Zonas de evacuación, reportes de inundación y mareas.',
+  now_watch_one: '1 cosa a vigilar en la Zona {z}',
+  now_watch_other: '{n} cosas a vigilar en la Zona {z}',
+  now_watch_nozone: '{n} cosas a vigilar',
+  now_clear: 'Nada que vigilar por ahora',
+  now_live: 'En vivo',
+  saved_at: 'Guardado a las {t}',
+  now_loading: 'Cargando condiciones…',
+  now_none: 'Aún no hay condiciones guardadas. Conéctese una vez para cargarlas.',
+  feels_like: 'Sensación de {t}',
+  hi_lo: 'Máx {h}°  Mín {l}°',
+  until: 'hasta {t}',
+  lvl_red: 'Advertencia',
+  lvl_orange: 'Vigilancia',
+  lvl_yellow: 'Aviso',
+  lvl_blue: 'Información',
+  lvl_green: 'Todo bien',
+  tile_heat: 'Sensación',
+  humidity: 'Humedad {n}%',
+  uv_low: 'Bajo',
+  uv_moderate: 'Moderado',
+  uv_high: 'Alto',
+  uv_very_high: 'Muy alto',
+  uv_extreme: 'Extremo',
+  uv_max: 'Máx. hoy {n}',
+  tile_wind: 'Viento',
+  gusts: 'Ráfagas {v}',
+  tile_rain: 'Lluvia, próximas 6 h',
+  tile_air: 'Calidad del aire',
+  aqi_good: 'Buena',
+  aqi_moderate: 'Moderada',
+  aqi_usg: 'Dañina para grupos sensibles',
+  aqi_unhealthy: 'Dañina',
+  aqi_very: 'Muy dañina',
+  aqi_hazardous: 'Peligrosa',
+  tile_tide: 'Marea ahora',
+  tide_next: 'Próxima alta {m} a las {t}',
+  king_tide: 'Línea de marea real {m}',
+  tile_daylight: 'Luz del día',
+  daylight_left_short: 'de luz restante',
+  dark_now: 'Ya anocheció. Use una linterna, no velas.',
+  dark_now_short: 'Noche',
+  sunset_at: 'Atardecer {t}',
+  sunrise_at: 'Amanecer {t}',
+  zone_check_short: 'Verifique en miamidade.gov o 311',
+  tile_clocks: 'Sus relojes',
+  clocks_need: '{n} requieren acción',
+  clocks_none: 'Aún no hay artículos',
+  clocks_ok: 'Todo bien por ahora',
+  clocks_open: 'Abrir Relojes',
+  wx_clear: 'Despejado',
+  wx_mainly_clear: 'Mayormente despejado',
+  wx_partly: 'Parcialmente nublado',
+  wx_overcast: 'Nublado',
+  wx_fog: 'Niebla',
+  wx_drizzle: 'Llovizna',
+  wx_rain: 'Lluvia',
+  wx_snow: 'Nieve',
+  wx_showers: 'Chubascos',
+  wx_storm: 'Tormenta eléctrica',
+  blackout_pill: 'Modo apagón · todo aquí funciona sin conexión',
+  blackout_on: 'Activar modo apagón',
+  blackout_off: 'Desactivar modo apagón',
+  st_on_device: 'En este dispositivo',
+  zone_short: 'Zona',
+  zone_none_short: 'Sin zona',
+  install_title: 'Agregar a la pantalla de inicio',
+  install_why: 'Se abre en pantalla completa y funciona sin señal.',
+  install_ios_1: 'Toque Compartir',
+  install_ios_2: 'Elija Agregar a inicio',
+  install_ios_3: 'Toque Agregar. Blackout Box ya es una app.',
+  install_btn: 'Instalar Blackout Box',
+  cat_all: 'Todo',
+  cat_fridge: 'Refrigerador',
+  cat_freezer: 'Congelador',
+  cat_meds: 'Medicina',
+  cat_pantry: 'Despensa',
+  need_action_one: '{n} artículo requiere acción',
+  need_action_other: '{n} artículos requieren acción',
+  all_clear: 'Todo está bien por ahora',
+  hero_none: 'Escanee su refrigerador para iniciar los relojes',
+  hero_sub: '{n} artículos · sin luz hace {h} h',
+  adjust: 'Ajustar',
+  outage_title: 'Apagón',
+  power_out_for: 'hace {h} h',
+  door_n: 'Refrigerador abierto {n}×',
+  room: 'Interior {t}',
+  est_nws: 'estimada con NWS',
+  why: 'Por qué',
+  what_to_do: 'Qué hacer',
+  source_quote: 'Fuente, textual',
+  open_source: 'Abrir fuente',
+  done: 'Listo',
+  time_left: 'restante',
+  read_from_photo: 'Leído de su foto',
+  unreadable: 'ilegibles',
 }
 
 const ht: Dict = {
+  snap_fridge: 'Foto frijidè ou', // MT
+  snap_meds: 'Foto medikaman ou', // MT
+  snap_hint: 'Louvri kamera a', // MT
+  snap_reading: 'N ap li foto ou…', // MT
+  items_saved: '{n} bagay sove', // MT
+  item_saved: '1 bagay sove', // MT
+  power_went_out: 'Kouran an fèk koupe', // MT
+  pack_box: 'Prepare bwat mwen', // MT
+  open_clocks: 'Louvri Revèy', // MT
+  drill_title: 'TANPÈT SIMILE', // MT
+  drill_sub: 'Egzèsis siklòn — mòd pratik', // MT
   lang_name: 'Kreyòl',
   tagline: 'Aplikasyon ki mache lè anyen pa mache.', // MT
-  tab_fourhour: 'Règ 4 èdtan', // MT
+  tab_fourhour: 'Revèy', // MT
   tab_prep: 'Prepare', // MT
   tab_ask: 'Mande', // MT
   tab_map: 'Kat', // MT
@@ -304,7 +541,7 @@ const ht: Dict = {
   footer: 'Enfòmasyon sa a soti nan sous FDA, USDA, NWS, FEMA ak Miami-Dade. Se pa konsèy medikal. Rele famasyen oswa doktè ou. Si se yon ijans, rele 911.',
   fh_title: 'Règ 4 èdtan an', // MT
   fh_sub: 'Tout bagay nan frijidè ou ak nan armwa medikaman ou gen yon revèy.', // MT
-  fh_photo: 'Pran yon foto', // MT
+  fh_photo: 'Eskane frijidè', // MT
   fh_demo: 'Eseye foto egzanp', // MT
   demo_local: 'Mete egzanp (san sèvè)', // MT
   fh_none_found: 'Nou pa jwenn anyen nan foto a. Eseye yon etajè alafwa, oswa ajoute yo ak men.', // MT
@@ -334,7 +571,7 @@ const ht: Dict = {
   fh_empty: 'Pa gen anyen ankò. Pran yon foto frijidè a ouvè oswa etajè medikaman an, oswa ajoute youn ak men.', // MT
   read_by: 'Li pa', // MT
   via: 'atravè', // MT
-  demo_items: 'Egzanp (san modèl)', // MT
+  demo_items: 'Egzanp', // MT
   demo_items_fallback: 'Sèvè a pa reponn: men egzanp', // MT
   no_clock: 'Pa gen revèy', // MT
   over_limit: 'Depase limit', // MT
@@ -410,7 +647,7 @@ const ht: Dict = {
   ans_zone_none: 'Kote ou sove a pa nan yon zòn evakyasyon Miami-Dade.', // MT
   ans_places: 'Kote ki ka gen kouran, sove {t}:', // MT
   ans_food: 'USDA: yon frijidè ki fèmen kenbe manje an sekirite anviwon 4 èdtan san kouran. Apre sa, jete manje ki ka gate. Yon frizè plen kenbe anviwon 48 èdtan (24 si li mwatye plen).', // MT
-  ans_insulin: 'FDA: ou ka kenbe ensilin nan 59–86°F (15–30°C) jiska 28 jou. Nan yon ijans, si ou pa gen yon lòt, ou ka toujou bezwen sèvi avè l. Pa janm sèvi ak ensilin ki te jele. Jwenn yon lòt pi vit ke ou kapab.', // MT
+  ans_insulin: 'FDA: ou ka kenbe ensilin nan 59–86 °F jiska 28 jou. Nan yon ijans, si ou pa gen yon lòt, ou ka toujou bezwen sèvi avè l. Pa janm sèvi ak ensilin ki te jele. Jwenn yon lòt pi vit ke ou kapab.', // MT
   map_loading: 'Kat la ap chaje…', // MT
   map_missing: 'Kat la ap chaje… (modil la poko pare)', // MT
   model_demo: 'egzanp', // MT
@@ -425,6 +662,108 @@ const ht: Dict = {
   fema_title: 'Tit', // MT
   fema_date: 'Dat deklarasyon', // MT
   call_911: 'Rele 911.', // MT
+  tab_now: 'Kounye a',
+  title_now: 'Kounye a',
+  title_prep: 'Prepare',
+  title_map: 'Kat',
+  title_ask: 'Mande',
+  now_sub: 'Kondisyon ak avètisman, yon sèl kou.',
+  map_sub: 'Zòn evakyasyon, rapò inondasyon ak mare.',
+  now_watch_one: '1 bagay pou veye nan Zòn {z}',
+  now_watch_other: '{n} bagay pou veye nan Zòn {z}',
+  now_watch_nozone: '{n} bagay pou veye',
+  now_clear: 'Pa gen anyen pou veye kounye a',
+  now_live: 'An dirèk',
+  saved_at: 'Sove a {t}',
+  now_loading: 'N ap chaje kondisyon yo…',
+  now_none: 'Pa gen kondisyon ki sove ankò. Konekte yon fwa pou chaje yo.',
+  feels_like: 'Santi tankou {t}',
+  hi_lo: 'Wo {h}°  Ba {l}°',
+  until: 'jiska {t}',
+  lvl_red: 'Avètisman',
+  lvl_orange: 'Veye',
+  lvl_yellow: 'Avi',
+  lvl_blue: 'Enfòmasyon',
+  lvl_green: 'Tout bon',
+  tile_heat: 'Santi',
+  humidity: 'Imidite {n}%',
+  uv_low: 'Ba',
+  uv_moderate: 'Mwayen',
+  uv_high: 'Wo',
+  uv_very_high: 'Trè wo',
+  uv_extreme: 'Ekstrèm',
+  uv_max: 'Pi wo jodi a {n}',
+  tile_wind: 'Van',
+  gusts: 'Rafal {v}',
+  tile_rain: 'Lapli, 6 è k ap vini',
+  tile_air: 'Kalite lè',
+  aqi_good: 'Bon',
+  aqi_moderate: 'Mwayen',
+  aqi_usg: 'Malsen pou moun ki fragil',
+  aqi_unhealthy: 'Malsen',
+  aqi_very: 'Trè malsen',
+  aqi_hazardous: 'Danjere',
+  tile_tide: 'Mare kounye a',
+  tide_next: 'Pwochen mare wo {m} a {t}',
+  king_tide: 'Liy gwo mare {m}',
+  tile_daylight: 'Limyè jou',
+  daylight_left_short: 'limyè ki rete',
+  dark_now: 'Solèy la kouche. Sèvi ak flach, pa ak bouji.',
+  dark_now_short: 'Nwa',
+  sunset_at: 'Solèy kouche {t}',
+  sunrise_at: 'Solèy leve {t}',
+  zone_check_short: 'Tcheke miamidade.gov oswa 311',
+  tile_clocks: 'Revèy ou yo',
+  clocks_need: '{n} bezwen aksyon',
+  clocks_none: 'Pa gen anyen ankò',
+  clocks_ok: 'Tout bon pou kounye a',
+  clocks_open: 'Louvri Revèy',
+  wx_clear: 'Klè',
+  wx_mainly_clear: 'Prèske klè',
+  wx_partly: 'Kèk nwaj',
+  wx_overcast: 'Nwaj',
+  wx_fog: 'Bwouya',
+  wx_drizzle: 'Ti lapli',
+  wx_rain: 'Lapli',
+  wx_snow: 'Nèj',
+  wx_showers: 'Avès',
+  wx_storm: 'Tanpèt loraj',
+  blackout_pill: 'Mòd blakawout · tout sa ki la a mache san entènèt',
+  blackout_on: 'Limen mòd blakawout',
+  blackout_off: 'Etenn mòd blakawout',
+  st_on_device: 'Sou aparèy sa a',
+  zone_short: 'Zòn',
+  zone_none_short: 'Pa gen zòn',
+  install_title: 'Ajoute sou ekran dakèy',
+  install_why: 'Li louvri plen ekran e li mache san siyal.',
+  install_ios_1: 'Peze Pataje',
+  install_ios_2: 'Chwazi Ajoute sou ekran dakèy',
+  install_ios_3: 'Peze Ajoute. Blackout Box se yon aplikasyon kounye a.',
+  install_btn: 'Enstale Blackout Box',
+  cat_all: 'Tout',
+  cat_fridge: 'Frijidè',
+  cat_freezer: 'Frizè',
+  cat_meds: 'Medikaman',
+  cat_pantry: 'Pantri',
+  need_action_one: '{n} bagay bezwen aksyon',
+  need_action_other: '{n} bagay bezwen aksyon',
+  all_clear: 'Tout bagay anfòm pou kounye a',
+  hero_none: 'Eskane frijidè ou pou revèy yo kòmanse',
+  hero_sub: '{n} bagay · san kouran depi {h} è',
+  adjust: 'Ajiste',
+  outage_title: 'Pàn kouran',
+  power_out_for: 'depi {h} è',
+  door_n: 'Frijidè louvri {n}×',
+  room: 'Andedan {t}',
+  est_nws: 'estimasyon NWS',
+  why: 'Poukisa',
+  what_to_do: 'Kisa pou fè',
+  source_quote: 'Sous, mo pou mo',
+  open_source: 'Louvri sous',
+  done: 'Fini',
+  time_left: 'ki rete',
+  read_from_photo: 'Li nan foto ou',
+  unreadable: 'pa ka li',
 }
 
 const DICTS: Record<Lang, Dict> = { en, es, ht }

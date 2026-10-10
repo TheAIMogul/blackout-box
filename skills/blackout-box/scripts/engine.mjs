@@ -1250,7 +1250,14 @@ function medDraft(it, c) {
     let crossAt;
     if (max != null) {
       const fromIndoor = !!c.env.forecastIndoorF?.length;
-      const cross = upcoming(fromIndoor ? c.env.forecastIndoorF : c.env.hourly, c.now).find((p) => p.tempF > max);
+      const outage0 = c.hoursOut ?? 0;
+      const indoorFromOutdoor = (p) => {
+        const at = Date.parse(p.t);
+        const h = outage0 + (Number.isFinite(at) ? Math.max(0, (at - c.now) / HOUR_MS) : 0);
+        return { t: p.t, tempF: h < 4 ? Math.max(78, p.tempF - 4) : Math.max(80, p.tempF) };
+      };
+      const series = fromIndoor ? upcoming(c.env.forecastIndoorF, c.now) : upcoming(c.env.hourly, c.now).map(indoorFromOutdoor);
+      const cross = series.find((p) => p.tempF > max);
       const tc = cross ? Date.parse(cross.t) : NaN;
       if (cross && Number.isFinite(tc)) {
         const hoursToCross = Math.max(0, (tc - c.now) / HOUR_MS);
