@@ -328,6 +328,42 @@ const en: Dict = {
   why_s_heat_days: 'days a year above 90 °F in Miami-Dade, up from 84 since 1970',
   why_s_heat_streak: 'days in a row the heat index hit 100 °F or more in Miami (2023)',
   why_s_heat_deaths: 'estimated excess deaths a year during extreme heat in Miami-Dade',
+  why_k6: 'How it works',
+  why_h6: 'From photo to countdown in seconds.',
+  why_st1: 'Your photo',
+  why_st1s: 'Snap the fridge, freezer or medicine shelf.',
+  why_st2: 'Gemini reads it',
+  why_st2s: 'Names every item in about 3 seconds.',
+  why_st3: 'Open rules engine',
+  why_st3s: 'FDA and USDA rules, 64 tests, no AI guessing.',
+  why_st4: 'A clock for every item',
+  why_st4s: 'Each countdown cites its source.',
+  why_t1: 'Works with no signal',
+  why_t1s: 'An installable web app. Your data and clocks live on your phone.',
+  why_t2: 'Runs on Cloudflare',
+  why_t2s: "Served from Cloudflare's global network, close to every phone.",
+  why_t3: 'Gemini reads photos',
+  why_t3s: 'Google Gemini 3.5 Flash through Cloudflare AI Gateway.',
+  why_t4: 'Claude answers questions',
+  why_t4s: 'In English, Spanish and Haitian Creole.',
+  why_t5: 'The math is never AI',
+  why_t5s: 'An open-source rules engine does every countdown, citing FDA or USDA.',
+  why_t6: 'Grok painted it',
+  why_t6s: 'Every image in the app was made with Grok Imagine.',
+  why_oss: 'Open source (MIT)',
+  why_k7: 'Built on public data',
+  why_h7: 'Built on 20+ public data sources.',
+  why_data_lbl: 'free, public data sources power every screen',
+  why_g_fda: 'FDA',
+  why_g_usda: 'USDA',
+  why_g_noaa: 'NOAA · National Weather Service',
+  why_g_fema: 'FEMA',
+  why_g_mdc: 'Miami-Dade County · City of Miami',
+  why_g_energy: 'Energy',
+  why_g_people: 'People & health',
+  why_g_wx: 'Weather & air',
+  why_g_maps: 'Maps & terrain',
+  why_g_law: 'Florida law',
 }
 
 const es: Dict = {
@@ -645,6 +681,42 @@ const es: Dict = {
   why_s_heat_days: 'días al año por encima de 90 °F en Miami-Dade, antes eran 84 (desde 1970)', // MT
   why_s_heat_streak: 'días seguidos con índice de calor de 100 °F o más en Miami (2023)', // MT
   why_s_heat_deaths: 'muertes en exceso estimadas al año durante calor extremo en Miami-Dade', // MT
+  why_k6: 'Cómo funciona', // MT
+  why_h6: 'De la foto a la cuenta regresiva en segundos.', // MT
+  why_st1: 'Su foto', // MT
+  why_st1s: 'Fotografíe el refrigerador, el congelador o las medicinas.', // MT
+  why_st2: 'Gemini la lee', // MT
+  why_st2s: 'Nombra cada artículo en unos 3 segundos.', // MT
+  why_st3: 'Motor de reglas abierto', // MT
+  why_st3s: 'Reglas de la FDA y el USDA, 64 pruebas, sin adivinanzas de IA.', // MT
+  why_st4: 'Un reloj para cada artículo', // MT
+  why_st4s: 'Cada cuenta regresiva cita su fuente.', // MT
+  why_t1: 'Funciona sin señal', // MT
+  why_t1s: 'Una app web instalable. Sus datos y relojes viven en su teléfono.', // MT
+  why_t2: 'Funciona en Cloudflare', // MT
+  why_t2s: 'Servida desde la red global de Cloudflare, cerca de cada teléfono.', // MT
+  why_t3: 'Gemini lee las fotos', // MT
+  why_t3s: 'Google Gemini 3.5 Flash a través de Cloudflare AI Gateway.', // MT
+  why_t4: 'Claude responde preguntas', // MT
+  why_t4s: 'En inglés, español y criollo haitiano.', // MT
+  why_t5: 'Los cálculos nunca son IA', // MT
+  why_t5s: 'Un motor de reglas de código abierto hace cada cuenta regresiva, citando a la FDA o el USDA.', // MT
+  why_t6: 'Grok lo pintó', // MT
+  why_t6s: 'Cada imagen de la app se hizo con Grok Imagine.', // MT
+  why_oss: 'Código abierto (MIT)', // MT
+  why_k7: 'Hecho con datos públicos', // MT
+  why_h7: 'Hecho con más de 20 fuentes de datos públicos.', // MT
+  why_data_lbl: 'fuentes de datos públicos y gratuitos alimentan cada pantalla', // MT
+  why_g_fda: 'FDA', // MT
+  why_g_usda: 'USDA', // MT
+  why_g_noaa: 'NOAA · Servicio Meteorológico Nacional', // MT
+  why_g_fema: 'FEMA', // MT
+  why_g_mdc: 'Condado Miami-Dade · Ciudad de Miami', // MT
+  why_g_energy: 'Energía', // MT
+  why_g_people: 'Población y salud', // MT
+  why_g_wx: 'Clima y aire', // MT
+  why_g_maps: 'Mapas y terreno', // MT
+  why_g_law: 'Ley de Florida', // MT
 }
 
 const ht: Dict = {
@@ -962,6 +1034,42 @@ const ht: Dict = {
   why_s_heat_days: 'jou pa ane plis pase 90 °F nan Miami-Dade, te 84 depi 1970', // MT
   why_s_heat_streak: 'jou youn dèyè lòt endèks chalè a te rive 100 °F oswa plis nan Miami (2023)', // MT
   why_s_heat_deaths: 'lanmò anplis estime chak ane pandan gwo chalè nan Miami-Dade', // MT
+  why_k6: 'Kijan li mache', // MT
+  why_h6: 'Soti nan foto rive nan kont a rebou an kèk segonn.', // MT
+  why_st1: 'Foto ou', // MT
+  why_st1s: 'Pran foto frijidè a, frizè a oswa etajè medikaman an.', // MT
+  why_st2: 'Gemini li l', // MT
+  why_st2s: 'Li nonmen chak atik nan anviwon 3 segonn.', // MT
+  why_st3: 'Motè règ louvri', // MT
+  why_st3s: 'Règ FDA ak USDA, 64 tès, pa gen AI k ap devine.', // MT
+  why_st4: 'Yon revèy pou chak atik', // MT
+  why_st4s: 'Chak kont a rebou site sous li.', // MT
+  why_t1: 'Mache san siyal', // MT
+  why_t1s: 'Yon app wèb ou ka enstale. Done ou ak revèy ou rete sou telefòn ou.', // MT
+  why_t2: 'Mache sou Cloudflare', // MT
+  why_t2s: 'Sèvi depi rezo mondyal Cloudflare, pre chak telefòn.', // MT
+  why_t3: 'Gemini li foto yo', // MT
+  why_t3s: 'Google Gemini 3.5 Flash atravè Cloudflare AI Gateway.', // MT
+  why_t4: 'Claude reponn kesyon', // MT
+  why_t4s: 'An angle, panyòl ak kreyòl ayisyen.', // MT
+  why_t5: 'Kalkil yo pa janm AI', // MT
+  why_t5s: 'Yon motè règ sous louvri fè chak kont a rebou, li site FDA oswa USDA.', // MT
+  why_t6: 'Grok pentire l', // MT
+  why_t6s: 'Chak imaj nan app la fèt ak Grok Imagine.', // MT
+  why_oss: 'Sous louvri (MIT)', // MT
+  why_k7: 'Bati sou done piblik', // MT
+  why_h7: 'Bati sou plis pase 20 sous done piblik.', // MT
+  why_data_lbl: 'sous done piblik gratis ki bay chak ekran fòs', // MT
+  why_g_fda: 'FDA', // MT
+  why_g_usda: 'USDA', // MT
+  why_g_noaa: 'NOAA · Sèvis Meteyo Nasyonal', // MT
+  why_g_fema: 'FEMA', // MT
+  why_g_mdc: 'Konte Miami-Dade · Vil Miami', // MT
+  why_g_energy: 'Enèji', // MT
+  why_g_people: 'Moun ak sante', // MT
+  why_g_wx: 'Tan ak lè', // MT
+  why_g_maps: 'Kat ak teren', // MT
+  why_g_law: 'Lwa Florid', // MT
 }
 
 const DICTS: Record<Lang, Dict> = { en, es, ht }

@@ -4,7 +4,13 @@
 import { getLang, onLang, t } from './i18n'
 import { iconHTML, media, onMedia, stillSrc } from './media'
 import { esc, reducedMotion } from './util'
-import { STATS, type WhyStat } from './why-data'
+import { SOURCE_COUNT, SOURCES, STATS as BASE, type WhyStat } from './why-data'
+
+const STATS: Record<string, WhyStat> = {
+  ...BASE,
+  sources: { id: 'sources', value: SOURCE_COUNT, label: 'why_data_lbl', source: '', url: '' },
+}
+const REPO = 'https://github.com/TheAIMogul/blackout-box'
 
 let host: HTMLElement
 let io: IntersectionObserver | null = null
@@ -34,6 +40,50 @@ function stat(id: keyof typeof STATS, size = ''): string {
     <figcaption><span class="why-lbl">${esc(t(s.label))}</span>
     <a class="why-src" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(t('why_src'))}: ${esc(s.source)}<span class="ms" aria-hidden="true">north_east</span></a></figcaption>
   </figure>`
+}
+
+function howItWorks(): string {
+  const steps: [string, string, string][] = [
+    ['photo_camera', 'why_st1', 'why_st1s'],
+    ['auto_awesome', 'why_st2', 'why_st2s'],
+    ['rule', 'why_st3', 'why_st3s'],
+    ['timer', 'why_st4', 'why_st4s'],
+  ]
+  const tiles: [string, string, string][] = [
+    ['wifi_off', 'why_t1', 'why_t1s'],
+    ['cloud', 'why_t2', 'why_t2s'],
+    ['document_scanner', 'why_t3', 'why_t3s'],
+    ['forum', 'why_t4', 'why_t4s'],
+    ['calculate', 'why_t5', 'why_t5s'],
+    ['palette', 'why_t6', 'why_t6s'],
+  ]
+  return `<section class="why-sec dark how">
+    <div class="why-in">
+      <p class="why-k">${esc(t('why_k6'))}</p>
+      <h2 class="why-h">${esc(t('why_h6'))}</h2>
+      <ol class="why-pipe" data-reveal>${steps.map(([ic, h, sub], i) => `<li class="why-step" style="--i:${i}">
+        <span class="why-dot"><span class="ms" aria-hidden="true">${ic}</span></span>
+        <div><b>${esc(t(h))}</b><span>${esc(t(sub))}</span></div></li>`).join('')}</ol>
+      <div class="why-tiles">${tiles.map(([ic, h, sub]) => `<div class="why-tile"><span class="ms" aria-hidden="true">${ic}</span><b>${esc(t(h))}</b><span>${esc(t(sub))}</span></div>`).join('')}</div>
+      <a class="why-repo" href="${REPO}" target="_blank" rel="noopener"><span class="ms" aria-hidden="true">code</span>${esc(t('why_oss'))} · github.com/TheAIMogul/blackout-box<span class="ms" aria-hidden="true">north_east</span></a>
+    </div>
+  </section>`
+}
+
+function builtOnData(): string {
+  let i = 0
+  return `<section class="why-sec light data">
+    <div class="why-in">
+      <p class="why-k">${esc(t('why_k7'))}</p>
+      <h2 class="why-h">${esc(t('why_h7'))}</h2>
+      <figure class="why-stat xl"><div class="why-num" data-stat="sources" aria-label="${SOURCE_COUNT}">${reducedMotion() ? SOURCE_COUNT : 0}</div>
+        <figcaption><span class="why-lbl">${esc(t('why_data_lbl'))}</span></figcaption></figure>
+      <div class="why-grps" data-reveal>${SOURCES.map((g) => `<div class="why-grp">
+        <h3><span class="ms" aria-hidden="true">${esc(g.icon)}</span>${esc(t(g.group))}</h3>
+        <div class="why-chips">${g.items.map((s) => `<a class="why-chip" style="--i:${i++}" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}<span class="ms" aria-hidden="true">north_east</span></a>`).join('')}</div>
+      </div>`).join('')}</div>
+    </div>
+  </section>`
 }
 
 function render(): void {
@@ -80,6 +130,8 @@ function render(): void {
         <div class="why-stats grid">${stat('population')}${stat('evacIrma')}${stat('heatDays')}${stat('heatStreak')}${stat('heatDeaths')}</div>
       </div>
     </section>
+    ${howItWorks()}
+    ${builtOnData()}
     <section class="why-sec dark end">
       ${bg('now.hero.blackout')}<div class="why-in">
         <p class="why-k">${esc(t('why_k5'))}</p>
@@ -95,7 +147,9 @@ function render(): void {
 function observe(): void {
   io?.disconnect()
   const nums = host.querySelectorAll<HTMLElement>('[data-stat]')
+  const reveals = host.querySelectorAll<HTMLElement>('[data-reveal]')
   if (reducedMotion() || typeof IntersectionObserver !== 'function') {
+    reveals.forEach((r) => r.classList.add('in'))
     nums.forEach((n) => { const s = STATS[n.dataset.stat!]; if (s) n.textContent = fmt(s, s.value) })
     return
   }
@@ -103,10 +157,12 @@ function observe(): void {
     for (const e of entries) {
       if (!e.isIntersecting) continue
       io?.unobserve(e.target)
-      countUp(e.target as HTMLElement)
+      if ((e.target as HTMLElement).dataset.reveal !== undefined) e.target.classList.add('in')
+      else countUp(e.target as HTMLElement)
     }
-  }, { threshold: 0.5 })
+  }, { threshold: 0.25 })
   nums.forEach((n) => io!.observe(n))
+  reveals.forEach((r) => io!.observe(r))
 }
 
 function countUp(el: HTMLElement): void {

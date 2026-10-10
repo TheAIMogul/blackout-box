@@ -88,7 +88,8 @@ function paintTitles(): void {
 }
 
 function renderDrill(): void {
-  document.getElementById('drill')!.innerHTML = `<span class="drill-dot" aria-hidden="true"></span><span class="ms fill" aria-hidden="true">cyclone</span><b>${esc(t('drill_title'))}</b><span class="drill-sep" aria-hidden="true">·</span><span class="drill-sub">${esc(t('drill_sub'))}</span>`
+  // The event name, not translated.
+  document.getElementById('drill')!.innerHTML = `<span class="drill-dot" aria-hidden="true"></span><b>Hack for Humanity: Miami</b>`
 }
 
 function renderFooter(): void {
