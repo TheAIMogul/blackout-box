@@ -24,13 +24,13 @@ const SUB: Record<Tab, string> = { now: 'now_sub', fourhour: 'fh_sub', prep: 'pr
 const app = document.getElementById('app')!
 app.innerHTML = `
   <div class="drill" id="drill" role="status"></div>
-  <button type="button" class="lang-fab" id="lang-fab" aria-label="Language: English. Tap to switch."><span class="lang-fab-c">EN</span><span class="lang-fab-n">Español</span></button>
   <div class="net-pill" id="net-pill" role="status" aria-live="polite"><span class="ms" aria-hidden="true">wifi_off</span><span class="net-pill-t"></span></div>
   <header class="topbar" id="topbar">
     <div class="tb-left"><span class="brand"><img src="/icons/icon-192.png" alt="" width="26" height="26"><span>Blackout Box</span></span></div>
     <div class="tb-title" id="tb-title" aria-hidden="true"></div>
     <div class="tb-right">
       <button type="button" class="round-btn hidden" id="install-btn"><span class="ms" aria-hidden="true">install_mobile</span></button>
+      <button type="button" class="round-btn lang-fab" id="lang-fab" aria-label="Language: English. Tap to switch."><span class="lang-fab-c">EN</span><span class="lang-fab-n">Español</span></button>
       <button type="button" class="round-btn" id="moon-btn" aria-pressed="false"><span class="ms" aria-hidden="true">dark_mode</span></button>
     </div>
   </header>
