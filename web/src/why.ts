@@ -107,7 +107,7 @@ function render(): void {
     <section class="why-models" aria-label="AI models">
       <p class="why-models-k">The AI behind Blackout Box</p>
       <div class="why-model gemma"><span class="why-model-n">Gemma 4 <em>26B A4B</em></span><span class="why-model-b">Open weights</span><span class="why-model-d">Translates every answer into Spanish and Haitian Creole. Google DeepMind, on Cloudflare Workers AI.</span></div>
-      <div class="why-model"><span class="why-model-n">Gemini 3.5 Flash</span><span class="why-model-d">Reads your fridge, freezer and medicine photos in about 3 seconds.</span></div>
+      <div class="why-model"><span class="why-model-n">Gemini 3.8 Flash</span><span class="why-model-d">Reads your fridge, freezer and medicine photos in about 3 seconds.</span></div>
       <div class="why-model"><span class="why-model-n">Claude Fable 5.1</span><span class="why-model-d">Answers questions from your saved data, with Claude Sonnet 5.5 as backup.</span></div>
       <div class="why-model"><span class="why-model-n">Grok Imagine</span><span class="why-model-d">Painted every image in the app.</span></div>
       <div class="why-model rules"><span class="why-model-n">Open rules engine</span><span class="why-model-b">No AI</span><span class="why-model-d">Every countdown comes from FDA and USDA rules, never a model. 77 tests.</span></div>
