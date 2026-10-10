@@ -1265,5 +1265,13 @@ input.o-range::-moz-range-thumb, .sheet input[type="range"][data-hrs]::-moz-rang
 @media (min-width: 900px) { .fh-sum .big { font-size: 40px; } .outage .o-val { font-size: 52px; } .cd-clock { font-size: 32px; } }
 @media (prefers-reduced-motion: reduce) { .sk-b { animation: none; } }
 
-/* Everything ~10% smaller (user request). Phones: viewport initial-scale=0.9 in index.html. Desktop: zoom. */
-@media (min-width: 700px) { body { zoom: 0.9; } }
+/* Everything ~10% smaller (user request), on every screen size. Viewport-height units shrink with zoom too,
+   so the full-height layouts below divide by the same factor to still fill the screen. */
+:root { --ui-zoom: 0.9; }
+body { zoom: var(--ui-zoom); }
+body { min-height: calc(100dvh / var(--ui-zoom)); }
+.sheet { max-height: calc((100dvh - var(--safe-t) - 24px) / var(--ui-zoom)); }
+@media (min-width: 700px) { .sheet { max-height: calc((100dvh - 48px) / var(--ui-zoom)); } }
+.map-host { height: calc((100dvh - var(--topbar-h) - var(--safe-t) - var(--tabbar-h) - var(--footer-h) - var(--safe-b) - 130px) / var(--ui-zoom)); }
+.stage.now-stage { min-height: calc((100svh - var(--tabbar-h) - env(safe-area-inset-bottom, 0px)) / var(--ui-zoom)); }
+@media (min-width: 900px) { .stage.now-stage { min-height: calc((100svh - 110px) / var(--ui-zoom)); } }

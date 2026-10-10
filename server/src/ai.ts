@@ -260,9 +260,9 @@ const NOT_SAVED: Record<Lang, string> = {
 };
 
 const CALL_911: Record<Lang, string> = {
-  en: 'Call 911 now if anyone is in danger. Get away from the hazard first.',
-  es: 'Llame al 911 ahora si alguien está en peligro. Aléjese primero del peligro.',
-  ht: 'Rele 911 kounye a si yon moun an danje. Ale lwen danje a anvan.',
+  en: 'Call 911 from a safe place, away from the hazard.',
+  es: 'Llame al 911 desde un lugar seguro, lejos del peligro.',
+  ht: 'Rele 911 depi yon kote ki an sekirite, lwen danje a.',
 };
 
 const CONTEXT_CAP = 12_000; // ~3,000 tokens for gemma4:e4b
