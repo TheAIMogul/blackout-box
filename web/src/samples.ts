@@ -74,6 +74,7 @@ async function run(body: HTMLElement, sheet: Sheet, s: (typeof SAMPLES)[number])
   const found = body.querySelector<HTMLElement>('.smp-found')!
   const chips = found.querySelector<HTMLElement>('.smp-chips')!
   found.classList.remove('hidden')
+  requestAnimationFrame(() => body.scrollTo({ top: body.scrollHeight, behavior: reducedMotion() ? 'auto' : 'smooth' }))
   if (!res || !res.names.length) {
     found.querySelector('.smp-found-h')!.textContent = t(res ? 'fh_none_found' : 'fh_read_fail')
     go.disabled = false
@@ -91,6 +92,7 @@ async function run(body: HTMLElement, sheet: Sheet, s: (typeof SAMPLES)[number])
     c.innerHTML = `<span>${esc(name)}</span><span class="ms fill" aria-hidden="true">check_circle</span>`
     chips.appendChild(c)
     chips.scrollTop = chips.scrollHeight
+    body.scrollTop = body.scrollHeight
     if (step) { haptic(); await wait(step) }
   }
   await wait(reducedMotion() ? 600 : 1600)

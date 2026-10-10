@@ -575,6 +575,11 @@ function toFreezer(r: Awaited<ReturnType<typeof visionItems>>): Awaited<ReturnTy
   }
 }
 
+/** Everything in a fridge photo is in the fridge: the vision model says "shelf" for a fridge shelf, which would land in Pantry. */
+function toFridge(r: Awaited<ReturnType<typeof visionItems>>): Awaited<ReturnType<typeof visionItems>> {
+  return { ...r, items: r.items.map((it) => (it.category === 'med' || /med/i.test(String(it.category)) || it.location === 'door' || it.location === 'freezer' ? it : { ...it, location: 'fridge' })) }
+}
+
 /** "Try demo photo" sheet: send one bundled sample photo through /api/vision/items for real. Scanning a sample replaces only
  *  that sample's own category (fridge items, freezer items, or medicines); everything else stays. Returns the item names. */
 export async function scanSample(kind: SampleKind, base64: string, mime: string): Promise<{ names: string[]; fallback: boolean }> {
@@ -588,11 +593,13 @@ export async function scanSample(kind: SampleKind, base64: string, mime: string)
       r = { ...r, items: pick }
     }
     if (kind === 'freezer') r = toFreezer(r)
-    if (kind === 'fridge') r = { ...r, items: r.items.map((it) => (it.category === 'med' || it.location ? it : { ...it, location: 'fridge' })) }
+    if (kind === 'fridge' && !r._fallback) r = toFridge(r)
     const drop = (it: WebItem) => kind === 'meds' ? it.category === 'med' : kind === 'freezer' ? catOf(it) === 'freezer' : it.category !== 'med' && catOf(it) === 'fridge'
-    items = items.filter((x) => !drop(x))
+    items = items.filter((x) => !drop(x) && (x as WebItem & { capture?: string }).capture !== kind)
     const before = new Set(items.map((x) => x.id))
     await ingest([r])
+    for (const it of items) if (!before.has(it.id)) (it as WebItem & { capture?: string }).capture = kind
+    saveItems()
     if (r._fallback) note = { text: t('demo_items_fallback'), kind: 'warn' }
     const names = items.filter((x) => !before.has(x.id)).map((x) => x.name)
     return { names, fallback: !!r._fallback }
@@ -669,7 +676,7 @@ export async function captureFromHome(file: File, hint: 'fridge' | 'meds' | 'fre
   try {
     const [{ base64, mime }, small] = await Promise.all([downscale(file, 1280, 0.85), downscale(file, 360, 0.7)])
     const raw = await visionItems(base64, mime, hint === 'freezer' ? 'fridge' : hint)
-    const r = hint === 'freezer' ? toFreezer(raw) : raw
+    const r = hint === 'freezer' ? toFreezer(raw) : hint === 'fridge' && !raw._fallback ? toFridge(raw) : raw
     const before = new Set(items.map((x) => x.id))
     items = items.filter((x) => (x as WebItem & { capture?: string }).capture !== hint)
     await ingest([r])
