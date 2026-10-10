@@ -18,7 +18,7 @@ export const DOSING =
 export const SAFE_CLAIM = /\b(is|looks|seems|appears) (to be )?safe\b|\bes seguro\b|\bparece seguro\b|\ban sekirite\b/i;
 
 const MED_WORDS =
-  /insulin|insulina|ensilin|medic|medik|pill|pastilla|grenn|tablet|pen\b|pluma|plum|vial|lantus|humalog|trulicity|ozempic|basaglar|metformin|amoxicillin|pharmac|farmac|famasi|prescri|receta|dose|dosis|doz/i;
+  /\b(insulin|insulina|ensilin|medicine|medicines|medication|medications|medicamento|medicamentos|medicina|medicinas|medikaman|medsin|meds?|pills?|pastillas?|grenn|tablets?|pens?|pluma|plim|vials?|lantus|humalog|trulicity|ozempic|basaglar|metformin|amoxicillin|pharmacy|pharmacist|farmacia|farmac[eé]utico|famasi|famasyen|prescriptions?|prescribed|receta|preskripsyon|doses?|dosis|doz)\b/i;
 const FOOD_WORDS =
   /food|fridge|freezer|milk|egg|meat|chicken|comida|refrigerador|nevera|leche|huevo|carne|pollo|manje|frijidè|lèt|ze\b|vyann|poul/i;
 

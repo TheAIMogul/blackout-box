@@ -92,10 +92,12 @@ export function startTour(): void {
   root.setAttribute('role', 'dialog')
   root.setAttribute('aria-modal', 'true')
   root.setAttribute('aria-labelledby', 'tour-title')
-  root.innerHTML = `<div class="tour-hole" aria-hidden="true"></div><div class="tour-card" tabindex="-1"></div>`
+  root.innerHTML = `<div class="tour-dim" aria-hidden="true"></div><div class="tour-hole" aria-hidden="true"></div><div class="tour-card" tabindex="-1"></div>`
   document.body.append(root)
   document.documentElement.classList.add('touring')
+  const dim = root.querySelector<HTMLElement>('.tour-dim')!
   const hole = root.querySelector<HTMLElement>('.tour-hole')!
+  let lastKey = ''
   const card = root.querySelector<HTMLElement>('.tour-card')!
 
   let idx = 0
@@ -122,14 +124,22 @@ export function startTour(): void {
     if (r) {
       const top = Math.max(0, r.top - PAD), left = Math.max(0, r.left - PAD)
       const bottom = Math.min(vh, r.bottom + PAD), right = Math.min(vw, r.right + PAD)
-      hole.style.cssText = `top:${top}px;left:${left}px;width:${Math.max(0, right - left)}px;height:${Math.max(0, bottom - top)}px`
+      const w = Math.max(0, right - left), h = Math.max(0, bottom - top)
+      const key = `${top}|${left}|${w}|${h}|${vw}|${vh}`
+      if (key !== lastKey) {
+        lastKey = key
+        hole.style.cssText = `top:${top}px;left:${left}px;width:${w}px;height:${h}px`
+        // Full-screen dim with a rounded-rect cut-out (even-odd fill), so the real element shows through.
+        const rr = Math.min(22, w / 2, h / 2)
+        dim.style.clipPath = `path(evenodd, "M0 0H${vw}V${vh}H0Z M${left + rr} ${top}H${right - rr}A${rr} ${rr} 0 0 1 ${right} ${top + rr}V${bottom - rr}A${rr} ${rr} 0 0 1 ${right - rr} ${bottom}H${left + rr}A${rr} ${rr} 0 0 1 ${left} ${bottom - rr}V${top + rr}A${rr} ${rr} 0 0 1 ${left + rr} ${top}Z")`
+      }
       hole.classList.add('on')
       // Card goes on the side away from the target: low targets (the tab bar) push it to the top.
       const low = (r.top + r.bottom) / 2 > vh * 0.55
       card.classList.toggle('top', low)
       card.classList.remove('center')
     } else {
-      hole.style.cssText = `top:${vh / 2}px;left:${vw / 2}px;width:0;height:0`
+      if (lastKey) { lastKey = ''; dim.style.clipPath = 'none' }
       hole.classList.remove('on')
       card.classList.remove('top')
       card.classList.add('center')

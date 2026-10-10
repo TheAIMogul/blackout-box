@@ -94,7 +94,7 @@ const en: Dict = {
   doubt: 'When in doubt, throw it out.',
   // Prep
   prep_title: 'Get ready',
-  prep_sub: 'Before the storm, save everything you’ll need onto this phone: your evacuation zone, nearest shelters, places with power and emergency numbers. It all keeps working when the power and internet go out.',
+  prep_sub: 'Save it to your phone before the storm. Works with no power or internet.',
   prep_btn: 'Save to my phone for offline use',
   prep_locating: 'Finding your location…',
   prep_fallback_loc: 'Location not available. Using downtown Miami (25.77, -80.19).',
@@ -393,6 +393,18 @@ const en: Dict = {
   tour_6_b: 'See flood risk, evacuation zones and the tide. Ask anything in English, Spanish or Haitian Creole.',
   tour_7_t: "You're ready.",
   tour_7_b: 'Tap Start to go back to Now. Stay safe.',
+  // v8 Prep + Clocks redesign
+  saved_dot: 'Saved · {t}',
+  help_nearby: 'Help nearby',
+  tide_weather: 'Tide & weather',
+  sources: 'Sources',
+  tap_to_call: 'Tap to call',
+  scan_section: 'Scan',
+  your_items: 'Your items',
+  outage_section: 'Outage',
+  call911_v8: 'Call 911',
+  life_threat: 'Life-threatening emergency',
+  open_now: 'Open now',
 }
 
 const es: Dict = {
@@ -478,7 +490,7 @@ const es: Dict = {
   'act.med.DISCARD': 'Consulte a su farmacéutico.', // MT
   doubt: 'Ante la duda, deséchelo.',
   prep_title: 'Prepárese', // MT
-  prep_sub: 'Antes de la tormenta, guarde en este teléfono todo lo que necesitará: su zona de evacuación, los refugios más cercanos, lugares con electricidad y números de emergencia. Todo sigue funcionando sin luz ni internet.', // MT
+  prep_sub: 'Guárdelo en su teléfono antes de la tormenta. Funciona sin luz ni internet.', // MT
   prep_btn: 'Guardar en mi teléfono para usar sin internet', // MT
   prep_locating: 'Buscando su ubicación…', // MT
   prep_fallback_loc: 'Ubicación no disponible. Usando el centro de Miami (25.77, -80.19).', // MT
@@ -775,6 +787,18 @@ const es: Dict = {
   tour_6_b: 'Mira el riesgo de inundación, las zonas de evacuación y la marea. Pregunta lo que quieras en inglés, español o criollo haitiano.', // MT
   tour_7_t: 'Ya estás listo.', // MT
   tour_7_b: 'Toca Empezar para volver a Ahora. Cuídate.', // MT
+  // v8 Prep + Clocks redesign
+  saved_dot: 'Guardado · {t}', // MT
+  help_nearby: 'Ayuda cercana', // MT
+  tide_weather: 'Marea y clima', // MT
+  sources: 'Fuentes', // MT
+  tap_to_call: 'Toque para llamar', // MT
+  scan_section: 'Escanear', // MT
+  your_items: 'Sus artículos', // MT
+  outage_section: 'Apagón', // MT
+  call911_v8: 'Llame al 911', // MT
+  life_threat: 'Emergencia de vida o muerte', // MT
+  open_now: 'Abierto', // MT
 }
 
 const ht: Dict = {
@@ -860,7 +884,7 @@ const ht: Dict = {
   'act.med.DISCARD': 'Mande famasyen ou.', // MT
   doubt: 'Si ou pa sèten, jete l.',
   prep_title: 'Pare w', // MT
-  prep_sub: 'Anvan tanpèt la, sove sou telefòn sa a tout sa w ap bezwen: zòn evakyasyon ou, abri ki pi pre yo, kote ki gen kouran ak nimewo ijans. Tout bagay kontinye mache san kouran ak san entènèt.', // MT
+  prep_sub: 'Sove l sou telefòn ou anvan tanpèt la. Li mache san kouran ni entènèt.', // MT
   prep_btn: 'Sove sou telefòn mwen pou san entènèt', // MT
   prep_locating: 'N ap chèche kote ou ye…', // MT
   prep_fallback_loc: 'Nou pa jwenn kote ou ye. N ap sèvi ak anba lavil Miami (25.77, -80.19).', // MT
@@ -1157,6 +1181,18 @@ const ht: Dict = {
   tour_6_b: 'Gade risk inondasyon, zòn evakyasyon ak mare a. Mande nenpòt bagay an angle, panyòl oswa kreyòl ayisyen.', // MT
   tour_7_t: 'Ou pare.', // MT
   tour_7_b: 'Peze Kòmanse pou retounen nan Kounye a. Rete an sekirite.', // MT
+  // v8 Prep + Clocks redesign
+  saved_dot: 'Sove · {t}', // MT
+  help_nearby: 'Èd tou pre', // MT
+  tide_weather: 'Mare ak tan', // MT
+  sources: 'Sous', // MT
+  tap_to_call: 'Touche pou rele', // MT
+  scan_section: 'Eskane', // MT
+  your_items: 'Bagay ou yo', // MT
+  outage_section: 'Pàn kouran', // MT
+  call911_v8: 'Rele 911', // MT
+  life_threat: 'Ijans ki an danje lavi', // MT
+  open_now: 'Louvri', // MT
 }
 
 const DICTS: Record<Lang, Dict> = { en, es, ht }

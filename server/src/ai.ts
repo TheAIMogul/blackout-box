@@ -211,6 +211,12 @@ const NOT_SAVED: Record<Lang, string> = {
   ht: 'Mwen pa gen sa anrejistre sou aparèy sa a. Tcheke ankò lè sèvis la tounen.',
 };
 
+const CALL_911: Record<Lang, string> = {
+  en: 'Call 911 now if anyone is in danger. Get away from the hazard first.',
+  es: 'Llame al 911 ahora si alguien está en peligro. Aléjese primero del peligro.',
+  ht: 'Rele 911 kounye a si yon moun an danje. Ale lwen danje a anvan.',
+};
+
 const CONTEXT_CAP = 12_000; // ~3,000 tokens for gemma4:e4b
 
 export function contextJson(ctx: Record<string, unknown>): string {
@@ -258,7 +264,15 @@ export async function chat(body: any, fallbackBundle: () => Promise<any>) {
     if (e instanceof HttpError && e.code === 'MODEL_BAD_JSON') throw new HttpError(502, 'MODEL_BAD_JSON', 'The model did not return a usable answer. Try again.');
     throw e;
   }
-  const f = filterAnswer(answer || NOT_SAVED[lang], question, lang);
+  // Emergency: never let the medicine/food filter swap out a 911 answer. Lead with the fixed 911 line, then the model text.
+  let f: { text: string; filtered: boolean; rule?: string };
+  if (call911) {
+    const body = (answer || '').trim();
+    const startsWith911 = /^\s*(call|llame|rele)\b[^.]{0,20}911/i.test(body);
+    f = { text: startsWith911 ? body : `${CALL_911[lang]}${body ? ` ${body}` : ''}`, filtered: false, rule: 'call_911' };
+  } else {
+    f = filterAnswer(answer || NOT_SAVED[lang], question, lang);
+  }
   return {
     text: f.text,
     lang,
