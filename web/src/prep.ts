@@ -213,15 +213,22 @@ function render(): void {
   const stamp = state.prepAt ? `${t('checked')} ${fmtWhen(state.prepAt)}` : ''
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const placesNote = (b?.places as any)?.note as string | undefined
-  // The 5 nearest places overall, one per address (a garage lists each charger separately).
-  const seenAddr = new Set<string>()
+  // 5 places, mixed so it isn't all chargers in one garage: the 2 nearest charging sites, 2 libraries, 1 fire station.
+  // Numbered/lettered chargers at one site ("ICON GARAGE 1…4", "OBE 500 BRICKELL R/L") count once.
+  const CAP: Record<string, number> = { power: 2, library: 2, fire: 1 }
+  const seenSite = new Set<string>()
+  const taken: Record<string, number> = {}
   const rows = groups.flatMap((g) => g.items.map((p) => ({ g, p })))
     .sort((a, c) => (a.p.distanceMi ?? 1e9) - (c.p.distanceMi ?? 1e9))
-    .filter(({ p }) => {
+    .filter(({ g, p }) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const key = String((p as any).address ?? (p as any).name ?? '').toLowerCase().replace(/\s+/g, ' ').trim()
-      if (!key || seenAddr.has(key)) return !key
-      seenAddr.add(key)
+      const site = String((p as any).name ?? (p as any).address ?? '').toLowerCase().replace(/(\s+[a-z0-9]{1,2})+\s*$/, '').replace(/\s+/g, ' ').trim()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const kind = String((g as any).kind ?? (g as any).key ?? '')
+      if (site && seenSite.has(site)) return false
+      if ((taken[kind] ?? 0) >= (CAP[kind] ?? 1)) return false
+      if (site) seenSite.add(site)
+      taken[kind] = (taken[kind] ?? 0) + 1
       return true
     })
     .slice(0, 5)
