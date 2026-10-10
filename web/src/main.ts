@@ -6,7 +6,7 @@ import './styles.css'
 import { registerSW } from 'virtual:pwa-register'
 import { mountAsk } from './ask'
 import { mountFourHour } from './fourhour'
-import { onLang, t } from './i18n'
+import { getLang, LANGS, onLang, setLang, t } from './i18n'
 import { mountNow } from './now'
 import { loadPrepFromCache, mountPrep } from './prep'
 import { openSheet } from './sheet'
@@ -24,6 +24,7 @@ const SUB: Record<Tab, string> = { now: 'now_sub', fourhour: 'fh_sub', prep: 'pr
 const app = document.getElementById('app')!
 app.innerHTML = `
   <div class="drill" id="drill" role="status"></div>
+  <button type="button" class="lang-fab" id="lang-fab" aria-label="Language: English. Tap to switch."><span class="lang-fab-c">EN</span><span class="lang-fab-n">Español</span></button>
   <div class="net-pill" id="net-pill" role="status" aria-live="polite"><span class="ms" aria-hidden="true">wifi_off</span><span class="net-pill-t"></span></div>
   <header class="topbar" id="topbar">
     <div class="tb-left"><span class="brand"><img src="/icons/icon-192.png" alt="" width="26" height="26"><span>Blackout Box</span></span></div>
@@ -226,3 +227,20 @@ registerSW({ immediate: true })
 const paintNetPill = () => { const el = document.querySelector('#net-pill .net-pill-t'); if (el) el.textContent = t('offline_pill') }
 paintNetPill()
 onLang(paintNetPill)
+
+// Language circle in the corner: one tap cycles English → Español → Kreyòl and re-renders every screen.
+const LANG_NAME: Record<string, string> = { en: 'English', es: 'Español', ht: 'Kreyòl' }
+const paintLangFab = () => {
+  const b = document.getElementById('lang-fab'); if (!b) return
+  const cur = getLang(), next = LANGS[(LANGS.indexOf(cur) + 1) % LANGS.length]
+  b.querySelector('.lang-fab-c')!.textContent = cur.toUpperCase()
+  b.querySelector('.lang-fab-n')!.textContent = LANG_NAME[next]
+  b.setAttribute('aria-label', `Language: ${LANG_NAME[cur]}. Tap for ${LANG_NAME[next]}.`)
+}
+document.getElementById('lang-fab')?.addEventListener('click', () => {
+  const cur = getLang()
+  setLang(LANGS[(LANGS.indexOf(cur) + 1) % LANGS.length])
+  try { navigator.vibrate?.(10) } catch { /* no haptics */ }
+})
+paintLangFab()
+onLang(paintLangFab)

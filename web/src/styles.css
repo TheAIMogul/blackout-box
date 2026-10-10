@@ -1313,3 +1313,15 @@ html.is-offline #fh-demo, html.is-offline #smp-go, html.is-offline .smp-tile, ht
 .why-model.rules .why-model-b { background: #34C759; color: #fff; }
 .why-models-s { margin: 4px 0 0; font-size: 13px; color: var(--text-2, #717171); }
 html[data-theme="dark"] .why-model:not(.gemma), html[data-blackout="1"] .why-model:not(.gemma) { background: rgba(255,255,255,.06); }
+
+/* ---- Language circle: bottom-right, above the floating tab bar ---- */
+.lang-fab { position: fixed; z-index: 115; right: 14px; bottom: calc(var(--tabbar-h, 74px) + env(safe-area-inset-bottom, 0px) + 12px);
+  width: 56px; height: 56px; border-radius: 50%; border: 0; padding: 0; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+  background: #FF385C; color: #fff; box-shadow: 0 8px 20px rgba(255,56,92,.4), 0 2px 6px rgba(0,0,0,.18);
+  transition: transform .15s cubic-bezier(.2,.8,.2,1); -webkit-tap-highlight-color: transparent; }
+.lang-fab:active { transform: scale(.92); }
+.lang-fab-c { font-size: 17px; font-weight: 800; letter-spacing: .02em; line-height: 1; }
+.lang-fab-n { font-size: 8.5px; font-weight: 600; opacity: .9; line-height: 1.2; margin-top: 2px; }
+html.touring .lang-fab { display: none; }
+@media (min-width: 900px) { .lang-fab { right: 24px; bottom: 28px; width: 64px; height: 64px; } .lang-fab-c { font-size: 19px; } }
