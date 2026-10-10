@@ -1,0 +1,94 @@
+{
+  "en": {
+    "text": "A white label or card with a black border showing printed text listing several medications. It reads: 'Lantus SoloStar, insulin glargine injection 100 units/mL, 3 mL prefilled pen, Rx only'; 'Amoxicillin 500 mg capsules Qty 30'; 'Lisinopril 10 mg tablets Qty 90'; 'Humira 40 mg/0.4 mL pen Keep refrigerated'. At the bottom, in gray text, is 'Walgreens Pharmacy Miami FL (305) 555-0100'. No patient name, prescriber, dates, or prescription number is visible.",
+    "kind": "document",
+    "lang": "en",
+    "scene": "medication",
+    "hazards": [
+      "none"
+    ],
+    "hazardCard": false,
+    "document": {
+      "type": "prescription",
+      "sender": "Walgreens Pharmacy, Miami FL, (305) 555-0100",
+      "claim_or_case_number": null,
+      "dates": [],
+      "deadlines": [],
+      "amounts_mentioned": [
+        "insulin glargine 100 units/mL",
+        "3 mL prefilled pen",
+        "Amoxicillin 500 mg capsules Qty 30",
+        "Lisinopril 10 mg tablets Qty 90",
+        "Humira 40 mg/0.4 mL pen"
+      ],
+      "action_requested": "Keep refrigerated (printed next to Humira 40 mg/0.4 mL pen)"
+    },
+    "confidence": 0.93,
+    "_model": "anthropic/claude-sonnet-5.5",
+    "_provider": "claude",
+    "_latencyMs": 3513,
+    "_recordedAt": "2026-10-10T16:05:43.118Z"
+  },
+  "es": {
+    "text": "Una etiqueta o tarjeta blanca con borde negro que muestra texto impreso con una lista de varios medicamentos. Dice: 'Lantus SoloStar, inyección de insulin glargine 100 units/mL, pluma precargada de 3 mL, Rx only'; 'Amoxicillin 500 mg cápsulas Qty 30'; 'Lisinopril 10 mg tabletas Qty 90'; 'Humira 40 mg/0.4 mL pluma Mantener refrigerado'. Al final, en texto gris, aparece 'Walgreens Pharmacy Miami FL (305) 555-0100'. No se ve el nombre del paciente, el médico que receta, fechas ni el número de receta.",
+    "kind": "document",
+    "lang": "es",
+    "scene": "medication",
+    "hazards": [
+      "none"
+    ],
+    "hazardCard": false,
+    "document": {
+      "type": "prescription",
+      "sender": "Walgreens Pharmacy, Miami FL, (305) 555-0100",
+      "claim_or_case_number": null,
+      "dates": [],
+      "deadlines": [],
+      "amounts_mentioned": [
+        "insulin glargine 100 units/mL",
+        "3 mL prefilled pen",
+        "Amoxicillin 500 mg capsules Qty 30",
+        "Lisinopril 10 mg tablets Qty 90",
+        "Humira 40 mg/0.4 mL pen"
+      ],
+      "action_requested": "Keep refrigerated (printed next to Humira 40 mg/0.4 mL pen)"
+    },
+    "confidence": 0.93,
+    "_translatedBy": "anthropic/claude-fable-5.1",
+    "_model": "anthropic/claude-sonnet-5.5",
+    "_provider": "claude",
+    "_latencyMs": 3513,
+    "_recordedAt": "2026-10-10T16:05:47.414Z"
+  },
+  "ht": {
+    "text": "Yon etikèt oswa kat blan ak yon bòdi nwa ki montre tèks enprime ki bay lis plizyè medikaman. Li di: 'Lantus SoloStar, enjeksyon insulin glargine 100 units/mL, plim pre-ranpli 3 mL, Rx sèlman'; 'Amoxicillin 500 mg kapsil Kantite 30'; 'Lisinopril 10 mg tablèt Kantite 90'; 'Humira 40 mg/0.4 mL plim Kenbe nan frijidè'. Anba a, an tèks gri, gen 'Walgreens Pharmacy Miami FL (305) 555-0100'. Pa gen okenn non pasyan, moun ki preskri, dat, oswa nimewo preskripsyon ki vizib.",
+    "kind": "document",
+    "lang": "ht",
+    "scene": "medication",
+    "hazards": [
+      "none"
+    ],
+    "hazardCard": false,
+    "document": {
+      "type": "prescription",
+      "sender": "Walgreens Pharmacy, Miami FL, (305) 555-0100",
+      "claim_or_case_number": null,
+      "dates": [],
+      "deadlines": [],
+      "amounts_mentioned": [
+        "insulin glargine 100 units/mL",
+        "3 mL prefilled pen",
+        "Amoxicillin 500 mg capsules Qty 30",
+        "Lisinopril 10 mg tablets Qty 90",
+        "Humira 40 mg/0.4 mL pen"
+      ],
+      "action_requested": "Keep refrigerated (printed next to Humira 40 mg/0.4 mL pen)"
+    },
+    "confidence": 0.93,
+    "_translatedBy": "anthropic/claude-fable-5.1",
+    "_model": "anthropic/claude-sonnet-5.5",
+    "_provider": "claude",
+    "_latencyMs": 3513,
+    "_recordedAt": "2026-10-10T16:06:00.907Z"
+  }
+}

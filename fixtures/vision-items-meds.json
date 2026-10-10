@@ -1,0 +1,58 @@
+{
+  "items": [
+    {
+      "id": "m1",
+      "name": "Lantus SoloStar",
+      "category": "med",
+      "container": "pen",
+      "quantity": "5 pens",
+      "opened": false,
+      "brandText": "LANTUS SoloStar insulin glargine injection 100 units/mL",
+      "location": "shelf",
+      "confidence": 0.96,
+      "source": "fixture:four-hour-rule-brief"
+    },
+    {
+      "id": "m2",
+      "name": "Humalog KwikPen",
+      "category": "med",
+      "container": "pen",
+      "quantity": null,
+      "opened": true,
+      "brandText": "HUMALOG KwikPen insulin lispro injection 100 units/mL",
+      "location": "shelf",
+      "confidence": 0.94,
+      "openedDaysAgo": 20,
+      "source": "fixture:four-hour-rule-brief"
+    },
+    {
+      "id": "m3",
+      "name": "Amoxicillin for oral suspension 250 mg/5 mL",
+      "category": "med",
+      "container": "bottle",
+      "quantity": "150 mL",
+      "opened": true,
+      "brandText": "Amoxicillin for Oral Suspension USP 250 mg/5 mL",
+      "location": "shelf",
+      "confidence": 0.9,
+      "openedDaysAgo": 10,
+      "source": "fixture:four-hour-rule-brief"
+    },
+    {
+      "id": "m4",
+      "name": "Metformin 500 mg tablets",
+      "category": "med",
+      "container": "bottle",
+      "quantity": null,
+      "opened": true,
+      "brandText": "Metformin HCl 500 mg",
+      "location": "cabinet",
+      "confidence": 0.92,
+      "source": "fixture:four-hour-rule-brief"
+    }
+  ],
+  "unreadableCount": 0,
+  "hint": "meds",
+  "_model": "fixture",
+  "_note": "Item list from specs/four-hour-rule-brief.html DEMO_MODE fixtures (not a live model read). Re-record with a real photo."
+}

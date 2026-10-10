@@ -1,0 +1,112 @@
+{
+  "items": [
+    {
+      "id": "f1",
+      "name": "2% milk",
+      "category": "food",
+      "container": "carton",
+      "quantity": "1 gallon",
+      "opened": true,
+      "brandText": null,
+      "location": "door",
+      "confidence": 0.93,
+      "foodClass": "discard_4h",
+      "source": "fixture:four-hour-rule-brief"
+    },
+    {
+      "id": "f2",
+      "name": "Eggs",
+      "category": "food",
+      "container": "carton",
+      "quantity": "12",
+      "opened": true,
+      "brandText": null,
+      "location": "fridge",
+      "confidence": 0.95,
+      "foodClass": "discard_4h",
+      "source": "fixture:four-hour-rule-brief"
+    },
+    {
+      "id": "f3",
+      "name": "Cooked chicken (leftovers)",
+      "category": "food",
+      "container": "tub",
+      "quantity": null,
+      "opened": true,
+      "brandText": null,
+      "location": "fridge",
+      "confidence": 0.78,
+      "foodClass": "discard_4h",
+      "source": "fixture:four-hour-rule-brief"
+    },
+    {
+      "id": "f4",
+      "name": "Cheddar cheese block",
+      "category": "food",
+      "container": "bag",
+      "quantity": null,
+      "opened": true,
+      "brandText": null,
+      "location": "fridge",
+      "confidence": 0.88,
+      "foodClass": "keep",
+      "source": "fixture:four-hour-rule-brief"
+    },
+    {
+      "id": "f5",
+      "name": "Butter",
+      "category": "food",
+      "container": "box",
+      "quantity": null,
+      "opened": true,
+      "brandText": null,
+      "location": "door",
+      "confidence": 0.9,
+      "foodClass": "keep",
+      "source": "fixture:four-hour-rule-brief"
+    },
+    {
+      "id": "f6",
+      "name": "Ketchup",
+      "category": "food",
+      "container": "bottle",
+      "quantity": null,
+      "opened": true,
+      "brandText": "Heinz",
+      "location": "door",
+      "confidence": 0.97,
+      "foodClass": "keep",
+      "source": "fixture:four-hour-rule-brief"
+    },
+    {
+      "id": "f7",
+      "name": "Baby formula (ready-to-feed), opened",
+      "category": "food",
+      "container": "bottle",
+      "quantity": null,
+      "opened": true,
+      "brandText": null,
+      "location": "fridge",
+      "confidence": 0.7,
+      "foodClass": "discard_4h",
+      "source": "fixture:four-hour-rule-brief"
+    },
+    {
+      "id": "f8",
+      "name": "Frozen chicken breasts",
+      "category": "food",
+      "container": "bag",
+      "quantity": null,
+      "opened": false,
+      "brandText": null,
+      "location": "freezer",
+      "confidence": 0.86,
+      "foodClass": "frozen_refreeze",
+      "source": "fixture:four-hour-rule-brief"
+    }
+  ],
+  "unreadableCount": 0,
+  "hint": "fridge",
+  "_model": "fixture",
+  "_note": "Item list from specs/four-hour-rule-brief.html DEMO_MODE fixtures (not a live model read). Re-record with a real photo."
+}

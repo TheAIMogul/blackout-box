@@ -1,0 +1,29 @@
+{
+  "kind": "fire",
+  "features": [
+    {
+      "name": "Port of Miami",
+      "lat": 25.7748564825718,
+      "lon": -80.1697082110553,
+      "address": "641 EUROPE WAY, Miami, 33132",
+      "distanceMi": 1.31
+    },
+    {
+      "name": "Fisher Island",
+      "lat": 25.7632445624037,
+      "lon": -80.139737184632,
+      "address": "65 FISHER ISLAND DR, Unincorporated Miami-Dade, 33109",
+      "distanceMi": 3.16
+    },
+    {
+      "name": "Key Biscayne",
+      "lat": 25.702827597222,
+      "lon": -80.1608293157877,
+      "address": "2 CRANDON BLVD, Unincorporated Miami-Dade, 33149",
+      "distanceMi": 4.98
+    }
+  ],
+  "fetchedAt": "2026-10-10T15:57:35.971Z",
+  "_source": "Miami-Dade County FireStation_gdb/FeatureServer/0",
+  "_recordedAt": "2026-10-10T15:57:36.870Z"
+}

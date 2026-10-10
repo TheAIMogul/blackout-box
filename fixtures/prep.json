@@ -1,0 +1,730 @@
+{
+  "generatedAt": "2026-10-10T15:57:36.862Z",
+  "location": {
+    "lat": 25.77,
+    "lon": -80.19
+  },
+  "zone": {
+    "zone": "B",
+    "category": 2,
+    "color": "O",
+    "inCounty": true,
+    "fetchedAt": "2026-10-10T15:57:35.230Z",
+    "_source": "Miami-Dade County HurricaneEvacZone_gdb/FeatureServer/0 (ZONEID)"
+  },
+  "nws": {
+    "tempF": 89.6,
+    "heatIndexF": 100.3,
+    "observedAt": "2026-10-10T15:40:00+00:00",
+    "station": "KMIA",
+    "stationName": "Miami, Miami International Airport",
+    "hourly": [
+      {
+        "t": "2026-10-10T11:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-10T12:00:00-04:00",
+        "tempF": 88
+      },
+      {
+        "t": "2026-10-10T13:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-10T14:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-10T15:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-10T16:00:00-04:00",
+        "tempF": 88
+      },
+      {
+        "t": "2026-10-10T17:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-10T18:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-10T19:00:00-04:00",
+        "tempF": 86
+      },
+      {
+        "t": "2026-10-10T20:00:00-04:00",
+        "tempF": 85
+      },
+      {
+        "t": "2026-10-10T21:00:00-04:00",
+        "tempF": 85
+      },
+      {
+        "t": "2026-10-10T22:00:00-04:00",
+        "tempF": 85
+      },
+      {
+        "t": "2026-10-10T23:00:00-04:00",
+        "tempF": 85
+      },
+      {
+        "t": "2026-10-11T00:00:00-04:00",
+        "tempF": 85
+      },
+      {
+        "t": "2026-10-11T01:00:00-04:00",
+        "tempF": 85
+      },
+      {
+        "t": "2026-10-11T02:00:00-04:00",
+        "tempF": 85
+      },
+      {
+        "t": "2026-10-11T03:00:00-04:00",
+        "tempF": 84
+      },
+      {
+        "t": "2026-10-11T04:00:00-04:00",
+        "tempF": 84
+      },
+      {
+        "t": "2026-10-11T05:00:00-04:00",
+        "tempF": 84
+      },
+      {
+        "t": "2026-10-11T06:00:00-04:00",
+        "tempF": 84
+      },
+      {
+        "t": "2026-10-11T07:00:00-04:00",
+        "tempF": 83
+      },
+      {
+        "t": "2026-10-11T08:00:00-04:00",
+        "tempF": 85
+      },
+      {
+        "t": "2026-10-11T09:00:00-04:00",
+        "tempF": 85
+      },
+      {
+        "t": "2026-10-11T10:00:00-04:00",
+        "tempF": 86
+      },
+      {
+        "t": "2026-10-11T11:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-11T12:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-11T13:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-11T14:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-11T15:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-11T16:00:00-04:00",
+        "tempF": 88
+      },
+      {
+        "t": "2026-10-11T17:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-11T18:00:00-04:00",
+        "tempF": 87
+      },
+      {
+        "t": "2026-10-11T19:00:00-04:00",
+        "tempF": 86
+      },
+      {
+        "t": "2026-10-11T20:00:00-04:00",
+        "tempF": 84
+      },
+      {
+        "t": "2026-10-11T21:00:00-04:00",
+        "tempF": 84
+      },
+      {
+        "t": "2026-10-11T22:00:00-04:00",
+        "tempF": 84
+      },
+      {
+        "t": "2026-10-11T23:00:00-04:00",
+        "tempF": 84
+      },
+      {
+        "t": "2026-10-12T00:00:00-04:00",
+        "tempF": 84
+      },
+      {
+        "t": "2026-10-12T01:00:00-04:00",
+        "tempF": 83
+      },
+      {
+        "t": "2026-10-12T02:00:00-04:00",
+        "tempF": 83
+      },
+      {
+        "t": "2026-10-12T03:00:00-04:00",
+        "tempF": 83
+      },
+      {
+        "t": "2026-10-12T04:00:00-04:00",
+        "tempF": 82
+      },
+      {
+        "t": "2026-10-12T05:00:00-04:00",
+        "tempF": 82
+      },
+      {
+        "t": "2026-10-12T06:00:00-04:00",
+        "tempF": 81
+      },
+      {
+        "t": "2026-10-12T07:00:00-04:00",
+        "tempF": 81
+      },
+      {
+        "t": "2026-10-12T08:00:00-04:00",
+        "tempF": 81
+      },
+      {
+        "t": "2026-10-12T09:00:00-04:00",
+        "tempF": 82
+      },
+      {
+        "t": "2026-10-12T10:00:00-04:00",
+        "tempF": 84
+      }
+    ],
+    "grid": "MFL/110,50",
+    "fetchedAt": "2026-10-10T15:57:35.537Z",
+    "_source": "NWS api.weather.gov (observations/latest + forecast/hourly)"
+  },
+  "places": {
+    "power": [
+      {
+        "name": "ICON GARAGE ICONBRICKELL 1",
+        "lat": 25.768851,
+        "lon": -80.189356,
+        "address": "465 Brickell Ave, Miami, FL, 33131",
+        "phone": "888-758-4389",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.09
+      },
+      {
+        "name": "ICON GARAGE ICONBRICKELL 2",
+        "lat": 25.768858,
+        "lon": -80.189171,
+        "address": "465 Brickell Ave, Miami, FL, 33131",
+        "phone": "888-758-4389",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.09
+      },
+      {
+        "name": "Wells Fargo Center-Miami",
+        "lat": 25.7712942,
+        "lon": -80.1894492,
+        "address": "333 SE 2nd Ave., #3300, Miami, FL, 33131",
+        "phone": "888-998-2546",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.1
+      },
+      {
+        "name": "ICON GARAGE ICONBRICKELL 3",
+        "lat": 25.768906,
+        "lon": -80.189026,
+        "address": "495 Brickell Ave, Miami, FL, 33131",
+        "phone": "888-758-4389",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.1
+      },
+      {
+        "name": "ICON GARAGE ICONBRICKELL 4",
+        "lat": 25.768944,
+        "lon": -80.188875,
+        "address": "485 Brickell Ave, Miami, FL, 33131",
+        "phone": "888-758-4389",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.1
+      },
+      {
+        "name": "Brickell on the River",
+        "lat": 25.769623,
+        "lon": -80.191636,
+        "address": "31 SE 5th St, Miami, FL, 33131",
+        "phone": "888-998-2546",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.11
+      },
+      {
+        "name": "OBE 500 BRICKELL R",
+        "lat": 25.768437,
+        "lon": -80.191511,
+        "address": "55 Southeast 6th Street, Miami, FL, 33131",
+        "phone": "888-758-4389",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.14
+      },
+      {
+        "name": "OBE 500 BRICKELL L",
+        "lat": 25.768462,
+        "lon": -80.191554,
+        "address": "55 Southeast 6th Street, Miami, FL, 33131",
+        "phone": "888-758-4389",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.14
+      },
+      {
+        "name": "Down Town Miami 1",
+        "lat": 25.7719345,
+        "lon": -80.1890472,
+        "address": "299 Se 3Rd St, Miami, FL, 33131",
+        "phone": "305-995-0600",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.15
+      },
+      {
+        "name": "Monarc at Met 3 Residential Parking",
+        "lat": 25.7721236,
+        "lon": -80.1894522,
+        "address": "201 SE 2nd Ave., Miami, FL, 33131",
+        "phone": "888-998-2546",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.15
+      },
+      {
+        "name": "Reach Residential",
+        "lat": 25.76832389831543,
+        "lon": -80.19189453125,
+        "address": "68 Southeast 6th Street, Miami, FL, 33131",
+        "phone": "888-998-2546",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.17
+      },
+      {
+        "name": "MET 1 CONDO STATION 1",
+        "lat": 25.771433,
+        "lon": -80.187758,
+        "address": "300 Biscayne Blvd Way, Miami, FL, 33131",
+        "phone": "888-758-4389",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.17
+      },
+      {
+        "name": "SEFC LEGACY SEFC",
+        "lat": 25.772033,
+        "lon": -80.188402,
+        "address": "200 S Biscayne Blvd, Miami, FL, 33131",
+        "phone": "888-758-4389",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.17
+      },
+      {
+        "name": "Reach Commercial",
+        "lat": 25.76837,
+        "lon": -80.1922,
+        "address": "66 Southeast 6th Street, Miami, FL, 33131",
+        "phone": "888-998-2546",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.18
+      },
+      {
+        "name": "600 Brickell World Plaza",
+        "lat": 25.7674922,
+        "lon": -80.1910373,
+        "address": "600 Brickell Avenue, Miami, FL, 33131",
+        "phone": "888-998-2546",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.18
+      },
+      {
+        "name": "OBE MPA KNIGHT CENT",
+        "lat": 25.772608,
+        "lon": -80.19097,
+        "address": "117 SE 2nd St, Miami, FL, 33131",
+        "phone": "888-758-4389",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.19
+      },
+      {
+        "name": "Legacy Parking",
+        "lat": 25.767087,
+        "lon": -80.189801,
+        "address": "701 Brickell Avenue, Miami, FL, 33131",
+        "phone": "888-998-2546",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.2
+      },
+      {
+        "name": "620 Brickell World Plaza",
+        "lat": 25.7674204,
+        "lon": -80.1915305,
+        "address": "33 se 7th street, miami, FL, 33131",
+        "phone": "888-998-2546",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.2
+      },
+      {
+        "name": "SEFC SEFCLEGACY 3",
+        "lat": 25.772355,
+        "lon": -80.187721,
+        "address": "200 S Biscayne Blvd, Miami, FL, 33131",
+        "phone": "888-758-4389",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.22
+      },
+      {
+        "name": "SEFC SEFC/LEGACY 2",
+        "lat": 25.772317,
+        "lon": -80.187668,
+        "address": "200 S Biscayne Blvd, Miami, FL, 33131",
+        "phone": "888-758-4389",
+        "hours": "24 hours daily",
+        "open24h": true,
+        "distanceMi": 0.22
+      }
+    ],
+    "library": [
+      {
+        "name": "Main Library",
+        "lat": 25.7743616066567,
+        "lon": -80.1971798351007,
+        "address": "101 W Flagler St, Miami, 33130",
+        "phone": "305-375-2665",
+        "hours": "Mon,Tue,Wed,Thu,Fri,Sat 9:30 am. - 6 p.m.",
+        "url": "https://mdpls.org/branch-main",
+        "distanceMi": 0.54
+      },
+      {
+        "name": "Culmer/Overtown Branch",
+        "lat": 25.7858054218371,
+        "lon": -80.2010767277015,
+        "address": "350 NW 13th St, Miami, 33136",
+        "phone": "305-579-5322",
+        "hours": "Mon,Tue,Wed,Thu 9:30 a.m. - 8 p.m.; Fri,Sat 9:30 am - 6 p.m.",
+        "url": "https://mdpls.org/branch-culmerovertown",
+        "distanceMi": 1.29
+      },
+      {
+        "name": "Hispanic Branch",
+        "lat": 25.7721348207047,
+        "lon": -80.2176100875551,
+        "address": "1398 SW 1st St, Miami, 33135",
+        "phone": "305-643-8574",
+        "hours": "Mon,Tue,Wed,Thu 9:30 am - 8 p.m.; Fri,Sat 9:30 am. - 6 p.m.",
+        "url": "https://mdpls.org/branch-hispanic",
+        "distanceMi": 1.72
+      },
+      {
+        "name": "UHealth Jackson Station Library Kiosk",
+        "lat": 25.7896961285592,
+        "lon": -80.2148300954998,
+        "address": "1501 NW 12th Ave, Miami, 33136",
+        "phone": "305-324-0291",
+        "hours": "Mon,Tue,Wed,Thu,Fri 7 a.m. - 6 p.m.",
+        "url": "https://mdpls.org/branch-civic-center",
+        "distanceMi": 2.06
+      },
+      {
+        "name": "Shenandoah Branch",
+        "lat": 25.7553584175912,
+        "lon": -80.2290099465641,
+        "address": "2111 SW 19th St, Miami, 33145",
+        "phone": "305-250-4688",
+        "hours": "Mon,Tue,Wed,Thu 9:30 am - 8 p.m.; Fri,Sat 9:30 am - 6 p.m.",
+        "url": "https://mdpls.org/branch-shenandoah",
+        "distanceMi": 2.63
+      },
+      {
+        "name": "South Shore Branch",
+        "lat": 25.7704060667151,
+        "lon": -80.1377641258402,
+        "address": "131 Alton Rd, Miami Beach, 33139",
+        "phone": "305-535-4223",
+        "hours": "Mon,Tue,Wed,Thu 9:30 am - 8 p.m; Fri,Sat 9:30 am - 6 p.m.",
+        "url": "https://mdpls.org/branch-south-shore",
+        "distanceMi": 3.25
+      },
+      {
+        "name": "Allapattah Branch",
+        "lat": 25.8087449371477,
+        "lon": -80.2256372829153,
+        "address": "1799 NW 35th St, Miami, 33142",
+        "phone": "305-638-6086",
+        "hours": "Temporarily Closed null; null null",
+        "url": "https://mdpls.org/branch-allapattah",
+        "distanceMi": 3.48
+      },
+      {
+        "name": "Miami Beach Regional",
+        "lat": 25.7980372097599,
+        "lon": -80.1288016629967,
+        "address": "227 22nd St, Miami Beach, 33139",
+        "phone": "305-535-4219",
+        "hours": "Mon,Tue,Wed,Thu 9:30 am. - 8 p.m.; Fri,Sat 9:30 am - 6 p.m.",
+        "url": "https://mdpls.org/branch-miami-beach-regional",
+        "distanceMi": 4.27
+      },
+      {
+        "name": "Lemon City Branch",
+        "lat": 25.8323908804003,
+        "lon": -80.1870328016212,
+        "address": "430 NE 61st St, Miami, 33137",
+        "phone": "305-757-0662",
+        "url": "https://mdpls.org/branch-lemon-city",
+        "distanceMi": 4.31
+      },
+      {
+        "name": "Coconut Grove Branch",
+        "lat": 25.726782698512,
+        "lon": -80.2403401232566,
+        "address": "2875 McFarlane Rd, Miami, 33133",
+        "phone": "305-442-8695",
+        "hours": "Mon,Tue,Wed,Thu 9:30 a.m. - 8 p.m.; Fri,Sat 9:30 am - 6 p.m.",
+        "url": "https://mdpls.org/branch-coconut-grove",
+        "distanceMi": 4.33
+      }
+    ],
+    "fire": [
+      {
+        "name": "Port of Miami",
+        "lat": 25.7748564825718,
+        "lon": -80.1697082110553,
+        "address": "641 EUROPE WAY, Miami, 33132",
+        "distanceMi": 1.31
+      },
+      {
+        "name": "Fisher Island",
+        "lat": 25.7632445624037,
+        "lon": -80.139737184632,
+        "address": "65 FISHER ISLAND DR, Unincorporated Miami-Dade, 33109",
+        "distanceMi": 3.16
+      },
+      {
+        "name": "Key Biscayne",
+        "lat": 25.702827597222,
+        "lon": -80.1608293157877,
+        "address": "2 CRANDON BLVD, Unincorporated Miami-Dade, 33149",
+        "distanceMi": 4.98
+      }
+    ],
+    "note": "Libraries, fire stations and EV chargers are places that likely have power. They are not designated cooling centers or shelters.",
+    "_source": "NREL/NLR AFDC + Miami-Dade Library_gdb + FireStation_gdb"
+  },
+  "fema": {
+    "declarations": [
+      {
+        "number": 4834,
+        "title": "HURRICANE MILTON",
+        "date": "2024-10-11T00:00:00.000Z",
+        "type": "DR",
+        "incidentType": "Hurricane",
+        "incidentBeginDate": "2024-10-05T00:00:00.000Z",
+        "incidentEndDate": "2024-11-02T00:00:00.000Z",
+        "iaProgramDeclared": false,
+        "ihProgramDeclared": false
+      },
+      {
+        "number": 3622,
+        "title": "HURRICANE MILTON",
+        "date": "2024-10-07T00:00:00.000Z",
+        "type": "EM",
+        "incidentType": "Hurricane",
+        "incidentBeginDate": "2024-10-05T00:00:00.000Z",
+        "incidentEndDate": "2024-11-02T00:00:00.000Z",
+        "iaProgramDeclared": false,
+        "ihProgramDeclared": false
+      },
+      {
+        "number": 4680,
+        "title": "HURRICANE NICOLE",
+        "date": "2022-12-13T00:00:00.000Z",
+        "type": "DR",
+        "incidentType": "Hurricane",
+        "incidentBeginDate": "2022-11-07T00:00:00.000Z",
+        "incidentEndDate": "2022-11-30T00:00:00.000Z",
+        "iaProgramDeclared": false,
+        "ihProgramDeclared": false
+      },
+      {
+        "number": 3587,
+        "title": "TROPICAL STORM NICOLE",
+        "date": "2022-11-08T00:00:00.000Z",
+        "type": "EM",
+        "incidentType": "Tropical Storm",
+        "incidentBeginDate": "2022-11-07T00:00:00.000Z",
+        "incidentEndDate": "2022-11-30T00:00:00.000Z",
+        "iaProgramDeclared": false,
+        "ihProgramDeclared": false
+      },
+      {
+        "number": 4673,
+        "title": "HURRICANE IAN",
+        "date": "2022-09-29T00:00:00.000Z",
+        "type": "DR",
+        "incidentType": "Hurricane",
+        "incidentBeginDate": "2022-09-23T00:00:00.000Z",
+        "incidentEndDate": "2022-11-04T00:00:00.000Z",
+        "iaProgramDeclared": false,
+        "ihProgramDeclared": false
+      },
+      {
+        "number": 3584,
+        "title": "TROPICAL STORM IAN",
+        "date": "2022-09-24T00:00:00.000Z",
+        "type": "EM",
+        "incidentType": "Hurricane",
+        "incidentBeginDate": "2022-09-23T00:00:00.000Z",
+        "incidentEndDate": "2022-11-04T00:00:00.000Z",
+        "iaProgramDeclared": false,
+        "ihProgramDeclared": false
+      },
+      {
+        "number": 3561,
+        "title": "TROPICAL STORM ELSA",
+        "date": "2021-07-04T00:00:00.000Z",
+        "type": "EM",
+        "incidentType": "Severe Storm",
+        "incidentBeginDate": "2021-07-04T00:00:00.000Z",
+        "incidentEndDate": "2021-07-08T00:00:00.000Z",
+        "iaProgramDeclared": false,
+        "ihProgramDeclared": false
+      },
+      {
+        "number": 3560,
+        "title": "SURFSIDE BUILDING COLLAPSE",
+        "date": "2021-06-25T00:00:00.000Z",
+        "type": "EM",
+        "incidentType": "Other",
+        "incidentBeginDate": "2021-06-24T00:00:00.000Z",
+        "incidentEndDate": "2021-07-04T00:00:00.000Z",
+        "iaProgramDeclared": false,
+        "ihProgramDeclared": true
+      },
+      {
+        "number": 3533,
+        "title": "HURRICANE ISAIAS",
+        "date": "2020-08-01T00:00:00.000Z",
+        "type": "EM",
+        "incidentType": "Hurricane",
+        "incidentBeginDate": "2020-07-31T00:00:00.000Z",
+        "incidentEndDate": "2020-08-04T00:00:00.000Z",
+        "iaProgramDeclared": false,
+        "ihProgramDeclared": false
+      },
+      {
+        "number": 4486,
+        "title": "COVID-19 PANDEMIC",
+        "date": "2020-03-25T00:00:00.000Z",
+        "type": "DR",
+        "incidentType": "Biological",
+        "incidentBeginDate": "2020-01-20T00:00:00.000Z",
+        "incidentEndDate": "2023-05-11T00:00:00.000Z",
+        "iaProgramDeclared": false,
+        "ihProgramDeclared": true
+      }
+    ],
+    "fetchedAt": "2026-10-10T15:57:35.035Z",
+    "_source": "OpenFEMA DisasterDeclarationsSummaries v2 (fema.gov/api/open/v2)"
+  },
+  "femaRegister": {
+    "text": "Register for FEMA help at DisasterAssistance.gov or 1-800-621-3362.",
+    "url": "https://www.disasterassistance.gov"
+  },
+  "tide": {
+    "station": "8723214",
+    "stationName": "Virginia Key",
+    "datum": "MLLW",
+    "units": "ft",
+    "predictions": [
+      {
+        "t": "2026-10-10 03:05",
+        "v": 0.345,
+        "type": "L"
+      },
+      {
+        "t": "2026-10-10 09:21",
+        "v": 2.933,
+        "type": "H"
+      },
+      {
+        "t": "2026-10-10 15:29",
+        "v": 0.56,
+        "type": "L"
+      },
+      {
+        "t": "2026-10-10 21:33",
+        "v": 2.792,
+        "type": "H"
+      }
+    ],
+    "latest": {
+      "t": "2026-10-10 11:48",
+      "v": 2.756
+    },
+    "fetchedAt": "2026-10-10T15:57:35.134Z",
+    "_source": "NOAA CO-OPS api.tidesandcurrents.noaa.gov (predictions hilo + water_level latest)"
+  },
+  "statute": {
+    "number": "F.S. 252.358",
+    "url": "https://www.flsenate.gov/Laws/Statutes/2025/252.358",
+    "summary": "Florida early-refill law: during a hurricane warning, a Governor-declared state of emergency, or an activated county emergency operations center, insurers must waive \"refill too soon\" limits and cover at least a 30-day supply of a prescription that still has refills. It likely applies during a declared emergency; ask your pharmacy."
+  },
+  "fdaEmergencyInsulin": {
+    "url": "https://www.fda.gov/drugs/emergency-preparedness-drugs/information-regarding-insulin-storage-and-switching-between-products-emergency",
+    "summary": "FDA: in an emergency, insulin kept between 59°F and 86°F (15°C to 30°C) can be used for up to 28 days. Above 86°F it may still need to be used if there is no replacement. Never use insulin that has been frozen. Replace it when proper storage is available. No dosing changes without your doctor or pharmacist.",
+    "safeDrugUseUrl": "https://www.fda.gov/drugs/emergency-preparedness-drugs/safe-drug-use-after-natural-disaster"
+  },
+  "foodRules": {
+    "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage",
+    "usdaUrl": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/emergencies/keep-your-food-safe-during-emergencies",
+    "reviewed": "2024-08-08",
+    "headline": "Your refrigerator will keep food safe for up to 4 hours during a power outage. Keep the door closed as much as possible. Discard refrigerated perishable food such as meat, poultry, fish, eggs, and leftovers after 4 hours without power.",
+    "freezer": "A full freezer will hold a safe temperature for approximately 48 hours (24 hours if it is half full and the door remains closed).",
+    "doubt": "After a power outage never taste food to determine its safety. When in Doubt, Throw it Out!",
+    "rule": {
+      "fridgeHours": 4,
+      "maxSafeF": 40,
+      "freezerFullHours": 48,
+      "freezerHalfHours": 24
+    }
+  },
+  "errors": {},
+  "_source": "Miami-Dade ArcGIS, NWS, OpenFEMA, NOAA CO-OPS, NREL/NLR, FDA, FoodSafety.gov/USDA, flsenate.gov",
+  "_recordedAt": "2026-10-10T15:57:36.863Z"
+}

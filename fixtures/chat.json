@@ -1,0 +1,158 @@
+{
+  "en": [
+    {
+      "question": "Am I in an evacuation zone?",
+      "text": "Yes. Your saved location (lat 25.77, lon -80.19) is in Miami-Dade Evacuation Zone B. This was saved on 2026-10-10. Zone B is one of the lower-lying zones, so it is often ordered to evacuate for stronger storms. I do not have the county's current evacuation orders saved, so I cannot tell you if Zone B has been ordered to leave right now. When service returns, check Miami-Dade Emergency Management (miamidade.gov/hurricane) or call 311 to see which zones are under an order. If you hear an order for Zone B on the radio or from officials, follow it.",
+      "lang": "en",
+      "sources": [
+        "Miami-Dade County HurricaneEvacZone_gdb/FeatureServer/0 (ZONEID)"
+      ],
+      "call_911": false,
+      "contextKeys": [
+        "location",
+        "zone",
+        "foodRules",
+        "fdaEmergencyInsulin",
+        "generatedAt"
+      ],
+      "contextSource": "server-prep-bundle",
+      "_model": "anthropic/claude-fable-5.1",
+      "_provider": "claude",
+      "_latencyMs": 4883,
+      "_recordedAt": "2026-10-10T16:04:03.073Z"
+    },
+    {
+      "question": "Where can I charge my phone or find power nearby?",
+      "text": "Places near you that likely have power (saved Oct 10, 2026):\n\n• ICON GARAGE ICONBRICKELL 1 & 2 – 465 Brickell Ave, Miami, FL 33131. Open 24 hours. Phone 888-758-4389. About 0.09 miles away.\n• Wells Fargo Center-Miami – 333 SE 2nd Ave., #3300, Miami, FL 33131. Open 24 hours. Phone 888-998-2546. About 0.1 miles away.\n• Main Library – 101 W Flagler St, Miami 33130. Open Mon–Sat 9:30 a.m.–6 p.m. Phone 305-375-2665. About 0.54 miles away.\n\nThese are EV chargers and a library. They likely have power, but they are not official cooling centers or shelters. Hours may change after the storm. When service returns, check mdpls.org or call before you go.",
+      "lang": "en",
+      "sources": [
+        "NREL/NLR AFDC + Miami-Dade Library_gdb + FireStation_gdb"
+      ],
+      "call_911": false,
+      "contextKeys": [
+        "location",
+        "zone",
+        "foodRules",
+        "fdaEmergencyInsulin",
+        "places",
+        "generatedAt"
+      ],
+      "contextSource": "server-prep-bundle",
+      "_model": "anthropic/claude-fable-5.1",
+      "_provider": "claude",
+      "_latencyMs": 8982,
+      "_recordedAt": "2026-10-10T16:04:12.057Z"
+    },
+    {
+      "question": "My insulin pen has been out of the fridge for 30 hours and it is 84°F inside. Is it still OK?",
+      "text": "FDA emergency guidance says this pen can still be used. The FDA says that in an emergency, insulin kept between 59°F and 86°F (15°C to 30°C) can be used for up to 28 days. Your pen has been at 84°F (29°C) for 30 hours. That is inside the FDA range and well under 28 days.\n\nKeep it as cool as you can, out of sunlight. Never use insulin that has been frozen. Do not change your dose on your own. When your power or pharmacy is back, replace the pen and ask your pharmacist if you have any doubts about how it looks or works.",
+      "lang": "en",
+      "sources": [
+        "https://www.fda.gov/drugs/emergency-preparedness-drugs/information-regarding-insulin-storage-and-switching-between-products-emergency"
+      ],
+      "call_911": false,
+      "contextKeys": [
+        "location",
+        "zone",
+        "foodRules",
+        "fdaEmergencyInsulin",
+        "generatedAt"
+      ],
+      "contextSource": "server-prep-bundle",
+      "_model": "anthropic/claude-fable-5.1",
+      "_provider": "claude",
+      "_latencyMs": 6927,
+      "_recordedAt": "2026-10-10T16:04:18.985Z"
+    }
+  ],
+  "es": [
+    {
+      "question": "¿Estoy en una zona de evacuación?",
+      "text": "Según los datos guardados en este aparato, tu ubicación está en la Zona B de evacuación de Miami-Dade. Pero no tengo guardado si hay una orden de evacuación activa para la Zona B en este momento. Esa decisión la da el Condado durante la tormenta. Cuando vuelva el servicio, revisa el sitio del Condado de Miami-Dade (miamidade.gov), llama al 311, o escucha la radio local. Si las autoridades ordenan evacuar la Zona B, sal cuando te lo indiquen. Si tienes dudas, sigue las instrucciones de las autoridades locales.",
+      "lang": "es",
+      "sources": [
+        "Miami-Dade County HurricaneEvacZone_gdb/FeatureServer/0 (ZONEID) - fetchedAt 2026-10-10T15:57:35.230Z"
+      ],
+      "call_911": false,
+      "contextKeys": [
+        "location",
+        "zone",
+        "foodRules",
+        "fdaEmergencyInsulin",
+        "generatedAt"
+      ],
+      "contextSource": "server-prep-bundle",
+      "_model": "anthropic/claude-fable-5.1",
+      "_provider": "claude",
+      "_latencyMs": 9428,
+      "_recordedAt": "2026-10-10T16:04:28.413Z"
+    },
+    {
+      "question": "¿Dónde puedo cargar mi teléfono cerca de aquí?",
+      "text": "Estos lugares cerca de usted probablemente tienen electricidad. No son refugios ni centros de enfriamiento oficiales.\n\n1. ICON GARAGE ICONBRICKELL 1 y 2 – 465 Brickell Ave, Miami. Abierto 24 horas. Tel: 888-758-4389. A 0.09 millas.\n2. Wells Fargo Center-Miami – 333 SE 2nd Ave., #3300, Miami. Abierto 24 horas. Tel: 888-998-2546. A 0.1 millas.\n3. Main Library (Biblioteca Principal) – 101 W Flagler St, Miami. Lunes a sábado, 9:30 am a 6 pm. Tel: 305-375-2665. A 0.54 millas.\n\nLos garajes son estaciones de carga para autos eléctricos. Llame antes de ir si puede. Esta información se guardó antes de la tormenta y puede haber cambiado.",
+      "lang": "es",
+      "sources": [
+        "NREL/NLR AFDC + Miami-Dade Library_gdb + FireStation_gdb"
+      ],
+      "call_911": false,
+      "contextKeys": [
+        "location",
+        "zone",
+        "foodRules",
+        "fdaEmergencyInsulin",
+        "places",
+        "generatedAt"
+      ],
+      "contextSource": "server-prep-bundle",
+      "_model": "anthropic/claude-fable-5.1",
+      "_provider": "claude",
+      "_latencyMs": 7606,
+      "_recordedAt": "2026-10-10T16:04:36.019Z"
+    }
+  ],
+  "ht": [
+    {
+      "question": "Èske mwen nan yon zòn evakyasyon?",
+      "text": "Wi. Dapre kat Miami-Dade ki te sove sou aparèy sa a (10 oktòb 2026), kote ou ye a nan Zòn Evakyasyon B. Men, mwen pa gen enfòmasyon sove sou si yo bay lòd evakyasyon pou Zòn B kounye a. Sa ka chanje vit. Lè sèvis la tounen, tcheke sit Miami-Dade County, rele 311, oswa koute radyo lokal pou konnen si Zòn B dwe evakye. Si otorite yo di evakye, evakye.",
+      "lang": "ht",
+      "sources": [
+        "Miami-Dade County HurricaneEvacZone_gdb/FeatureServer/0 (ZONEID), fetchedAt 2026-10-10T15:57:35.230Z"
+      ],
+      "call_911": false,
+      "contextKeys": [
+        "location",
+        "zone",
+        "foodRules",
+        "fdaEmergencyInsulin",
+        "generatedAt"
+      ],
+      "contextSource": "server-prep-bundle",
+      "_model": "anthropic/claude-fable-5.1",
+      "_provider": "claude",
+      "_latencyMs": 9204,
+      "_recordedAt": "2026-10-10T16:04:45.223Z"
+    },
+    {
+      "question": "Ki kote mwen ka jwenn kouran pou chaje telefòn mwen?",
+      "text": "Men kèk kote tou pre w ki gen plis chans gen kouran:\n\n• ICON GARAGE ICONBRICKELL, 465 Brickell Ave, Miami – louvri 24 è, tel 888-758-4389 (0.09 mil)\n• Wells Fargo Center-Miami, 333 SE 2nd Ave, Miami – louvri 24 è, tel 888-998-2546 (0.1 mil)\n• Main Library, 101 W Flagler St, Miami – Lendi a Samdi 9:30 am - 6 pm, tel 305-375-2665 (0.54 mil)\n• Culmer/Overtown Branch, 350 NW 13th St – Lendi a Jedi 9:30 am - 8 pm; Vandredi, Samdi 9:30 am - 6 pm (1.29 mil)\n\nAtansyon: kote sa yo ka gen kouran, men yo pa sant pou refwadi ni abri ofisyèl. Rele anvan si w kapab, paske orè yo ka chanje apre tanpèt la.",
+      "lang": "ht",
+      "sources": [
+        "NREL/NLR AFDC + Miami-Dade Library_gdb + FireStation_gdb"
+      ],
+      "call_911": false,
+      "contextKeys": [
+        "location",
+        "zone",
+        "foodRules",
+        "fdaEmergencyInsulin",
+        "places",
+        "generatedAt"
+      ],
+      "contextSource": "server-prep-bundle",
+      "_model": "anthropic/claude-fable-5.1",
+      "_provider": "claude",
+      "_latencyMs": 9997,
+      "_recordedAt": "2026-10-10T16:04:55.221Z"
+    }
+  ]
+}

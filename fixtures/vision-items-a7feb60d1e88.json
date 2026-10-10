@@ -1,0 +1,60 @@
+{
+  "items": [
+    {
+      "id": "m1",
+      "name": "Lantus SoloStar insulin glargine injection",
+      "category": "med",
+      "container": "pen",
+      "quantity": "3 mL prefilled pen",
+      "opened": null,
+      "brandText": "Lantus SoloStar insulin glargine injection 100 units/mL",
+      "location": null,
+      "confidence": 0.9,
+      "source": "vision:claude"
+    },
+    {
+      "id": "m2",
+      "name": "Amoxicillin capsules",
+      "category": "med",
+      "container": null,
+      "quantity": "Qty 30",
+      "opened": null,
+      "brandText": "Amoxicillin 500 mg capsules",
+      "location": null,
+      "confidence": 0.9,
+      "source": "vision:claude"
+    },
+    {
+      "id": "m3",
+      "name": "Lisinopril tablets",
+      "category": "med",
+      "container": null,
+      "quantity": "Qty 90",
+      "opened": null,
+      "brandText": "Lisinopril 10 mg tablets",
+      "location": null,
+      "confidence": 0.9,
+      "source": "vision:claude"
+    },
+    {
+      "id": "m4",
+      "name": "Humira pen",
+      "category": "med",
+      "container": "pen",
+      "quantity": null,
+      "opened": null,
+      "brandText": "Humira 40 mg/0.4 mL pen",
+      "location": null,
+      "confidence": 0.9,
+      "source": "vision:claude"
+    }
+  ],
+  "unreadableCount": 0,
+  "hint": "meds",
+  "_retried": false,
+  "_model": "anthropic/claude-sonnet-5.5",
+  "_provider": "claude",
+  "_latencyMs": 6404,
+  "_image": "reports/decision-models/label.png",
+  "_recordedAt": "2026-10-10T16:05:39.602Z"
+}

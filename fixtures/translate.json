@@ -1,0 +1,42 @@
+{
+  "es": [
+    {
+      "source": "Zone B. Check whether Zone B has been ordered to evacuate (miamidade.gov or 311).",
+      "text": "Zona B. Verifique si se ha ordenado evacuar la Zona B (miamidade.gov o 311).",
+      "to": "es",
+      "_model": "anthropic/claude-fable-5.1",
+      "_provider": "claude",
+      "_latencyMs": 9890,
+      "_recordedAt": "2026-10-10T16:05:05.115Z"
+    },
+    {
+      "source": "Your fridge has been without power for more than 4 hours. USDA says to discard refrigerated perishable food.",
+      "text": "Su refrigerador ha estado sin electricidad por más de 4 horas. El USDA dice que debe botar la comida perecedera refrigerada.",
+      "to": "es",
+      "_model": "anthropic/claude-fable-5.1",
+      "_provider": "claude",
+      "_latencyMs": 9949,
+      "_recordedAt": "2026-10-10T16:05:15.064Z"
+    }
+  ],
+  "ht": [
+    {
+      "source": "Zone B. Check whether Zone B has been ordered to evacuate (miamidade.gov or 311).",
+      "text": "Zòn B. Verifye si yo bay lòd pou Zòn B evakye (miamidade.gov oswa 311).",
+      "to": "ht",
+      "_model": "anthropic/claude-fable-5.1",
+      "_provider": "claude",
+      "_latencyMs": 6079,
+      "_recordedAt": "2026-10-10T16:05:21.143Z"
+    },
+    {
+      "source": "Your fridge has been without power for more than 4 hours. USDA says to discard refrigerated perishable food.",
+      "text": "Frijidè ou a pase plis pase 4 èdtan san kouran. USDA di pou jete manje perisab ki te nan frijidè a.",
+      "to": "ht",
+      "_model": "anthropic/claude-fable-5.1",
+      "_provider": "claude",
+      "_latencyMs": 12035,
+      "_recordedAt": "2026-10-10T16:05:33.178Z"
+    }
+  ]
+}

@@ -1,0 +1,628 @@
+{
+  "source": "FoodSafety.gov, Food Safety During Power Outage",
+  "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage",
+  "reviewed": "2024-08-08",
+  "captured": "2026-10-10 ~10:55 ET in a browser (the host returns HTTP 403 to curl)",
+  "attribution": "FoodSafety.gov attributes the 4-hour line to USDA, Keeping Food Safe During an Emergency",
+  "quotes": {
+    "fridge": "Discard refrigerated perishable food such as meat, poultry, fish, eggs, and leftovers after 4 hours without power.",
+    "fridgeHeadline": "your refrigerator will keep food safe for up to 4 hours during a power outage. Keep the door closed as much as possible.",
+    "chartColumn": "Exposed to temperatures of 40°F (4°C) or above for more than 2 hours",
+    "freezer": "A full freezer will hold a safe temperature for approximately 48 hours (24 hours if it is half full and the door remains closed).",
+    "refreeze": "Food may be safely refrozen if it still contains ice crystals or is at 40°F (4°C) or below, however, its quality may suffer.",
+    "mayo": "Opened mayonnaise, tartar sauce, horseradish (if above 50°F (10°C) for more than 8 hrs)",
+    "frozenVeg": "Discard after held above 40°F (4°C) for 6 hours",
+    "doubt": "When in Doubt, Throw it Out!",
+    "neverTaste": "After a power outage never taste food to determine its safety."
+  },
+  "constants": {
+    "FRIDGE_H": 4,
+    "FRIDGE_USE_NOW_H": 2,
+    "FREEZER_FULL_H": 48,
+    "FREEZER_HALF_H": 24,
+    "FREEZER_USE_NOW_H": 12,
+    "DOOR_OPEN_PENALTY_H": 0.5,
+    "DOOR_OPEN_CAP_H": 2,
+    "MAYO_AFTER_WARM_H": 8,
+    "FROZEN_VEG_AFTER_WARM_H": 6
+  },
+  "ours": [
+    "FREEZER_USE_NOW_H",
+    "DOOR_OPEN_PENALTY_H",
+    "DOOR_OPEN_CAP_H",
+    "warm-start of the mayo 8 h and frozen-vegetable 6 h counters"
+  ],
+  "note": "hours = allowance from the outage start before the door penalty; null = no clock. verbatim:false rows are trimmed summaries from the brief.",
+  "rows": [
+    {
+      "name": "Hard cheeses (Cheddar, Colby, Swiss, Parmesan, provolone, Romano)",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Hard cheeses (Cheddar, Colby, Swiss, Parmesan, provolone, Romano)",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Processed cheeses",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Processed cheeses",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Grated Parmesan/Romano (can or jar)",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Grated Parmesan/Romano (can or jar)",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Butter, margarine",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Butter, margarine",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Fresh fruits, uncut",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Fresh fruits, uncut",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Fruit juices, opened",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Fruit juices, opened",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Canned fruits, opened",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Canned fruits, opened",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Dried fruits",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Dried fruits",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Peanut butter",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Peanut butter",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Jelly, relish, taco sauce, mustard, catsup, olives, pickles",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Jelly, relish, taco sauce, mustard, catsup, olives, pickles",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Worcestershire, soy, barbecue, hoisin sauces",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Worcestershire, soy, barbecue, hoisin sauces",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Opened vinegar-based dressings",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Opened vinegar-based dressings",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Bread, rolls, cakes, muffins, quick breads, tortillas",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Bread, rolls, cakes, muffins, quick breads, tortillas",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Breakfast foods: waffles, pancakes, bagels",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Breakfast foods: waffles, pancakes, bagels",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Fruit pies",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Fruit pies",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Fresh vegetables, uncut",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Fresh vegetables, uncut",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Fresh mushrooms, herbs, spices",
+      "class": "keep",
+      "verdict": "Keep",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Fresh mushrooms, herbs, spices",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Raw or leftover cooked meat, poultry, fish, seafood, soy meat substitutes",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Raw or leftover cooked meat, poultry, fish, seafood, soy meat substitutes",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Thawing meat or poultry",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Thawing meat or poultry",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Meat/tuna/shrimp/chicken/egg salads",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Meat/tuna/shrimp/chicken/egg salads",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Gravy, stuffing, broth",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Gravy, stuffing, broth",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Lunchmeats, hot dogs, bacon, sausage, dried beef",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Lunchmeats, hot dogs, bacon, sausage, dried beef",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Pizza with any topping",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Pizza with any topping",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Canned hams \"Keep Refrigerated\"",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Canned hams \"Keep Refrigerated\"",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Canned meats and fish, opened",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Canned meats and fish, opened",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Casseroles, soups, stews",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Casseroles, soups, stews",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Soft cheeses (blue, Brie, Camembert, cottage, cream, Edam, Monterey Jack, ricotta, mozzarella, Muenster, Neufchatel, queso blanco, queso fresco)",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Soft cheeses (blue, Brie, Camembert, cottage, cream, Edam, Monterey Jack, ricotta, mozzarella, Muenster, Neufchatel, queso blanco, queso fresco)",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Shredded cheeses",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Shredded cheeses",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Low-fat cheeses",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Low-fat cheeses",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Milk, cream, sour cream, buttermilk, evaporated milk, yogurt, eggnog, soy milk",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Milk, cream, sour cream, buttermilk, evaporated milk, yogurt, eggnog, soy milk",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Baby formula, opened",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Baby formula, opened",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Fresh shell eggs, hard-cooked eggs, egg dishes, egg products",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Fresh shell eggs, hard-cooked eggs, egg dishes, egg products",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Custards, puddings, quiche",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Custards, puddings, quiche",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Fresh fruits, cut",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Fresh fruits, cut",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Sliced or shredded coconut",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Sliced or shredded coconut",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Opened mayonnaise, tartar sauce, horseradish",
+      "class": "mayo_8h_50f",
+      "verdict": "Discard",
+      "hours": 12,
+      "useNowHours": 2,
+      "quote": "Opened mayonnaise, tartar sauce, horseradish (if above 50°F (10°C) for more than 8 hrs)",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Fish sauces, oyster sauce",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Fish sauces, oyster sauce",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Opened creamy-based dressings",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Opened creamy-based dressings",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Spaghetti sauce, opened",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Spaghetti sauce, opened",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Refrigerator biscuits, rolls, cookie dough",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Refrigerator biscuits, rolls, cookie dough",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Cooked pasta, rice, potatoes",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Cooked pasta, rice, potatoes",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Pasta salads",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Pasta salads",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Fresh pasta",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Fresh pasta",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Cheesecake",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Cheesecake",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Cream filled pastries",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Cream filled pastries",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Pies with egg/milk filling",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Pies with egg/milk filling",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Fresh vegetables, cut",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Fresh vegetables, cut",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Greens pre-cut/pre-washed",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Greens pre-cut/pre-washed",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Vegetables, cooked",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Vegetables, cooked",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Tofu, cooked",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Tofu, cooked",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Vegetable juice, opened",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Vegetable juice, opened",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Baked potatoes",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Baked potatoes",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Commercial garlic in oil",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Commercial garlic in oil",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Potato salad",
+      "class": "discard_4h",
+      "verdict": "Discard",
+      "hours": 4,
+      "useNowHours": 2,
+      "quote": "Potato salad",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Ice cream, frozen yogurt",
+      "class": "frozen_discard",
+      "verdict": "Discard",
+      "hours": 48,
+      "useNowHours": 12,
+      "quote": "Ice cream/frozen yogurt: Discard even with ice crystals",
+      "verbatim": false,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Frozen vegetables",
+      "class": "frozen_veg_6h",
+      "verdict": "Discard",
+      "hours": 54,
+      "useNowHours": 12,
+      "quote": "Discard after held above 40°F (4°C) for 6 hours",
+      "verbatim": true,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Frozen meat, poultry, seafood, stews, milk, eggs, cheeses, juices, breads, flour, casseroles, frozen meals",
+      "class": "frozen_refreeze",
+      "verdict": "Refreeze",
+      "hours": 48,
+      "useNowHours": 12,
+      "quote": "Food may be safely refrozen if it still contains ice crystals or is at 40°F (4°C) or below, however, its quality may suffer.",
+      "verbatim": false,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Hard cheeses; flour, cornmeal, nuts; breads (frozen)",
+      "class": "frozen_refreeze",
+      "verdict": "Refreeze",
+      "hours": 48,
+      "useNowHours": 12,
+      "quote": "Refreeze",
+      "verbatim": false,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "name": "Shelf-stable food (canned, dry goods, unopened shelf-stable formula, water)",
+      "class": "shelf_stable",
+      "verdict": "No clock",
+      "hours": null,
+      "useNowHours": null,
+      "quote": "Not on the FoodSafety.gov refrigerated chart",
+      "verbatim": false,
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    }
+  ]
+}

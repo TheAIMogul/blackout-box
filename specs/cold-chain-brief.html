@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cold Chain Brief</title>
+<meta name="description" content="Cold Chain: concept page and build brief for Hack for Humanity Miami, Track 01. Photo of your meds becomes per-medication heat countdowns from FDA label storage limits.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f7fb; --surface:#ffffff; --surface-2:#eaf1f8; --ink:#0c1a2a; --muted:#4b5c70; --line:#d3dce7;
+  --ice:#0a63bd; --ice-ink:#ffffff; --ice-soft:#e2eefa; --ice-deep:#06325f;
+  --heat:#d9480f; --heat-soft:#fff0e5; --danger:#c3201f; --danger-soft:#fdeaea;
+  --ok:#0a7556; --ok-soft:#e0f4ec; --warn:#b35c00; --warn-soft:#fff4e0;
+  --code-bg:#0e1a29; --code-ink:#d8e5f3; --code-muted:#8aa1ba;
+  --hero-a:#06325f; --hero-b:#0a4f8f; --hero-ink:#eaf3fc;
+  --shadow:0 1px 2px rgba(12,26,42,.06),0 4px 14px rgba(12,26,42,.06);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#08111b; --surface:#0f1a27; --surface-2:#142338; --ink:#e4edf7; --muted:#9bb0c7; --line:#223650;
+    --ice:#5aaaf2; --ice-ink:#04182c; --ice-soft:#0f2840; --ice-deep:#cfe5fb;
+    --heat:#ff8a3d; --heat-soft:#2b1709; --danger:#ff6b66; --danger-soft:#2c1012;
+    --ok:#3fd09e; --ok-soft:#0c2a20; --warn:#ffb84d; --warn-soft:#2a1d07;
+    --code-bg:#050c15; --code-ink:#d8e5f3; --code-muted:#7d93ab;
+    --hero-a:#04182c; --hero-b:#0a2d52; --hero-ink:#eaf3fc;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#08111b; --surface:#0f1a27; --surface-2:#142338; --ink:#e4edf7; --muted:#9bb0c7; --line:#223650;
+  --ice:#5aaaf2; --ice-ink:#04182c; --ice-soft:#0f2840; --ice-deep:#cfe5fb;
+  --heat:#ff8a3d; --heat-soft:#2b1709; --danger:#ff6b66; --danger-soft:#2c1012;
+  --ok:#3fd09e; --ok-soft:#0c2a20; --warn:#ffb84d; --warn-soft:#2a1d07;
+  --code-bg:#050c15; --code-ink:#d8e5f3; --code-muted:#7d93ab;
+  --hero-a:#04182c; --hero-b:#0a2d52; --hero-ink:#eaf3fc;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+a{color:var(--ice);text-underline-offset:2px}
+code,pre,kbd{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+:not(pre)>code{background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:.88em;overflow-wrap:anywhere}
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:8px;padding:14px 16px;overflow-x:auto;max-width:100%;font-size:13px;line-height:1.55;margin:12px 0 18px;white-space:pre}
+pre .c{color:var(--code-muted)}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .5em;font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(1.45rem,3.4vw,1.9rem);margin-top:0}
+h3{font-size:1.15rem;margin-top:1.6em}
+h4{font-size:1rem;margin-top:1.2em}
+p{margin:0 0 1em}
+ul,ol{padding-left:1.25em;margin:0 0 1em}
+li{margin:.25em 0}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:14px;height:52px}
+.brand{font-weight:700;letter-spacing:.02em;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--ice),var(--heat))}
+.nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0}
+.nav::-webkit-scrollbar{display:none}
+.nav a{white-space:nowrap;text-decoration:none;color:var(--muted);font-size:.86rem;padding:6px 10px;border-radius:6px}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+
+/* hero */
+.hero{background:linear-gradient(160deg,var(--hero-a),var(--hero-b));color:var(--hero-ink);padding:44px 0 36px}
+.eyebrow{font:600 .78rem/1 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;opacity:.85;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:8px}
+.eyebrow span{border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:5px 10px}
+.hero h1{font-size:clamp(2.2rem,7vw,3.6rem);margin-bottom:.15em}
+.hero .tag{font-size:clamp(1.15rem,3.2vw,1.5rem);font-weight:500;margin-bottom:.9em}
+.hero .pitch{max-width:720px;opacity:.92}
+.demo{margin-top:26px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:16px}
+.demo-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;font-size:.9rem}
+.toggle{display:inline-flex;border:1px solid rgba(255,255,255,.3);border-radius:8px;overflow:hidden}
+.toggle button{font:600 .85rem "IBM Plex Mono",monospace;background:transparent;color:var(--hero-ink);border:0;padding:7px 12px;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--hero-ink);color:var(--hero-a)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.med{background:#ffffff;color:#0c1a2a;border-radius:10px;padding:12px 14px;border-top:5px solid #0a63bd;transition:border-color .3s}
+.med .nm{font-weight:700}
+.med .sub{font-size:.8rem;color:#4b5c70}
+.med .clock{font:600 1.55rem/1.2 "IBM Plex Mono",monospace;margin:8px 0 2px;font-variant-numeric:tabular-nums}
+.med .st{display:inline-block;font:600 .72rem/1 "IBM Plex Mono",monospace;letter-spacing:.06em;padding:4px 7px;border-radius:4px;background:#e2eefa;color:#06325f}
+.med .why{font-size:.78rem;color:#4b5c70;margin-top:6px}
+.med.over{border-top-color:#c3201f}.med.over .st{background:#fdeaea;color:#a1100f}.med.over .clock{color:#a1100f}
+.med.soon{border-top-color:#d9480f}.med.soon .st{background:#fff0e5;color:#9a3007}
+.med.ok .st{background:#e0f4ec;color:#075c43}
+.demo-foot{font-size:.78rem;opacity:.8;margin-top:10px}
+
+/* sections */
+section{padding:42px 0;border-bottom:1px solid var(--line)}
+.part{padding:28px 0 6px;border-bottom:0}
+.part .lbl{font:600 .8rem/1 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--heat)}
+.part h2{font-size:clamp(1.7rem,4.5vw,2.3rem);margin-top:8px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow);min-width:0}
+.card h3,.card h4{margin-top:0}
+.step-n{font:700 .8rem/1 "IBM Plex Mono",monospace;color:var(--ice);letter-spacing:.1em;margin-bottom:8px}
+.callout{border-left:4px solid var(--ice);background:var(--ice-soft);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+.callout.heat{border-color:var(--heat);background:var(--heat-soft)}
+.callout.danger{border-color:var(--danger);background:var(--danger-soft)}
+.callout.ok{border-color:var(--ok);background:var(--ok-soft)}
+.callout p:last-child,.callout ul:last-child{margin-bottom:0}
+.safety{border:2px solid var(--danger);border-radius:10px;padding:16px 18px;background:var(--danger-soft)}
+.safety strong{color:var(--danger)}
+.table-wrap{overflow-x:auto;margin:12px 0 18px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{background:var(--surface-2);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.t{font-family:"IBM Plex Mono",monospace;white-space:nowrap;color:var(--ice);font-weight:600}
+.pill{display:inline-block;font:600 .72rem/1 "IBM Plex Mono",monospace;padding:4px 7px;border-radius:4px;letter-spacing:.04em;white-space:nowrap}
+.pill.v{background:var(--ok-soft);color:var(--ok)}
+.pill.x{background:var(--danger-soft);color:var(--danger)}
+.pill.w{background:var(--warn-soft);color:var(--warn)}
+.pill.i{background:var(--ice-soft);color:var(--ice)}
+.api{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:16px 18px;margin:16px 0;box-shadow:var(--shadow);min-width:0}
+.api h3{margin-top:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:4px 12px;font-size:.9rem;margin:8px 0 6px}
+.kv dt{color:var(--muted);font-weight:500}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+@media (max-width:560px){.kv{grid-template-columns:1fr}.kv dt{margin-top:6px}}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;margin:14px 0}
+.diagram svg{width:100%;height:auto;display:block}
+.check li{list-style:none;position:relative;padding-left:4px}
+.check{padding-left:1.4em}
+.check li::before{content:"";position:absolute;left:-1.3em;top:.45em;width:12px;height:12px;border:2px solid var(--ice);border-radius:3px}
+.timeline td:first-child{width:1%}
+footer{padding:30px 0 50px;color:var(--muted);font-size:.85rem}
+.ref li{overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="dot" aria-hidden="true"></span>Cold Chain</div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#problem">Problem</a><a href="#how">How</a><a href="#demo-script">Demo</a><a href="#rubric">Rubric</a><a href="#safety">Safety</a>
+      <a href="#stack">Stack</a><a href="#arch">Architecture</a><a href="#apis">APIs</a><a href="#engine">Verdict logic</a><a href="#prompts">Prompts</a>
+      <a href="#i18n">Languages</a><a href="#skill">Agent Skill</a><a href="#plan">Build plan</a><a href="#submit">Submit</a><a href="#fallback">Fallback</a><a href="#risks">Risks</a><a href="#sources">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span>Hack for Humanity: Miami</span><span>Track 01 · Four Forces, One City</span><span>+ Best Open-Source AI (MLH)</span></div>
+    <h1>Cold Chain</h1>
+    <div class="tag">"The power's out. Is my insulin still good?"</div>
+    <p class="pitch">Snap one photo of your meds. Cold Chain reads every label, pulls each drug's official storage limits from the FDA label, and turns them into a live countdown for each medication based on the heat in your home. It also checks recalls and shows the nearest places with power. Works in English, Español, and Kreyòl.</p>
+
+    <div class="demo" aria-label="Demo preview">
+      <div class="demo-head">
+        <div><strong>Demo moment:</strong> 4 bottles → 4 countdowns. Power out for 30 h.</div>
+        <div class="toggle" role="group" aria-label="Indoor temperature">
+          <button type="button" data-temp="84" aria-pressed="true">Indoor 84°F</button>
+          <button type="button" data-temp="91" aria-pressed="false">Indoor 91°F</button>
+        </div>
+      </div>
+      <div class="cards" id="cards"></div>
+      <div class="demo-foot">Preview only. The numbers come from the engine in this brief: label room-temperature days × 0.9 safety margin, minus hours out of the fridge. The label limits are real openFDA text pulled today (Lantus, Humalog, Trulicity, metformin).</div>
+    </div>
+  </div>
+</div>
+
+<main>
+<!-- ===================== PART A ===================== -->
+<div class="wrap"><section class="part"><div class="lbl">Part A</div><h2>Concept: for judges and the team</h2></section></div>
+
+<section id="problem"><div class="wrap">
+  <h2>The problem in Miami</h2>
+  <div class="callout heat">
+    <p><strong>Verified this morning:</strong> At 10:20 AM ET, Miami International (KMIA, NWS) read <strong>31°C / 87.8°F</strong> with a <strong>heat index of 36.5°C / 97.7°F</strong>. That is already above the <strong>86°F (30°C)</strong> room-temperature limit printed on every insulin and GLP-1 label we pulled today: Lantus, Humalog, Basaglar, and Trulicity. And this is an ordinary October morning with the power on.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h4>Hurricanes take the fridge</h4><p>After a storm, outages can last for days. Insulin and GLP-1 pens are meant to be refrigerated. The label gives each one a fixed number of days at room temperature, and only <em>up to 86°F</em>. In a closed Miami apartment with no AC, the room gets hotter than that.</p></div>
+    <div class="card"><h4>Nobody knows the rules for their own meds</h4><p>The limits differ by product: Lantus gets 28 days, Trulicity 14, and Humalog Mix KwikPens only 10. That information sits in section 16.2 of a package insert most people threw away. FDA's emergency guidance is detailed, but it is written for clinicians.</p></div>
+    <div class="card"><h4>The people most at risk get served last</h4><p>Seniors, people managing diabetes alone, and Spanish- and Kreyòl-speaking households need this answer in their own language, on a phone running on its last battery, without reading an FDA PDF.</p></div>
+    <div class="card"><h4>A wrong answer either way is dangerous</h4><p>Insulin cooked past its limit loses potency, so blood sugar runs high. But throwing insulin away with no replacement is worse. FDA says that in an emergency, insulin stored above 86°F <em>may still need to be used</em>. The tool has to be precise and careful about this.</p></div>
+  </div>
+  <p class="small muted">Before you put Miami-Dade language or population figures in the pitch, pull them from Census ACS and cite them in the README. This brief does not assert any demographic numbers.</p>
+  <p><strong>The four forces:</strong> Water (hurricane, flooding), Air and Fire (extreme heat), Land (where people shelter and where the power is). Cold Chain sits right where they meet for the thousands of households whose medicine depends on a working fridge.</p>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <h2>How it works in 3 steps</h2>
+  <div class="grid3">
+    <div class="card"><div class="step-n">01 · SNAP</div><h4>One photo of all your meds</h4><p>A vision model (Claude Sonnet 5.5 through the Cloudflare AI Gateway) reads every label in the photo: brand, generic, strength, and form (pen, vial, tablet). Anything it isn't sure about comes back as a field you edit. It never guesses.</p></div>
+    <div class="card"><div class="step-n">02 · LOOK UP</div><h4>Official FDA storage limits</h4><p>openFDA drug labels return each drug's <code>storage_and_handling</code> text. A model turns that text into a rule (max °F, days at room temperature, do not freeze), and code then checks that every number appears in the quoted label text. Recalls are checked against openFDA enforcement data.</p></div>
+    <div class="card"><div class="step-n">03 · COUNT DOWN</div><h4>A live clock per medication</h4><p>The heat in your home (a thermometer reading, or an estimate from live NWS data) plus the hours since the outage started give each medication a countdown and a status. It also shows the nearest library, fire station, or 24-hour EV charger where there is likely power, and your Florida early-refill right.</p></div>
+  </div>
+</div></section>
+
+<section id="demo-script"><div class="wrap">
+  <h2>The 2-minute demo, second by second</h2>
+  <p class="muted">Show the working product on a phone that is mirrored to the screen. Use no slides. Q&amp;A is 1 minute afterward.</p>
+  <div class="table-wrap"><table class="timeline">
+    <thead><tr><th>Time</th><th>On screen</th><th>Say</th></tr></thead>
+    <tbody>
+      <tr><td class="t">0:00–0:12</td><td>App home screen, set to English.</td><td>"Hurricane's gone. Power's been out 30 hours. At 10:20 this morning Miami International already hit 88 degrees. Every insulin label we pulled says 86 is the max. Is this still good?"</td></tr>
+      <tr><td class="t">0:12–0:25</td><td>Tap <em>Scan my meds</em>. Take a live photo of 4 boxes: Lantus, Humalog, Trulicity, metformin.</td><td>"One photo. That's the whole input."</td></tr>
+      <tr><td class="t">0:25–0:45</td><td>4 cards appear with the drug names read off the boxes. Under each one is the FDA label quote with the limit highlighted.</td><td>"A vision model reads every label. openFDA gives us each drug's official storage rule, and we show you the exact sentence it came from."</td></tr>
+      <tr><td class="t">0:45–1:05</td><td>The outage start is set to "30 h ago" and the indoor temperature is at 84°F. Four countdowns start ticking. Drag the temperature to 91°F and three cards turn red.</td><td>"Humalog's been open 20 days, so it has about 5 days left. Push the room past 86 and it's over the label limit. Notice what we <em>don't</em> say: we don't tell you to throw it out. FDA says that in an emergency you may still need to use it. So we tell you to keep it cool, check your sugar more often, and get a replacement."</td></tr>
+      <tr><td class="t">1:05–1:20</td><td>Tap <em>Kreyòl</em>. The whole screen and the explanations switch. Tap <em>Español</em>.</td><td>"Miami's emergencies happen in three languages, so this one does too."</td></tr>
+      <tr><td class="t">1:20–1:38</td><td><em>Where is there power?</em> list: nearest library, fire station, and 24-hour EV chargers. Below it, the Florida early-refill card (F.S. 252.358) and the recall check.</td><td>"Nearest places likely to have power, from Miami-Dade open data and the national EV station database. And Florida law makes insurers allow an early refill when there's a hurricane warning or declared emergency."</td></tr>
+      <tr><td class="t">1:38–1:52</td><td>GitHub repo: <code>skills/cold-chain-check/SKILL.md</code>.</td><td>"The core logic is an open Agent Skill, MIT licensed. Any AI agent can run the same check."</td></tr>
+      <tr><td class="t">1:52–2:00</td><td>Safety footer, shown in all three languages.</td><td>"FDA label information, not medical advice. Call your pharmacist. In an emergency, call 911. Cold Chain."</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="rubric"><div class="wrap">
+  <h2>How it scores</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Criterion</th><th>Weight</th><th>How Cold Chain earns it</th></tr></thead>
+    <tbody>
+      <tr><td>Community impact</td><td>30%</td><td>It answers the one question people ask in a Miami outage, for the people most at risk: insulin users, seniors, and Spanish and Kreyòl speakers. It turns a 2-page package insert into a single verdict and the next action (keep cool, refill early under F.S. 252.358, where to find power). It also covers the four forces: hurricane, heat, and shelter/power locations.</td></tr>
+      <tr><td>Working build</td><td>25%</td><td>A live end-to-end run on a phone: camera, vision, openFDA, NWS, ArcGIS, NREL. Every upstream call is cached to disk, and a <code>DEMO_MODE</code> fixture path keeps the demo running if the Wi-Fi dies.</td></tr>
+      <tr><td>Use of AI and data</td><td>20%</td><td>Three AI jobs, each scoped: reading labels from a photo, extracting rules from FDA label text (with a check that the numbers appear in the quote), and plain-language explanations in 3 languages. Five public data sources: openFDA labels, openFDA enforcement, NWS, Miami-Dade Open Data, and NREL/NLR AFDC. The numbers come from a deterministic engine, never from the model.</td></tr>
+      <tr><td>Originality and craft</td><td>15%</td><td>Countdown timers per medication instead of a chatbot. A forecast-aware clock ("your room is forecast to pass 86°F in 3 h"). Every verdict shows the source sentence from the label. Careful handling of the insulin-in-heat edge case.</td></tr>
+      <tr><td>Demo clarity</td><td>10%</td><td>One clear moment: photo → 4 clocks → drag to 91°F → red. Then a language switch. Done in 2:00.</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="safety"><div class="wrap">
+  <h2>Safety framing (judges will look for this)</h2>
+  <div class="safety">
+    <p><strong>Fixed footer on every result screen, in all 3 languages, hard-coded (never generated by the model):</strong></p>
+    <ul>
+      <li><strong>EN:</strong> This information comes from FDA drug labeling. It is not medical advice. Call your pharmacist or doctor. In an emergency, call 911.</li>
+      <li><strong>ES:</strong> Esta información proviene del etiquetado de medicamentos de la FDA. No es consejo médico. Llame a su farmacéutico o médico. En una emergencia, llame al 911.</li>
+      <li><strong>HT:</strong> Enfòmasyon sa a soti nan etikèt medikaman FDA a. Se pa konsèy medikal. Rele famasyen oswa doktè ou. Si se yon ijans, rele 911. <span class="muted small">(Have a Kreyòl speaker at the event check this before the demo.)</span></li>
+    </ul>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="card"><h4>Rules the product follows</h4><ul>
+      <li>Numbers (limits, clocks) come from label text plus deterministic code. The model only reads photos, extracts rules (which code then validates), and explains.</li>
+      <li>Every verdict links to its source: openFDA <code>set_id</code>, label <code>effective_time</code>, and the quoted sentence.</li>
+      <li><strong>Never tells anyone to stop or throw out insulin without a replacement.</strong> This follows FDA emergency guidance: keep it cool, monitor blood sugar, replace it when you can. Frozen insulin is the one exception: "do not use", per FDA and the label.</li>
+      <li>If no storage text is found, the status is <em>UNKNOWN</em> with "ask your pharmacist". The app never guesses a limit.</li>
+      <li>Conservative by design: it uses 90% of the label's room-temperature allowance and treats anything above the label max as over the limit.</li>
+    </ul></div>
+    <div class="card"><h4>Privacy and honesty</h4><ul>
+      <li>The photo is processed in memory and never stored. There are no accounts and no tracking.</li>
+      <li>openFDA's own disclaimer (in every response) says "do not rely on openFDA to make decisions regarding medical care." Show it on the About screen and in the README.</li>
+      <li>The indoor-temperature estimate is labeled as an estimate, and the app asks for a thermometer reading.</li>
+      <li>"Places likely to have power" is a hint, not a promise. Show the data source and when it was checked.</li>
+    </ul></div>
+  </div>
+</div></section>
+
+<!-- ===================== PART B ===================== -->
+<div class="wrap"><section class="part"><div class="lbl">Part B</div><h2>Build intel: for the coding agent</h2>
+<p>Everything below was checked with real calls on Sat Oct 10, 2026, between 10:30 and 10:45 AM ET, unless marked otherwise. Raw responses are saved in <code>reports/cold-chain-research/</code>. Build time ends at <strong>3:30 PM ET</strong>, and submission in OrganizerHQ is due by <strong>3:45 PM</strong>.</p></section></div>
+
+<section id="stack"><div class="wrap">
+  <h2>Recommended stack</h2>
+  <div class="callout"><p><strong>Vite + TypeScript front end, plus one Node 20 Express server.</strong> Why: a single process holds the keys server-side, caches every upstream response to disk for the demo fallback, and runs from a laptop with no deploy step. The core engine lives in the Agent Skill as dependency-free ESM, and the server imports it, so there is one source of truth.</p></div>
+  <div class="grid2">
+    <div class="card"><h4>Front end (<code>web/</code>)</h4><ul>
+      <li>Vite + vanilla TS, with no framework. Use mobile-first CSS that follows this brief's colors.</li>
+      <li>Camera: <code>&lt;input type="file" accept="image/*" capture="environment"&gt;</code>. Resize on the client to a long edge of 1568 px, JPEG quality 0.85, then base64.</li>
+      <li>Countdowns: one <code>setInterval(1000)</code> that re-renders from <code>hoursLeft</code> and <code>computedAt</code>.</li>
+      <li>i18n: a static dictionary in <code>web/src/i18n.ts</code> for en, es, and ht.</li>
+      <li>Vite dev proxy: <code>/api</code> → <code>http://localhost:8787</code>.</li>
+    </ul></div>
+    <div class="card"><h4>Back end (<code>server/</code>)</h4><ul>
+      <li>Express on Node 20 via <code>tsx</code>, with <code>express.json({limit:"12mb"})</code>.</li>
+      <li>Native <code>fetch</code>, no SDKs. Read secrets from env only (see <a href="#spec-env">env vars</a>).</li>
+      <li>Disk cache: <code>cache/&lt;sha1(url+body)&gt;.json</code> with a TTL (labels 24 h, weather 10 min, places 1 h). <code>DEMO_MODE=1</code> means cache-only.</li>
+      <li>Production: <code>npm run build &amp;&amp; npm start</code>. Express serves <code>web/dist</code>. Cloud Run is optional, after 3:30.</li>
+      <li>Tests: <code>node --test</code> on the engine. It needs no test-runner install and keeps machine load low.</li>
+    </ul></div>
+  </div>
+  <h3>File structure</h3>
+<pre>cold-chain/
+├── LICENSE                      <span class="c"># MIT</span>
+├── README.md                    <span class="c"># pitch, screenshots, data sources (cited), track 01, MLH challenge</span>
+├── .env.example                 <span class="c"># names only, no values</span>
+├── package.json                 <span class="c"># scripts: dev, build, start, test, record</span>
+├── server/
+│   ├── index.ts                 <span class="c"># express app + routes</span>
+│   ├── cache.ts                 <span class="c"># disk cache + DEMO_MODE</span>
+│   ├── ai.ts                    <span class="c"># Cloudflare AI Gateway (Anthropic Messages format)</span>
+│   ├── openfda.ts               <span class="c"># label + enforcement</span>
+│   ├── nws.ts                   <span class="c"># points → stations → observations + hourly</span>
+│   └── places.ts                <span class="c"># Miami-Dade ArcGIS + NREL/NLR AFDC</span>
+├── web/
+│   ├── index.html
+│   └── src/ main.ts  i18n.ts  api.ts  render.ts  styles.css
+├── skills/
+│   └── cold-chain-check/
+│       ├── SKILL.md
+│       ├── scripts/ engine.mjs  check.mjs
+│       └── references/ RULES.md  SOURCES.md
+├── fixtures/                    <span class="c"># recorded real responses for DEMO_MODE</span>
+├── demo/ meds.jpg               <span class="c"># backup photo of the 4 demo meds</span>
+└── test/ engine.test.mjs</pre>
+</div></section>
+
+<section id="arch"><div class="wrap">
+  <h2>Architecture and data flow</h2>
+  <div class="diagram">
+  <svg viewBox="0 0 960 470" role="img" aria-label="Data flow: phone app to Express server to AI gateway, openFDA, NWS, Miami-Dade ArcGIS, and NREL; engine computes verdicts">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
+    </defs>
+    <style>
+      .bx{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+      .bx.ice{fill:var(--ice-soft);stroke:var(--ice)}
+      .bx.heat{fill:var(--heat-soft);stroke:var(--heat)}
+      .tt{fill:var(--ink);font:600 15px "IBM Plex Sans",sans-serif}
+      .ts{fill:var(--muted);font:12px "IBM Plex Mono",monospace}
+      .ln{stroke:var(--muted);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+      .nn{fill:var(--heat);font:700 12px "IBM Plex Mono",monospace}
+    </style>
+    <!-- phone -->
+    <rect class="bx ice" x="20" y="150" width="180" height="170" rx="12"/>
+    <text class="tt" x="40" y="182">Phone (web app)</text>
+    <text class="ts" x="40" y="206">camera → resize</text>
+    <text class="ts" x="40" y="226">temp slider</text>
+    <text class="ts" x="40" y="246">outage start</text>
+    <text class="ts" x="40" y="266">countdown cards</text>
+    <text class="ts" x="40" y="286">EN / ES / HT</text>
+    <!-- server -->
+    <rect class="bx" x="270" y="60" width="250" height="350" rx="12"/>
+    <text class="tt" x="290" y="92">Express server :8787</text>
+    <text class="ts" x="290" y="116">keys live here only</text>
+    <rect class="bx" x="290" y="132" width="210" height="38" rx="6"/><text class="ts" x="302" y="156">POST /api/scan</text>
+    <rect class="bx" x="290" y="178" width="210" height="38" rx="6"/><text class="ts" x="302" y="202">GET  /api/label  /recalls</text>
+    <rect class="bx" x="290" y="224" width="210" height="38" rx="6"/><text class="ts" x="302" y="248">GET  /api/weather /places</text>
+    <rect class="bx" x="290" y="270" width="210" height="38" rx="6"/><text class="ts" x="302" y="294">POST /api/explain</text>
+    <rect class="bx heat" x="290" y="320" width="210" height="72" rx="6"/>
+    <text class="tt" x="302" y="346" style="font-size:14px">engine.mjs (skill)</text>
+    <text class="ts" x="302" y="366">deterministic verdict</text>
+    <text class="ts" x="302" y="382">+ disk cache / DEMO_MODE</text>
+    <!-- upstreams -->
+    <rect class="bx" x="600" y="20" width="340" height="62" rx="10"/>
+    <text class="tt" x="616" y="46">Cloudflare AI Gateway</text>
+    <text class="ts" x="616" y="68">/ai/v1/messages · sonnet-5.5, fable-5.1</text>
+    <rect class="bx" x="600" y="100" width="340" height="62" rx="10"/>
+    <text class="tt" x="616" y="126">openFDA (api.fda.gov)</text>
+    <text class="ts" x="616" y="148">drug/label · drug/enforcement</text>
+    <rect class="bx" x="600" y="180" width="340" height="62" rx="10"/>
+    <text class="tt" x="616" y="206">NWS (api.weather.gov)</text>
+    <text class="ts" x="616" y="228">observations/latest · hourly</text>
+    <rect class="bx" x="600" y="260" width="340" height="62" rx="10"/>
+    <text class="tt" x="616" y="286">Miami-Dade Open Data (ArcGIS)</text>
+    <text class="ts" x="616" y="308">libraries · fire stations · shelters</text>
+    <rect class="bx" x="600" y="340" width="340" height="62" rx="10"/>
+    <text class="tt" x="616" y="366">NREL / NLR AFDC</text>
+    <text class="ts" x="616" y="388">nearest 24h EV chargers</text>
+    <!-- lines -->
+    <path class="ln" d="M200,235 L268,235"/>
+    <path class="ln" d="M500,151 C550,151 560,51 598,51"/>
+    <path class="ln" d="M500,197 C550,197 560,131 598,131"/>
+    <path class="ln" d="M500,243 C550,243 560,211 598,211"/>
+    <path class="ln" d="M500,243 C550,243 560,291 598,291"/>
+    <path class="ln" d="M500,243 C550,243 560,371 598,371"/>
+    <path class="ln" d="M500,289 C560,289 560,60 598,60"/>
+    <text class="nn" x="210" y="226">1</text>
+    <text class="nn" x="540" y="100">2 vision</text>
+    <text class="nn" x="540" y="168">3 rule</text>
+    <text class="nn" x="540" y="232">4 heat</text>
+    <text class="nn" x="548" y="330">5 places</text>
+    <text class="ts" x="20" y="350">6 engine → 7 explain (lang)</text>
+    <text class="ts" x="20" y="370">8 cards render + tick</text>
+  </svg>
+  </div>
+  <ol>
+    <li>The phone posts a resized photo to <code>/api/scan</code>.</li>
+    <li>Sonnet 5.5 (vision, through the AI Gateway in Anthropic Messages format) returns JSON with each medication. The user confirms or edits anything with low confidence.</li>
+    <li>For each medication, <code>/api/label</code> queries openFDA, picks the best label, and extracts a storage rule. Code validates that the numbers appear in the quote. <code>/api/recalls</code> runs in parallel.</li>
+    <li><code>/api/weather</code> gets the NWS observation now plus the hourly forecast, which feeds the indoor estimate. A thermometer reading from the user overrides it.</li>
+    <li><code>/api/places</code> merges Miami-Dade libraries, fire stations, and open shelters with NREL 24-hour EV chargers, sorted by distance.</li>
+    <li><code>engine.mjs</code> computes status and <code>hoursLeft</code> for each medication on the client and the server. It is the same file in both places, and it re-runs live when the slider moves.</li>
+    <li><code>/api/explain</code> has Fable 5.1 write a plain-language explanation in the chosen language. It cannot change status or numbers.</li>
+  </ol>
+</div></section>
+
+<section id="apis"><div class="wrap">
+  <h2>APIs: endpoints, auth, real samples, gotchas</h2>
+
+  <div class="api" id="api-ai">
+    <h3>1. Cloudflare AI Gateway: vision and text <span class="pill v">VERIFIED 10:40 ET</span></h3>
+    <dl class="kv">
+      <dt>Endpoint</dt><dd><code>POST https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/ai/v1/messages</code> (Anthropic Messages format)</dd>
+      <dt>Auth</dt><dd><code>Authorization: Bearer ${CF_AIG_TOKEN}</code> + <code>cf-aig-gateway-id: default</code> + <code>anthropic-version: 2023-06-01</code> + <code>content-type: application/json</code>. On Micah's machine the token is at <code>~/.config/cloudflare/claude-api-token</code> and the account ID at <code>~/.config/cloudflare/account-id</code>. Load both into env and never commit or print them.</dd>
+      <dt>Models</dt><dd><code>anthropic/claude-sonnet-5.5</code> (photo/label read, fast), <code>anthropic/claude-fable-5.1</code> (rule extraction and explanations), <code>anthropic/claude-opus-5.5</code> (spare). <code>max_tokens</code> is required. Keep it ≤ 8192 (the skill notes say a 16000 request hung on Opus).</dd>
+      <dt>Rate</dt><dd>The <code>default</code> gateway allows 50 requests/min and caches for 300 s (per Micah's gateway skill notes).</dd>
+    </dl>
+    <div class="callout danger"><p><strong>Gotcha (verified):</strong> sending the image through the OpenAI-compatible <code>/ai/v1/chat/completions</code> with an <code>image_url</code> data URI <strong>silently dropped the image</strong>. The response showed <code>prompt_tokens: 106</code> and returned <code>{"meds":[]}</code>. The same image through <code>/ai/v1/messages</code> with an Anthropic <code>image</code> block worked (<code>input_tokens: 339</code>, correct read). <strong>Use <code>/ai/v1/messages</code> for every call.</strong></p></div>
+    <h4>Request: vision (shape that worked)</h4>
+<pre>{
+  "model": "anthropic/claude-sonnet-5.5",
+  "max_tokens": 600,
+  "system": "You read medication labels. Return ONLY JSON: {...schema...}",
+  "messages": [{
+    "role": "user",
+    "content": [
+      { "type": "image", "source": { "type": "base64", "media_type": "image/png", "data": "&lt;BASE64&gt;" } },
+      { "type": "text", "text": "Read every medication label in this photo." }
+    ]
+  }]
+}</pre>
+    <h4>Real response (synthetic test label: rendered text "BASAGLAR KwikPen / (insulin glargine) injection / 100 units/mL U-100 / 5 x 3 mL prefilled pens Rx only / Lilly")</h4>
+<pre>{ "model": "claude-sonnet-5-5", "stop_reason": "end_turn",
+  "usage": { "input_tokens": 339, "output_tokens": 168 },
+  "content": [{ "type": "text", "text":
+"```json\n{\"meds\":[{\"label_text\":\"BASAGLAR KwikPen (insulin glargine) injection 100 units/mL U-100 5 x 3 mL prefilled pens Rx only Lilly\",\"brand_name\":\"Basaglar\",\"generic_name\":\"insulin glargine\",\"strength\":\"100 units/mL (U-100)\",\"dosage_form\":\"injection\",\"device\":\"KwikPen prefilled pen, 3 mL each (5 pens per carton)\",\"confidence\":0.98}]}\n```" }] }</pre>
+    <ul class="small">
+      <li><strong>Gotcha:</strong> the model wrapped the JSON in <code>```json</code> fences even though the prompt said "ONLY JSON". Strip fences, then <code>JSON.parse</code>, and retry once on failure.</li>
+      <li>The response <code>model</code> field comes back hyphenated (<code>claude-sonnet-5-5</code>). Don't compare against it.</li>
+      <li>This was tested only on a clean synthetic label, not a real phone photo of boxes. Test with the real demo meds by 12:20.</li>
+      <li>A text-only call to <code>anthropic/claude-fable-5.1</code> on the same endpoint also worked (<code>input_tokens: 441, output_tokens: 769</code>). See the <a href="#prompts">verdict prompt</a> for what it got wrong.</li>
+    </ul>
+  </div>
+
+  <div class="api" id="api-label">
+    <h3>2. openFDA drug label: storage limits <span class="pill v">VERIFIED</span></h3>
+    <dl class="kv">
+      <dt>Endpoint</dt><dd><code>GET https://api.fda.gov/drug/label.json</code></dd>
+      <dt>Auth</dt><dd>Header <code>X-Api-Key: ${DATA_GOV_API_KEY}</code> (api.data.gov key; it also works without a key at lower limits). Keep it server-side only.</dd>
+      <dt>Queries</dt><dd>
+        By brand (prefer labels that have the storage section):<br><code>?search=openfda.brand_name:"humalog"+AND+_exists_:storage_and_handling&amp;limit=5</code><br>
+        By generic: <code>?search=openfda.generic_name:"insulin+glargine"&amp;limit=5</code><br>
+        Single-ingredient only (no combos): <code>?search=openfda.generic_name.exact:"METFORMIN+HYDROCHLORIDE"+AND+openfda.route:"ORAL"</code><br>
+        Narrow injectables: <code>+AND+openfda.route:"SUBCUTANEOUS"</code></dd>
+      <dt>Read fields</dt><dd><code>storage_and_handling[0]</code> → fallback <code>how_supplied[0]</code> (find the substring starting at "Store" or "Storage") → fallback <code>package_label_principal_display_panel[0]</code>. Also <code>openfda.brand_name</code>, <code>openfda.generic_name</code>, <code>openfda.manufacturer_name</code>, <code>openfda.route</code>, <code>set_id</code>, <code>effective_time</code>. Some labels also have <code>storage_and_handling_table</code> (HTML).</dd>
+    </dl>
+<pre>GET /drug/label.json?search=openfda.generic_name:"insulin+glargine"&amp;limit=1   <span class="c"># total: 16</span>
+{ "meta": { "results": { "skip": 0, "limit": 1, "total": 16 } },
+  "results": [{
+    "set_id": "0ad21db3-2b1c-4ed9-a687-bdd6a74d0aae",
+    "effective_time": "20260616",
+    "openfda": { "brand_name": ["BASAGLAR KwikPen"], "generic_name": ["INSULIN GLARGINE"],
+                 "route": ["SUBCUTANEOUS"], "rxcui": ["847230", "1736863", "..."] },
+    "storage_and_handling": ["16.2 Storage and Handling Dispense in the original sealed carton ...
+      Protect BASAGLAR from heat and light. Do not freeze BASAGLAR. In-use BASAGLAR prefilled pens must
+      be used within 28 days or be discarded ... Not In-Use (Unopened) Room Temperature (up to 86°F [30°C])
+      ... 3 mL single-patient-use BASAGLAR KwikPen 28 days Until expiration date 28 days, Do not refrigerate."],
+    "how_supplied": ["16 HOW SUPPLIED/STORAGE AND HANDLING 16.1 How Supplied ..."],
+    "storage_and_handling_table": ["..."]
+  }] }</pre>
+    <h4>Demo set: real storage text pulled today</h4>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Drug (query)</th><th>Label hit</th><th>Key storage text (trimmed)</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td>Lantus <code>brand_name:"lantus"+AND+_exists_:storage_and_handling</code></td><td>Lantus SoloStar, sanofi-aventis, eff. 20250602, set <code>d5e07a0c-…</code></td><td>"Store unused LANTUS in a refrigerator between 36°F and 46°F … Do not freeze. Discard LANTUS if it has been frozen … Room Temperature (up to 86°F [30°C]) … 28 days"</td><td>max 86°F · 28 d room · in-use 28 d · do not freeze</td></tr>
+        <tr><td>Humalog <code>brand_name:"humalog"+AND+_exists_:storage_and_handling</code> (3 hits)</td><td>Humalog / KwikPen / Junior / Tempo, Eli Lilly, eff. 20260616, set <code>c8ecbd7a-…</code></td><td>"When stored at room temperature, HUMALOG U-100 and U-200 can only be used for a total of 28 days, including both not in-use (unopened) and in-use (opened) storage time … (Up to 86°F [30°C])"</td><td>max 86°F · 28 d total room time · do not freeze</td></tr>
+        <tr><td>Humalog Mix (same query)</td><td>Humalog Mix50/50 KwikPen, Lilly</td><td>"HUMALOG Mix50/50 KwikPen can only be used for a total of 10 days including both not in-use (unopened) and in-use (opened) storage time"</td><td>max 86°F · <strong>10 d</strong></td></tr>
+        <tr><td>Trulicity <code>brand_name:"trulicity"+AND+_exists_:storage_and_handling</code></td><td>Trulicity, Eli Lilly, eff. 20260616, set <code>463050bd-…</code></td><td>"Store TRULICITY in the refrigerator at 36°F to 46°F … each single-dose pen can be kept at room temperature, not to exceed 86°F (30°C) for a total of 14 days. Do not freeze …"</td><td>max 86°F · 14 d · do not freeze</td></tr>
+        <tr><td>Metformin <code>generic_name:"metformin+hydrochloride"+AND+how_supplied:"excursions"</code></td><td>ZITUVIMET (sitagliptin+metformin, a combo; see gotcha)</td><td>"Store at 20°C to 25°C (68°F to 77°F), excursions permitted between 15°C and 30°C (59°F and 86°F)"</td><td>room-temp med · max excursion 86°F · no clock</td></tr>
+      </tbody>
+    </table></div>
+    <h4>Gotchas (all observed today)</h4>
+    <ul>
+      <li><strong>Repackager labels come first and lack storage text.</strong> <code>brand_name:"humalog"</code> with no filter returned an A-S Medication Solutions repackager label (NDC 50090-…) whose <code>how_supplied</code> is just "3 mL in a SYRINGE / 5 in a CARTON". Fix: add <code>+AND+_exists_:storage_and_handling</code>, request <code>limit=5</code>, prefer results where <code>manufacturer_name</code> is not a repackager and the text contains "°F" or "Store".</li>
+      <li><strong>"Ozempic" now matches oral tablets.</strong> <code>brand_name:"ozempic"</code> returned an <code>OZEMPIC, RYBELSUS</code> label with route ORAL (Ozempic 1.5 mg / 4 mg tablets). The injectable Ozempic only came back as an A-S Medication repackager label with no storage text, and <code>generic_name:"semaglutide"+AND+route:"SUBCUTANEOUS"+AND+_exists_:storage_and_handling</code> returned <em>No matches</em>. Use <code>dosage_form</code> and route from the photo to pick a route, and fall back to UNKNOWN.</li>
+      <li><strong>Some brands have no label with a <code>storage_and_handling</code> field:</strong> <code>victoza</code> and <code>synthroid</code> with <code>_exists_:storage_and_handling</code> returned NOT_FOUND. Retry without the filter and parse <code>how_supplied</code>. If there is still no "Store…" sentence, the status is UNKNOWN.</li>
+      <li><strong>Generic search matches combination products.</strong> The top metformin hit was sitagliptin+metformin. Use <code>openfda.generic_name.exact:"METFORMIN HYDROCHLORIDE"</code> for single-ingredient products (verified: 247 results). But the first exact hit was a repackager with no "Store" text, so the same fix applies.</li>
+      <li>One label can cover multiple products with different limits (Humalog vial vs Mix KwikPen 10 days). The rule extractor must pick the row that matches the device in the photo, or take the <strong>shortest</strong> limit if unsure.</li>
+      <li>No match returns <code>{"error":{"code":"NOT_FOUND","message":"No matches found!"}}</code> with HTTP 404. Treat it as an empty result, not a crash.</li>
+      <li>Every response's <code>meta.disclaimer</code> says: "Do not rely on openFDA to make decisions regarding medical care … assume all results are unvalidated." Show it.</li>
+    </ul>
+  </div>
+
+  <div class="api" id="api-recall">
+    <h3>3. openFDA enforcement: recalls <span class="pill v">VERIFIED</span></h3>
+    <dl class="kv">
+      <dt>Endpoint</dt><dd><code>GET https://api.fda.gov/drug/enforcement.json?search=product_description:"&lt;brand&gt;"+AND+status:"Ongoing"&amp;sort=report_date:desc&amp;limit=5</code></dd>
+      <dt>Auth</dt><dd>Same <code>X-Api-Key</code> header.</dd>
+      <dt>Read fields</dt><dd><code>recall_number, status, classification, recalling_firm, reason_for_recall, product_description, report_date, recall_initiation_date, distribution_pattern, code_info</code></dd>
+    </dl>
+<pre>GET /drug/enforcement.json?search=product_description:"insulin"&amp;sort=report_date:desc&amp;limit=2   <span class="c"># total: 24, meta.last_updated 2026-09-30</span>
+{ "results": [
+  { "recall_number": "D-0806-2026", "status": "Ongoing", "classification": "Class II",
+    "recalling_firm": "Baxter Healthcare Corporation", "report_date": "20260909",
+    "recall_initiation_date": "20260806", "reason_for_recall": "CGMP Deviations",
+    "product_description": "MYXREDLIN, Insulin Human in 0.9% Sodium Chloride Injection, 100 units/100 mL ... NDC 0338-0126-12.",
+    "distribution_pattern": "US Nationwide; Puerto Rico; and Chile." },
+  { "recall_number": "D-0445-2024", "status": "Completed", "classification": "Class II",
+    "recalling_firm": "Eli Lilly &amp; Company", "report_date": "20240424",
+    "reason_for_recall": "CGMP Deviations",
+    "product_description": "Sterile Diluent, HUMALOG U-100 (insulin lispro injection), HUMULIN R U-100 ..." } ] }</pre>
+    <ul class="small">
+      <li><strong>Gotcha:</strong> searching on a generic word ("insulin") matches unrelated products, such as a hospital IV insulin bag. Search on the <strong>brand</strong> (and NDC if the photo read one), filter to <code>status:"Ongoing"</code>, and word the result as "recalls mentioning this product, check with your pharmacist". Never label a medication as recalled based on a fuzzy match.</li>
+      <li>The <code>openfda</code> sub-object on enforcement records is often empty, so don't rely on it.</li>
+    </ul>
+  </div>
+
+  <div class="api" id="api-nws">
+    <h3>4. National Weather Service: live heat <span class="pill v">VERIFIED</span></h3>
+    <dl class="kv">
+      <dt>Auth</dt><dd>No key. A <strong><code>User-Agent</code> header is required</strong>, e.g. <code>ColdChain-hackathon (contact email)</code>. Set it via <code>NWS_USER_AGENT</code>.</dd>
+      <dt>Flow</dt><dd>
+        1. <code>GET https://api.weather.gov/points/25.77,-80.19</code> → <code>properties.gridId=MFL, gridX=110, gridY=50</code>, <code>forecastHourly</code>, <code>observationStations</code>, <code>timeZone=America/New_York</code><br>
+        2. <code>GET https://api.weather.gov/gridpoints/MFL/110,50/stations?limit=3</code> → KMIA (Miami Intl), KOPF (Opa Locka), KHWO (North Perry)<br>
+        3. <code>GET https://api.weather.gov/stations/KMIA/observations/latest</code><br>
+        4. <code>GET https://api.weather.gov/gridpoints/MFL/110,50/forecast/hourly</code></dd>
+    </dl>
+<pre><span class="c">// observations/latest (KMIA) — values are °C</span>
+{ "properties": {
+  "stationId": "KMIA", "timestamp": "2026-10-10T14:20:00+00:00", "textDescription": "Partly Cloudy",
+  "temperature":      { "unitCode": "wmoUnit:degC",   "value": 31,                 "qualityControl": "V" },
+  "heatIndex":        { "unitCode": "wmoUnit:degC",   "value": 36.542062604902775, "qualityControl": "V" },
+  "relativeHumidity": { "unitCode": "wmoUnit:percent","value": 66.381888793879,    "qualityControl": "V" },
+  "dewpoint":         { "unitCode": "wmoUnit:degC",   "value": 24,                 "qualityControl": "V" } } }
+
+<span class="c">// forecast/hourly — values are °F</span>
+{ "properties": { "periods": [
+  { "startTime": "2026-10-10T10:00:00-04:00", "temperature": 86, "temperatureUnit": "F",
+    "relativeHumidity": { "unitCode": "wmoUnit:percent", "value": 82 },
+    "shortForecast": "Slight Chance Showers And Thunderstorms",
+    "probabilityOfPrecipitation": { "unitCode": "wmoUnit:percent", "value": 21 } },
+  { "startTime": "2026-10-10T11:00:00-04:00", "temperature": 87, ... } ] } }</pre>
+    <ul class="small">
+      <li><strong>Units differ:</strong> observations are °C (<code>F = C × 9/5 + 32</code>). The hourly forecast is already °F.</li>
+      <li><code>heatIndex.value</code> and <code>temperature.value</code> can be <code>null</code>. Fall back to the next station, then to the first hourly period.</li>
+      <li>Cache <code>/points</code> permanently (the grid doesn't change). Cache observations for 10 minutes.</li>
+    </ul>
+  </div>
+
+  <div class="api" id="api-nrel">
+    <h3>5. NREL / NLR Alternative Fuel Stations: 24-hour EV chargers <span class="pill v">VERIFIED</span></h3>
+    <dl class="kv">
+      <dt>Endpoint</dt><dd><code>GET https://developer.nlr.gov/api/alt-fuel-stations/v1/nearest.json?latitude=25.77&amp;longitude=-80.19&amp;fuel_type=ELEC&amp;status=E&amp;access=public&amp;radius=5&amp;limit=5</code></dd>
+      <dt>Auth</dt><dd><code>X-Api-Key: ${DATA_GOV_API_KEY}</code></dd>
+      <dt>Read fields</dt><dd><code>fuel_stations[].station_name, street_address, city, zip, latitude, longitude, distance</code> (miles), <code>access_days_time, ev_network, status_code</code>. Top level: <code>total_results</code>.</dd>
+    </dl>
+<pre>{ "total_results": 303, "latitude": 25.77, "longitude": -80.19, "station_locator_url": "https://afdc.energy.gov/stations/",
+  "fuel_stations": [
+    { "id": 183231, "station_name": "ICON GARAGE ICONBRICKELL 1", "street_address": "465 Brickell Ave",
+      "city": "Miami", "zip": "33131", "latitude": 25.768851, "longitude": -80.189356, "distance": 0.0887,
+      "access_days_time": "24 hours daily", "status_code": "E", "ev_network": "ChargePoint Network" },
+    { "id": 149037, "station_name": "Wells Fargo Center-Miami", "street_address": "333 SE 2nd Ave., #3300",
+      "distance": 0.09548, "access_days_time": "24 hours daily", "ev_network": "Blink Network", ... } ] }</pre>
+    <ul class="small">
+      <li><strong>Host moved:</strong> use <code>developer.nlr.gov</code>, because <code>developer.nrel.gov</code> times out. The <code>location=</code> param was removed, so use <code>latitude</code>/<code>longitude</code>.</li>
+      <li>An EV charger means a place where the grid is <em>likely</em> on. It does not mean public indoor cooling. Word it as "likely has power, check before you go".</li>
+    </ul>
+  </div>
+
+  <div class="api" id="api-mdc">
+    <h3>6. Miami-Dade Open Data (ArcGIS FeatureServer): places <span class="pill v">VERIFIED</span> <span class="pill w">SHELTERS = 0 TODAY</span></h3>
+    <dl class="kv">
+      <dt>Base</dt><dd><code>https://services.arcgis.com/8Pc9XBTAsYuxx9Ny/arcgis/rest/services</code> (found through the hub search API <code>https://gis-mdc.opendata.arcgis.com/api/search/v1/collections/all/items?q=…</code>)</dd>
+      <dt>Auth</dt><dd>None.</dd>
+      <dt>Near query</dt><dd><code>/&lt;Layer&gt;/FeatureServer/0/query?where=1%3D1&amp;geometry=-80.19%2C25.77&amp;geometryType=esriGeometryPoint&amp;inSR=4326&amp;spatialRel=esriSpatialRelIntersects&amp;distance=3&amp;units=esriSRUnit_StatuteMile&amp;outFields=*&amp;outSR=4326&amp;f=geojson&amp;resultRecordCount=5</code>. ArcGIS returns no distance field, so compute haversine yourself.</dd>
+    </dl>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Layer</th><th>Count (today)</th><th>Useful fields</th></tr></thead>
+      <tbody>
+        <tr><td><code>Library_gdb</code> (County Library)</td><td>50</td><td><code>BRANCH, ADDRESS, CITY, ZIPCODE, PHONE, WKDAY, OPERHOUR, WEBSITE, LAT, LON</code></td></tr>
+        <tr><td><code>FireStation_gdb</code></td><td>75</td><td><code>NAME, ADDRESS, CITY, ZIPCODE, LAT, LON</code></td></tr>
+        <tr><td><code>EvacuationCenterShelters_Open</code></td><td><strong>0</strong></td><td><code>shelter_name, address, city, zip, shelter_status, shelter_type, petfriendly, gen_pop, capacity, occupancy, post_storm</code></td></tr>
+        <tr><td><code>EvacuationCenter_gdb</code></td><td><strong>0</strong></td><td><code>ShlName, Address, City, Zipcode, ShlStatus, ShlType, SpeclNeed, ShlCapcity, PetFrndly, <strong>Generator</strong>, GenPop, PostStorm, LAT, LON</code></td></tr>
+        <tr><td><code>Hurricane_Bus_Stops</code> (evacuation pick-up)</td><td>129</td><td>(fields not inspected)</td></tr>
+        <tr><td><code>PointsofDistribution_Open</code></td><td>0</td><td>(fields not inspected)</td></tr>
+      </tbody>
+    </table></div>
+<pre><span class="c">// Library_gdb near downtown (real, trimmed)</span>
+{ "type": "FeatureCollection", "features": [{
+  "type": "Feature",
+  "geometry": { "type": "Point", "coordinates": [-80.1971798351007, 25.7743616066567] },
+  "properties": { "BRANCH": "Main Library", "ADDRESS": "101 W Flagler St", "CITY": "Miami", "ZIPCODE": 33130,
+    "PHONE": "305-375-2665", "WKDAY": "Mon,Tue,Wed,Thu,Fri,Sat", "OPERHOUR": "9:30 am. - 6 p.m.",
+    "EXCPTDAY": "Sun", "WEBSITE": "https://mdpls.org/branch-main", "LAT": 25.77436, "LON": -80.19718 } }] }
+
+<span class="c">// FireStation_gdb</span>
+{ "properties": { "NAME": "Port of Miami", "ADDRESS": "641 EUROPE WAY", "CITY": "Miami", "ZIPCODE": 33132,
+  "LAT": 25.77485, "LON": -80.16971 } }</pre>
+    <ul class="small">
+      <li><strong>Shelters returned 0 features at about 10:35 AM ET today</strong> for both evacuation-center layers, and the older county MapServer layer <code>giswspro.miamidade.gov/arcgis/rest/services/311/311CRM/MapServer/78</code> also returned 0. I haven't verified why. The likely reading is that the layer is only filled during an activation (the "_Open" naming suggests this), but that is unconfirmed. Build it as a live query with an honest empty state: "No shelters are open right now per Miami-Dade (checked 10:35 AM)." Don't fake shelter data.</li>
+      <li>I haven't verified that libraries are official cooling centers. Label them "public building, check hours", not "cooling center".</li>
+      <li>Never present a place as "has power". Say "likely has power". The source and the time it was checked go on every row.</li>
+    </ul>
+  </div>
+
+  <div class="api">
+    <h3>7. Florida early-refill law (content, not an API) <span class="pill v">VERIFIED TEXT</span></h3>
+    <p><strong>Fla. Stat. § 252.358, "Emergency-preparedness prescription medication refills."</strong> Insurers, HMOs, and other OIR-licensed entities that cover prescriptions must waive refill time restrictions, including "refill too soon" edits, and pay for at least a <strong>30-day supply</strong>, when the insured lives in a county that (a) is under an NWS <strong>hurricane warning</strong>, (b) is under a Governor-declared <strong>state of emergency</strong>, or (c) has activated its emergency operations center and plan. It applies to refills requested within 30 days of the trigger, or until the conditions end, and OIR can extend it in 15- or 30-day increments. The insured must still have refills remaining. Source: <a href="https://www.flsenate.gov/Laws/Statutes/2025/252.358">flsenate.gov/Laws/Statutes/2025/252.358</a>.</p>
+    <p class="small">UI card: "Florida law: during a hurricane warning or declared emergency, your insurance must let you refill early (if you have refills left). Ask your pharmacy." Cite § 252.358.</p>
+  </div>
+
+  <div class="api">
+    <h3>8. FDA emergency insulin guidance (content for the explain step) <span class="pill v">VERIFIED TEXT</span></h3>
+    <p>Source: <a href="https://www.fda.gov/drugs/emergency-preparedness-drugs/information-regarding-insulin-storage-and-switching-between-products-emergency">FDA, "Information Regarding Insulin Storage and Switching Between Products in an Emergency"</a> (page says content current as of 09/28/2026). Key rules, paraphrased:</p>
+    <ul>
+      <li>Manufacturer vials or cartridges, opened or unopened, may be left unrefrigerated at <strong>59°F–86°F for up to 28 days</strong>.</li>
+      <li>In an emergency, insulin stored above 86°F <strong>may still need to be used</strong>. Keep it as cool as possible and away from direct heat and sunlight.</li>
+      <li>If you use ice, don't freeze the insulin. <strong>Do not use insulin that has been frozen.</strong></li>
+      <li>Throw away pump insulin exposed to temperatures above 98.6°F. Replace pump infusion sets after 48 h unless the device instructions say otherwise.</li>
+      <li>Replace exposed insulin once proper storage is available again.</li>
+      <li>Switching products should happen under a doctor's care. The page gives unit-for-unit swap rules. <strong>Do not put dosing conversions in the app.</strong> Link to the FDA page and tell the user to call a clinician.</li>
+    </ul>
+  </div>
+</div></section>
+
+<section id="engine"><div class="wrap">
+  <h2>Verdict logic (deterministic, conservative)</h2>
+  <p>The engine is pure JS with no I/O. It lives at <code>skills/cold-chain-check/scripts/engine.mjs</code> and is imported by the server, the web app, and the skill CLI. The model never computes a number.</p>
+  <div class="grid2">
+    <div class="card"><h4>Statuses</h4><ul>
+      <li><span class="pill i">OK</span> under the label max, more than 48 h of room-temperature allowance left</li>
+      <li><span class="pill w">USE_SOON</span> 48 h or less left, or forecast to pass the max within the window</li>
+      <li><span class="pill x">OVER_LIMIT</span> indoor temp is above the label max, or the room-temperature days are used up. Copy: "Past the label limit. Don't stop your insulin without a replacement. Keep it cool, check your sugar, get a replacement."</li>
+      <li><span class="pill x">DO_NOT_USE</span> only when the medication was frozen and the label says do not freeze (FDA + label)</li>
+      <li><span class="pill">UNKNOWN</span> no storage text found. "Ask your pharmacist."</li>
+    </ul></div>
+    <div class="card"><h4>Conservative choices (ours, not FDA's; state them in the README)</h4><ul>
+      <li>Use <strong>90%</strong> of the label's room-temperature allowance (<code>SAFETY_MARGIN = 0.9</code>).</li>
+      <li>If one label covers several products, use the <strong>shortest</strong> limit unless the device is confirmed.</li>
+      <li>Count every hour since the outage started as room-temperature time, even if the fridge stayed cold for a while.</li>
+      <li>Indoor estimate (our heuristic, not validated): after 4 h without power, indoor = max(80°F, outdoor now, max of the next 6 hourly forecast temps). Always ask for a thermometer reading.</li>
+    </ul></div>
+  </div>
+<pre><span class="c">// skills/cold-chain-check/scripts/engine.mjs
+/** @typedef {{kind:"refrigerated"|"room_temp"|"unknown", maxTempF:number|null, roomTempDays:number|null,
+ *   inUseDays:number|null, doNotFreeze:boolean, quote:string,
+ *   source:{setId:string, effectiveTime:string, field:string}}} Rule
+ *  @typedef {{indoorTempF:number, indoorSource:"user"|"estimate", hoursOutOfFridge:number,
+ *   openedDaysAgo?:number, frozen?:boolean, forecastIndoorF?:{time:string,tempF:number}[]}} Exposure */</span>
+export const SAFETY_MARGIN = 0.9;
+export const USE_SOON_HOURS = 48;
+
+export function verdict(rule, x, now = Date.now()) {
+  if (!rule || rule.kind === "unknown" || rule.maxTempF == null)
+    return { status: "UNKNOWN", hoursLeft: null, reasons: ["no_label_limits"] };
+  if (x.frozen &amp;&amp; rule.doNotFreeze)
+    return { status: "DO_NOT_USE", hoursLeft: 0, reasons: ["frozen"] };
+  if (x.indoorTempF > rule.maxTempF)
+    return { status: "OVER_LIMIT", hoursLeft: 0, reasons: ["temp_above_label_max"] };
+
+  let hoursLeft = null;
+  if (rule.kind === "refrigerated" &amp;&amp; rule.roomTempDays != null) {
+    const budgets = [rule.roomTempDays * 24 * SAFETY_MARGIN - x.hoursOutOfFridge];
+    if (x.openedDaysAgo != null &amp;&amp; rule.inUseDays != null)
+      budgets.push(rule.inUseDays * 24 * SAFETY_MARGIN - x.openedDaysAgo * 24);
+    hoursLeft = Math.min(...budgets);
+    if (hoursLeft &lt;= 0) return { status: "OVER_LIMIT", hoursLeft: 0, reasons: ["room_temp_days_used_up"] };
+  }
+
+  <span class="c">// forecast-aware: when does the room cross the label max?</span>
+  const cross = (x.forecastIndoorF || []).find(p => p.tempF > rule.maxTempF);
+  const hoursToCross = cross ? Math.max(0, (Date.parse(cross.time) - now) / 36e5) : null;
+
+  const soon = (hoursLeft != null &amp;&amp; hoursLeft &lt; USE_SOON_HOURS) || (hoursToCross != null &amp;&amp; hoursToCross &lt; USE_SOON_HOURS);
+  return { status: soon ? "USE_SOON" : "OK", hoursLeft, hoursToCross, crossAt: cross?.time ?? null,
+           reasons: soon ? ["low_allowance_or_heat_coming"] : [] };
+}
+
+export function estimateIndoorF(outdoorNowF, hourlyF, hoursSinceOutage) {
+  if (hoursSinceOutage &lt; 4) return Math.max(78, outdoorNowF - 4);           <span class="c">// heuristic, label as estimate</span>
+  return Math.max(80, outdoorNowF, ...hourlyF.slice(0, 6));
+}</pre>
+  <h4>Worked examples (the hero preview uses these): outage 30 h, indoor 84°F</h4>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Med</th><th>Rule</th><th>Math</th><th>Result</th><th>At 91°F</th></tr></thead>
+    <tbody>
+      <tr><td>Lantus SoloStar, unopened</td><td>86°F, 28 d</td><td>28×24×0.9 − 30 = 574.8 h</td><td><span class="pill i">OK</span> 23 d 22 h</td><td><span class="pill x">OVER_LIMIT</span></td></tr>
+      <tr><td>Humalog KwikPen, opened 20 d ago</td><td>86°F, 28 d total</td><td>min(574.8, 28×24×0.9 − 480 = 124.8) h</td><td><span class="pill i">OK</span> 5 d 4 h</td><td><span class="pill x">OVER_LIMIT</span></td></tr>
+      <tr><td>Trulicity pen, unopened</td><td>86°F, 14 d</td><td>14×24×0.9 − 30 = 272.4 h</td><td><span class="pill i">OK</span> 11 d 8 h</td><td><span class="pill x">OVER_LIMIT</span></td></tr>
+      <tr><td>Metformin tablets</td><td>room temp, excursion ≤86°F</td><td>no clock</td><td><span class="pill i">OK</span> within range</td><td><span class="pill x">OVER_LIMIT</span> (above label range: ask pharmacist, don't stop)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Write these 4 cases, plus frozen, unknown, and forecast-crossing, as <code>test/engine.test.mjs</code> and run them with <code>node --test</code>.</p>
+</div></section>
+
+<section id="prompts"><div class="wrap">
+  <h2>Prompt designs</h2>
+
+  <h3>A. Label read (Sonnet 5.5, vision)</h3>
+<pre>SYSTEM:
+You read medication packaging in photos for a heat-safety app.
+Identify every distinct medication visible (cartons, pens, vials, bottles, blister packs).
+Return ONLY minified JSON, no markdown fences, matching:
+{"meds":[{"id":"m1","label_text":string,"brand_name":string|null,"generic_name":string|null,
+  "strength":string|null,"dosage_form":"pen"|"vial"|"cartridge"|"tablet"|"capsule"|"liquid"|"other"|null,
+  "route_hint":"subcutaneous"|"oral"|"other"|null,"ndc":string|null,
+  "position":"left"|"center"|"right"|"top"|"bottom"|null,"confidence":number}],
+ "unreadable_count":number}
+Rules:
+- Copy text exactly as printed into label_text. Never invent a drug name you cannot read.
+- If a field is not visible, use null and lower confidence.
+- One entry per distinct product, even if there are several identical boxes.
+- No medical advice, no commentary.
+USER: [image block] + "Read every medication label in this photo."</pre>
+  <p class="small">Post-process: strip <code>```</code> fences, then <code>JSON.parse</code>, and retry once with "Your last reply was not valid JSON." Any med with <code>confidence &lt; 0.6</code> or a null brand and generic gets an editable "Is this right?" field.</p>
+
+  <h3>B. Storage-rule extraction (Fable 5.1, text)</h3>
+<pre>SYSTEM:
+You convert FDA drug label storage text into a machine rule. Use ONLY the provided text.
+Return ONLY JSON:
+{"kind":"refrigerated"|"room_temp"|"unknown","max_temp_f":number|null,"room_temp_days":number|null,
+ "in_use_days":number|null,"do_not_freeze":boolean,"discard_if_frozen":boolean,
+ "applies_to":string,"quote":string}
+Rules:
+- "quote" must be copied verbatim from the text and must contain every number you output.
+- If the label lists several products with different limits, pick the row matching DEVICE;
+  if DEVICE is unknown, use the SHORTEST limit and say so in applies_to.
+- Convert °C to °F only if no °F is printed. If no storage limits are stated, kind="unknown".
+USER: {"brand":"Humalog KwikPen","device":"pen","in_use":true,"text":"&lt;storage_and_handling[0]&gt;"}</pre>
+  <p class="small"><strong>Code-side guard:</strong> reject the rule (status UNKNOWN) unless <code>quote</code> is a substring of the source text and <code>String(max_temp_f)</code> and <code>String(room_temp_days)</code> both appear in <code>quote</code>. For the 4 demo medications, cache the validated rules in <code>fixtures/</code>.</p>
+
+  <h3>C. Explanation (Fable 5.1, text, per language)</h3>
+<pre>SYSTEM:
+You explain a medication's heat-exposure status to someone in a power outage. You are not a doctor.
+The engine already decided STATUS and HOURS_LEFT. Never change, round differently, or contradict them.
+Use only the label quote and the FDA emergency guidance below. Reading level: 6th grade. Language: {lang}.
+FDA emergency guidance (insulin): unrefrigerated vials/cartridges 59–86°F up to 28 days; in an emergency,
+insulin stored above 86°F may still need to be used; keep it as cool as possible, out of sun;
+do not use insulin that has been frozen; replace exposed insulin when proper storage is available.
+HARD RULES:
+- NEVER tell the user to stop taking, skip, or throw away insulin unless STATUS is DO_NOT_USE (frozen).
+  For OVER_LIMIT say: keep using only if no replacement, keep it cool, check blood sugar more often,
+  get a replacement (pharmacy / early refill).
+- Never give dosing numbers or product-switching instructions. Say "ask your doctor or pharmacist".
+- Do not add a disclaimer; the app adds a fixed one.
+Return ONLY JSON: {"headline":string,"explanation":string,"what_to_do":[string],"call_now_if":[string]}</pre>
+  <div class="callout danger"><p><strong>Why the HARD RULES exist (seen today):</strong> a test run with a softer prompt (Spanish, Basaglar, 91°F, OVER_LIMIT) answered "No uses esta pluma hasta hablar con un farmacéutico" ("Don't use this pen until you talk to a pharmacist"). That contradicts FDA's emergency guidance and could lead someone to skip insulin. Keep the hard rules. Also run a code check that rejects outputs matching <code>/no (la )?uses|don't use|do not use|stop taking|throw (it )?away|discard|pa sèvi/i</code> when status ≠ DO_NOT_USE, and fall back to the fixed i18n copy for that status.</p></div>
+</div></section>
+
+<section id="i18n"><div class="wrap">
+  <h2>Multilingual approach (EN / ES / HT)</h2>
+  <ul>
+    <li><strong>Static UI strings</strong> (buttons, statuses, safety footer, refill card) go in <code>web/src/i18n.ts</code> as <code>{en, es, ht}</code>. Generate them once with Fable during the build, commit them, and have a human check the Spanish and Kreyòl before the demo. Language codes are <code>en</code>, <code>es</code>, and <code>ht</code> (Haitian Creole). Set <code>&lt;html lang&gt;</code> when the language switches.</li>
+    <li><strong>Per-status fixed copy</strong> (OK, USE_SOON, OVER_LIMIT, DO_NOT_USE, UNKNOWN) lives in i18n, so the safety-critical sentence is never generated live.</li>
+    <li><strong>Dynamic explanation</strong> comes from <code>/api/explain</code> with <code>lang</code>. Cache it by <code>(drug, status, lang)</code> and pre-warm all 3 languages for the 4 demo medications.</li>
+    <li>Keep drug names, numbers, and °F untranslated. Show °C in parentheses.</li>
+    <li>The language toggle is always visible. Default to <code>navigator.language</code> (<code>es*</code> → es, <code>ht*</code> → ht).</li>
+  </ul>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Key</th><th>EN</th><th>ES</th><th>HT (draft; have a speaker check it)</th></tr></thead>
+    <tbody>
+      <tr><td><code>scan</code></td><td>Scan my meds</td><td>Escanear mis medicinas</td><td>Eskane medikaman mwen</td></tr>
+      <tr><td><code>status.OK</code></td><td>Within label limits</td><td>Dentro de los límites de la etiqueta</td><td>Nan limit etikèt la</td></tr>
+      <tr><td><code>status.OVER_LIMIT</code></td><td>Past the label limit. Keep it cool and get a replacement.</td><td>Fuera del límite de la etiqueta. Manténgala fresca y consiga un reemplazo.</td><td>Li depase limit etikèt la. Kenbe l fre epi jwenn yon lòt.</td></tr>
+      <tr><td><code>power</code></td><td>Places likely to have power</td><td>Lugares que probablemente tienen electricidad</td><td>Kote ki gendwa gen kouran</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="skill"><div class="wrap">
+  <h2>Agent Skill packaging (Best Open-Source AI route)</h2>
+  <p>Per the <a href="https://agentskills.io/specification">Agent Skills specification</a> (verified today): a skill is a directory containing <code>SKILL.md</code> made of YAML frontmatter plus a Markdown body. Optional directories are <code>scripts/</code>, <code>references/</code>, and <code>assets/</code>.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Field</th><th>Required</th><th>Constraint</th></tr></thead>
+    <tbody>
+      <tr><td><code>name</code></td><td>Yes</td><td>1–64 chars. Lowercase a–z, 0–9, and hyphens only. Cannot start or end with a hyphen, no <code>--</code>, and it <strong>must match the directory name</strong>.</td></tr>
+      <tr><td><code>description</code></td><td>Yes</td><td>1–1024 chars. Says what it does <em>and when to use it</em>, with keywords.</td></tr>
+      <tr><td><code>license</code></td><td>No</td><td>License name or bundled file.</td></tr>
+      <tr><td><code>compatibility</code></td><td>No</td><td>1–500 chars. Environment needs.</td></tr>
+      <tr><td><code>metadata</code></td><td>No</td><td>String → string map.</td></tr>
+      <tr><td><code>allowed-tools</code></td><td>No</td><td>Space-separated, experimental.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Guidance from the spec: keep <code>SKILL.md</code> under 500 lines (under 5000 tokens recommended) and keep file references one level deep. Validate with <code>skills-ref validate ./skills/cold-chain-check</code> from <a href="https://github.com/agentskills/agentskills/tree/main/skills-ref">github.com/agentskills/agentskills/tree/main/skills-ref</a>. I haven't verified that tool's install command; check its README.</p>
+<pre>---
+name: cold-chain-check
+description: Checks whether temperature-sensitive medications (insulin, GLP-1 pens, other refrigerated drugs) are still within their FDA label storage limits during a power outage or heat exposure. Looks up each drug's storage_and_handling text on openFDA, applies a conservative countdown from indoor temperature and hours without refrigeration, and checks openFDA recalls. Use when someone asks if their insulin or medications are still good after a hurricane, blackout, or heat wave.
+license: MIT
+compatibility: Requires Node 20+ and internet access to api.fda.gov. Optional DATA_GOV_API_KEY env var for higher openFDA limits.
+metadata:
+  author: cold-chain-team
+  version: "0.1.0"
+  event: "Hack for Humanity Miami 2026"
+---
+
+# Cold Chain check
+
+## When to use
+A user has meds that need refrigeration, the power is out or it is hot, and they ask if the meds are still OK.
+
+## Steps
+1. Get each drug's brand or generic name, device (pen/vial/tablet), whether it is opened (and how many days ago),
+   hours since refrigeration was lost, and the indoor temperature in °F (ask for a thermometer reading).
+2. Run: `node scripts/check.mjs --drug "Lantus" --device pen --hours 30 --temp 84 [--opened-days 20] [--frozen]`
+3. The script prints JSON: {drug, rule{maxTempF, roomTempDays, quote, source}, status, hoursLeft, recalls[]}.
+4. Report status and hours left, and quote the label sentence and its source (openFDA set_id).
+
+## Safety rules (must follow)
+- Never tell the user to stop or discard insulin unless status is DO_NOT_USE (frozen).
+- For OVER_LIMIT: keep it cool, check blood sugar more often, get a replacement.
+  In Florida, F.S. 252.358 allows early refills during hurricane warnings or declared emergencies.
+- If status is UNKNOWN, say the label limits were not found and to ask a pharmacist.
+- Always end with: "FDA label information, not medical advice. Call your pharmacist or doctor; in an emergency call 911."
+
+## Details
+See [references/RULES.md](references/RULES.md) for the engine math and [references/SOURCES.md](references/SOURCES.md).</pre>
+  <ul class="small">
+    <li><code>scripts/check.mjs</code> uses only Node built-ins and <code>fetch</code>. It queries openFDA, extracts the rule with a <strong>regex-first parser</strong> (patterns like <code>up to (\d+)°F</code> and <code>total of (\d+) days</code>), and uses an LLM only if the regex fails and <code>CF_AIG_TOKEN</code> is set. That keeps the skill runnable with no proprietary model, which strengthens the open-source case.</li>
+    <li><code>scripts/engine.mjs</code> is the same file the app imports. Say so in the README: "the app is a UI over this open skill".</li>
+  </ul>
+</div></section>
+
+<section id="plan"><div class="wrap">
+  <h2>Timeboxed build plan (10:45 AM → 3:30 PM ET)</h2>
+  <div class="table-wrap"><table class="timeline">
+    <thead><tr><th>Time</th><th>Work</th><th>Checkpoint (must be true to move on)</th></tr></thead>
+    <tbody>
+      <tr><td class="t">10:45–11:00</td><td>Scaffold: <code>npm init</code>, Vite + TS, Express + tsx, MIT LICENSE, <code>.env.example</code>, <code>.gitignore</code> (covering <code>.env</code> and <code>cache/</code>). Create the <strong>public</strong> GitHub repo and push.</td><td><code>npm run dev</code> serves the page, and <code>/api/health</code> returns ok. The repo is public.</td></tr>
+      <tr><td class="t">11:00–11:40</td><td><code>server/openfda.ts</code> (label picker with repackager skip, recalls), <code>nws.ts</code>, <code>places.ts</code> (ArcGIS libraries, fire stations, shelters + NREL), <code>cache.ts</code>.</td><td><code>curl</code> on each <code>/api/*</code> route returns real JSON for Miami and the 4 demo medications.</td></tr>
+      <tr><td class="t">11:40–12:20</td><td><code>ai.ts</code>: <code>/api/scan</code> (vision via <code>/ai/v1/messages</code>) and rule extraction with the quote/number guard. Photograph the real demo meds now.</td><td>The real photo returns 4 meds, and each gets a validated rule with a quote.</td></tr>
+      <tr><td class="t">12:20–12:50</td><td><code>engine.mjs</code> + <code>node --test</code> (7 cases).</td><td>All tests pass, and the 84°F/91°F numbers match this brief.</td></tr>
+      <tr><td class="t">12:50–1:45</td><td>UI: scan screen, editable med cards, outage-start picker, temp slider (thermometer or NWS estimate), live countdowns, status colors, label quote, safety footer.</td><td><strong>Full happy path on a real phone:</strong> photo → 4 ticking clocks → drag to 91°F → red.</td></tr>
+      <tr><td class="t">1:45–2:15</td><td>i18n (en, es, ht) + <code>/api/explain</code> with the hard-rule filter. Pre-warm 3 languages × 4 medications.</td><td>Language toggle works with no layout breaks. The banned-phrase filter is tested.</td></tr>
+      <tr><td class="t">2:15–2:35</td><td>Places panel (sorted by distance, with source and checked-at time), F.S. 252.358 refill card, recall badge.</td><td>The panel shows a library, a fire station, and EV chargers. The shelters empty state is honest.</td></tr>
+      <tr><td class="t">2:35–2:55</td><td>Agent Skill: <code>SKILL.md</code>, <code>check.mjs</code>, references. Run validation. Write the README with all sources cited.</td><td><code>node skills/cold-chain-check/scripts/check.mjs --drug Lantus --hours 30 --temp 84</code> prints JSON.</td></tr>
+      <tr><td class="t">2:55–3:15</td><td><code>npm run record</code> saves fixtures from real calls. Test <code>DEMO_MODE=1</code> with Wi-Fi off. Rehearse the 2:00 script twice. Record a backup screen capture on the phone.</td><td>The demo runs fully offline in DEMO_MODE, and the rehearsal comes in at 2:00 or less.</td></tr>
+      <tr><td class="t">3:15–3:30</td><td><strong>Freeze.</strong> Final push, check that the repo is public and has its LICENSE, add README screenshots.</td><td>The repo URL opens in incognito.</td></tr>
+      <tr><td class="t">3:30–3:45</td><td>Submit in OrganizerHQ.</td><td>Submitted.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout heat"><p><strong>Cut order if behind:</strong> (1) forecast crossing, (2) recall badge, (3) live Kreyòl/Spanish explanations (keep the static i18n), (4) places panel (keep the refill card). <strong>Never cut:</strong> photo → labels → countdown, the label quote, the safety footer, README sources, and the skill folder.</p></div>
+</div></section>
+
+<section id="submit"><div class="wrap">
+  <h2>README and submission checklist</h2>
+  <div class="grid2">
+    <div class="card"><h4>README must have</h4><ul class="check">
+      <li>One-line pitch and a 3-step "how it works"</li>
+      <li>Screenshot or GIF of the 4 countdowns</li>
+      <li>Safety statement plus the openFDA disclaimer</li>
+      <li><strong>Data sources, each cited with a URL:</strong> openFDA Drug Label API, openFDA Drug Enforcement API, NWS API, Miami-Dade Open Data Hub (named layers), NREL/NLR Alternative Fuel Stations API, FDA emergency insulin guidance, Fla. Stat. § 252.358</li>
+      <li>AI used: Claude Sonnet 5.5 (vision) and Claude Fable 5.1 (rules, explanations) via Cloudflare AI Gateway, and what each one is <em>not</em> allowed to decide</li>
+      <li>Open Agent Skill: path, spec link, how to run <code>check.mjs</code></li>
+      <li>Run locally: <code>cp .env.example .env</code>, <code>npm i</code>, <code>npm run dev</code>; <code>DEMO_MODE=1</code></li>
+      <li>Conservative assumptions (90% margin, indoor heuristic)</li>
+      <li>License: MIT</li>
+    </ul></div>
+    <div class="card"><h4>OrganizerHQ submission (by 3:45 PM)</h4><ul class="check">
+      <li><strong>Public</strong> GitHub repo URL with a LICENSE file (MIT)</li>
+      <li>Short description (use the one-line pitch)</li>
+      <li>Technologies: TypeScript, Vite, Node/Express, Cloudflare AI Gateway, Claude Sonnet 5.5 / Fable 5.1, openFDA, NWS, ArcGIS, NREL</li>
+      <li>Track: <strong>Build for Miami, 01 Four Forces, One City</strong></li>
+      <li>MLH challenge: <strong>Best Open-Source AI Project</strong> (via the Agent Skill). Not entering Gemma.</li>
+      <li>Demo: 2:00 live product, no slides. Q&amp;A 1:00.</li>
+    </ul></div>
+  </div>
+</div></section>
+
+<section id="fallback"><div class="wrap">
+  <h2>Demo-day fallback plan</h2>
+  <ul>
+    <li><strong><code>DEMO_MODE=1</code></strong>: every <code>/api/*</code> route answers from <code>fixtures/</code> only, keyed by normalized request. Fixtures are recorded from <em>real</em> calls by <code>npm run record</code> before 3:00, never hand-written.</li>
+    <li><strong>Vision fallback:</strong> <code>demo/meds.jpg</code> plus <code>fixtures/scan_&lt;sha1(image)&gt;.json</code>. If the camera or network fails, tap "Use demo photo".</li>
+    <li><strong>Network:</strong> phone hotspot as the second path. The laptop runs the server, and the phone hits <code>http://&lt;laptop-ip&gt;:8787</code> on the same network. Or demo on the laptop browser in responsive mode.</li>
+    <li><strong>Weather:</strong> if NWS is down, use the cached KMIA reading with its timestamp shown. The manual temp slider always works.</li>
+    <li><strong>Last resort:</strong> the backup screen recording from the 3:10 rehearsal.</li>
+    <li>Bring physical boxes for the 4 demo meds. If the team doesn't have real ones, show the label images on a second phone and photograph that screen. Test this path at 12:20.</li>
+  </ul>
+</div></section>
+
+<section id="risks"><div class="wrap">
+  <h2>Open risks</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td>openFDA coverage gaps: repackager labels with no storage text, Ozempic resolving to oral tablets, no <code>storage_and_handling</code> hit for Victoza or Synthroid</td><td>Picker logic in the label section. UNKNOWN status. Pick demo medications whose labels are verified (Lantus, Humalog, Trulicity, plus one oral).</td></tr>
+      <tr><td>Model output says "don't use your insulin" (seen today)</td><td>Hard-rule prompt, banned-phrase filter, and fixed i18n status copy.</td></tr>
+      <tr><td>Vision on a real, glare-heavy photo is untested (only a synthetic label was tested)</td><td>Test with the real meds by 12:20. Editable fields. Demo photo fixture.</td></tr>
+      <tr><td>Image dropped through the OpenAI-compatible gateway endpoint</td><td>Use <code>/ai/v1/messages</code> only.</td></tr>
+      <tr><td>Shelter layers empty today</td><td>Honest empty state plus libraries, fire stations, and EV chargers.</td></tr>
+      <tr><td>Best Open-Source AI eligibility: the app's models are proprietary. This brief has not verified how MLH judges weigh an Agent Skill.</td><td>Make the skill fully runnable without any LLM (regex rule parser + engine + openFDA), MIT-licensed, spec-compliant, and validated. Lead with that in the submission text.</td></tr>
+      <tr><td>Kreyòl quality</td><td>Short fixed strings, a human check at the event, and generated explanations kept short.</td></tr>
+      <tr><td>Indoor-temperature heuristic isn't validated</td><td>Labeled as an estimate. Thermometer input is the first choice.</td></tr>
+      <tr><td>Secret leakage</td><td><code>DATA_GOV_API_KEY</code> and <code>CF_AIG_TOKEN</code> live in server env only. Add <code>.env</code> to gitignore. For any public deploy, mint a narrow-scope Cloudflare token (per the gateway skill) instead of the account-wide one.</td></tr>
+      <tr><td>Health-data privacy</td><td>No image storage, no logs of photos, and no accounts. Say so on screen.</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="sources"><div class="wrap">
+  <h2>Sources and verification log</h2>
+  <ul class="ref small">
+    <li>Challenge repo (rules, rubric, submission): <a href="https://github.com/AI-Collective-Hackathons/hack-for-humanity-miami">github.com/AI-Collective-Hackathons/hack-for-humanity-miami</a>. The rubric and rules are as given in the team brief and were not re-fetched for this page.</li>
+    <li>openFDA Drug Label API: <a href="https://open.fda.gov/apis/drug/label/">open.fda.gov/apis/drug/label/</a>. Called today: glargine, humalog (×2), ozempic (×3 variants), semaglutide, metformin (×3), lantus, trulicity, victoza, synthroid.</li>
+    <li>openFDA Drug Enforcement API: <a href="https://open.fda.gov/apis/drug/enforcement/">open.fda.gov/apis/drug/enforcement/</a>. Called today with insulin.</li>
+    <li>NWS API: <a href="https://www.weather.gov/documentation/services-web-api">weather.gov/documentation/services-web-api</a>. Called today: points, stations, KMIA latest, hourly.</li>
+    <li>NREL/NLR Alternative Fuel Stations API: <a href="https://developer.nlr.gov/docs/transportation/alt-fuel-stations-v1/nearest/">developer.nlr.gov/docs/transportation/alt-fuel-stations-v1/nearest/</a>. Called today. I haven't verified this docs URL path, but the API call itself worked.</li>
+    <li>Miami-Dade Open Data Hub: <a href="https://gis-mdc.opendata.arcgis.com">gis-mdc.opendata.arcgis.com</a>. Hub search API and FeatureServer layers (Library_gdb, FireStation_gdb, EvacuationCenter_gdb, EvacuationCenterShelters_Open, Hurricane_Bus_Stops, PointsofDistribution_Open) were called today.</li>
+    <li>FDA, Insulin Storage and Switching Between Products in an Emergency: <a href="https://www.fda.gov/drugs/emergency-preparedness-drugs/information-regarding-insulin-storage-and-switching-between-products-emergency">fda.gov/…/information-regarding-insulin-storage-and-switching-between-products-emergency</a>. Fetched today.</li>
+    <li>Fla. Stat. § 252.358: <a href="https://www.flsenate.gov/Laws/Statutes/2025/252.358">flsenate.gov/Laws/Statutes/2025/252.358</a>. Fetched today.</li>
+    <li>Agent Skills specification: <a href="https://agentskills.io/specification">agentskills.io/specification</a>. Fetched today.</li>
+    <li>Cloudflare AI Gateway (Unified Billing, <code>/ai/v1/messages</code>): Micah's skill notes at <code>~/.claude/skills/cloudflare-ai-gateway/SKILL.md</code>. Vision and text calls were made today.</li>
+    <li>Raw responses: <code>reports/cold-chain-research/*.json</code>.</li>
+  </ul>
+</div></section>
+</main>
+
+<footer><div class="wrap">Cold Chain. Concept and build brief, Hack for Humanity: Miami, Sat Oct 10, 2026. FDA label information, not medical advice.</div></footer>
+
+<script>
+(function(){
+  var meds=[
+    {nm:"Lantus SoloStar",sub:"insulin glargine · unopened",max:86,days:28,opened:null,why:"Label: up to 86°F, 28 days"},
+    {nm:"Humalog KwikPen",sub:"insulin lispro · opened 20 d ago",max:86,days:28,opened:20,why:"Label: 28 days total at room temp"},
+    {nm:"Trulicity",sub:"dulaglutide pen · unopened",max:86,days:14,opened:null,why:"Label: ≤86°F, total of 14 days"},
+    {nm:"Metformin",sub:"tablets",max:86,days:null,opened:null,why:"Label: excursions 59–86°F"}
+  ];
+  var HOURS_OUT=30, M=0.9, temp=84, t0=Date.now();
+  var el=document.getElementById("cards");
+  function fmt(h){ if(h==null) return "No clock"; var s=Math.max(0,Math.floor(h*3600)); var d=Math.floor(s/86400); s%=86400; var hh=Math.floor(s/3600); s%=3600; var mm=Math.floor(s/60); var ss=s%60; function p(n){return (n<10?"0":"")+n} return d+"d "+p(hh)+":"+p(mm)+":"+p(ss); }
+  function v(m){
+    if(temp>m.max) return {st:"OVER_LIMIT",h:0};
+    if(m.days==null) return {st:"OK",h:null};
+    var b=[m.days*24*M-HOURS_OUT]; if(m.opened!=null) b.push(m.days*24*M-m.opened*24);
+    var h=Math.min.apply(null,b); if(h<=0) return {st:"OVER_LIMIT",h:0};
+    return {st:h<48?"USE_SOON":"OK",h:h};
+  }
+  function render(){
+    var el2=(Date.now()-t0)/36e5; var html="";
+    meds.forEach(function(m){
+      var r=v(m); var h=r.h==null?null:Math.max(0,r.h-el2);
+      var cls=r.st==="OVER_LIMIT"?"over":(r.st==="USE_SOON"?"soon":"ok");
+      var clock=r.st==="OVER_LIMIT"?"Over limit":fmt(h);
+      var why=r.st==="OVER_LIMIT"?(m.days==null?"Above label range. Ask pharmacist, don't stop.":"Keep cool. Don't stop without a replacement."):m.why;
+      html+='<div class="med '+cls+'"><div class="nm">'+m.nm+'</div><div class="sub">'+m.sub+'</div><div class="clock">'+clock+'</div><span class="st">'+r.st.replace("_"," ")+'</span><div class="why">'+why+'</div></div>';
+    });
+    el.innerHTML=html;
+  }
+  document.querySelectorAll(".toggle button").forEach(function(b){
+    b.addEventListener("click",function(){
+      temp=+b.getAttribute("data-temp");
+      document.querySelectorAll(".toggle button").forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false")});
+      render();
+    });
+  });
+  render(); setInterval(render,1000);
+})();
+</script>
+
+<script type="application/json" id="build-spec">
+{
+  "project": "cold-chain",
+  "pitch": "The power's out. Is my insulin still good? Photo of your meds -> FDA label storage limits -> per-medication heat countdowns, recalls, places with power. EN/ES/HT.",
+  "event": {
+    "name": "Hack for Humanity: Miami",
+    "date": "2026-10-10",
+    "build_ends": "2026-10-10T15:30:00-04:00",
+    "submit_by": "2026-10-10T15:45:00-04:00",
+    "track": "Build for Miami - 01 Four Forces, One City",
+    "mlh_challenges": ["Best Open-Source AI Project"],
+    "not_entering": ["Gemma"],
+    "submission": ["public GitHub repo", "OSS license (MIT)", "short description", "technologies used", "track", "MLH challenges"],
+    "demo": "2 min live + 1 min Q&A, no slides"
+  },
+  "stack": {
+    "frontend": "Vite + TypeScript (vanilla), mobile-first",
+    "backend": "Node 20 + Express (tsx), port 8787, holds all keys, disk cache, DEMO_MODE",
+    "engine": "skills/cold-chain-check/scripts/engine.mjs (pure ESM, shared by server, web, and skill CLI)",
+    "tests": "node --test test/engine.test.mjs"
+  },
+  "env": {
+    "DATA_GOV_API_KEY": "api.data.gov key; header X-Api-Key; server-side only",
+    "CF_ACCOUNT_ID": "Cloudflare account id (local source: ~/.config/cloudflare/account-id)",
+    "CF_AIG_TOKEN": "Cloudflare API token for AI Gateway (local source: ~/.config/cloudflare/claude-api-token); never commit/print",
+    "CF_AIG_GATEWAY": "default",
+    "NWS_USER_AGENT": "ColdChain-hackathon (contact email)",
+    "DEMO_MODE": "0|1 - 1 serves fixtures/ only",
+    "PORT": "8787"
+  },
+  "models": {
+    "vision_label_read": "anthropic/claude-sonnet-5.5",
+    "rule_extraction": "anthropic/claude-fable-5.1",
+    "explanation": "anthropic/claude-fable-5.1",
+    "spare": "anthropic/claude-opus-5.5"
+  },
+  "endpoints": {
+    "ai_gateway_messages": {
+      "method": "POST",
+      "url": "https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/ai/v1/messages",
+      "headers": {"Authorization": "Bearer ${CF_AIG_TOKEN}", "cf-aig-gateway-id": "${CF_AIG_GATEWAY}", "anthropic-version": "2023-06-01", "content-type": "application/json"},
+      "image_block": {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": "<b64>"}},
+      "notes": ["max_tokens required (<=8192)", "do NOT use /ai/v1/chat/completions for images: image silently dropped (verified)", "strip ```json fences before JSON.parse"],
+      "verified": "2026-10-10"
+    },
+    "openfda_label": {
+      "method": "GET",
+      "url": "https://api.fda.gov/drug/label.json",
+      "headers": {"X-Api-Key": "${DATA_GOV_API_KEY}"},
+      "query_examples": [
+        "search=openfda.brand_name:\"humalog\"+AND+_exists_:storage_and_handling&limit=5",
+        "search=openfda.generic_name:\"insulin+glargine\"&limit=5",
+        "search=openfda.generic_name.exact:\"METFORMIN+HYDROCHLORIDE\"+AND+openfda.route:\"ORAL\"&limit=5"
+      ],
+      "fields": ["storage_and_handling[0]", "how_supplied[0]", "package_label_principal_display_panel[0]", "openfda.brand_name", "openfda.generic_name", "openfda.manufacturer_name", "openfda.route", "set_id", "effective_time"],
+      "gotchas": ["repackager labels (e.g. A-S Medication Solutions, NDC 50090) lack storage text", "brand 'ozempic' matches ORAL tablets", "victoza/synthroid: no hit with _exists_:storage_and_handling", "generic search matches combos; use .exact", "404 NOT_FOUND = empty result"],
+      "verified": "2026-10-10"
+    },
+    "openfda_enforcement": {
+      "method": "GET",
+      "url": "https://api.fda.gov/drug/enforcement.json",
+      "headers": {"X-Api-Key": "${DATA_GOV_API_KEY}"},
+      "query_example": "search=product_description:\"<brand>\"+AND+status:\"Ongoing\"&sort=report_date:desc&limit=5",
+      "fields": ["recall_number", "status", "classification", "recalling_firm", "reason_for_recall", "product_description", "report_date", "code_info"],
+      "verified": "2026-10-10"
+    },
+    "nws_points": {"method": "GET", "url": "https://api.weather.gov/points/25.77,-80.19", "headers": {"User-Agent": "${NWS_USER_AGENT}"}, "result": {"gridId": "MFL", "gridX": 110, "gridY": 50}, "verified": "2026-10-10"},
+    "nws_observation_latest": {"method": "GET", "url": "https://api.weather.gov/stations/KMIA/observations/latest", "headers": {"User-Agent": "${NWS_USER_AGENT}"}, "fields": ["properties.temperature.value (degC)", "properties.heatIndex.value (degC)", "properties.relativeHumidity.value", "properties.timestamp"], "fallback_stations": ["KOPF", "KHWO"], "verified": "2026-10-10"},
+    "nws_hourly": {"method": "GET", "url": "https://api.weather.gov/gridpoints/MFL/110,50/forecast/hourly", "headers": {"User-Agent": "${NWS_USER_AGENT}"}, "fields": ["properties.periods[].startTime", "properties.periods[].temperature (degF)"], "verified": "2026-10-10"},
+    "nrel_ev_nearest": {"method": "GET", "url": "https://developer.nlr.gov/api/alt-fuel-stations/v1/nearest.json?latitude=25.77&longitude=-80.19&fuel_type=ELEC&status=E&access=public&radius=5&limit=5", "headers": {"X-Api-Key": "${DATA_GOV_API_KEY}"}, "fields": ["fuel_stations[].station_name", "street_address", "city", "zip", "latitude", "longitude", "distance", "access_days_time", "ev_network"], "notes": ["developer.nrel.gov times out; location= param removed"], "verified": "2026-10-10"},
+    "mdc_arcgis": {
+      "base": "https://services.arcgis.com/8Pc9XBTAsYuxx9Ny/arcgis/rest/services",
+      "near_query": "/{layer}/FeatureServer/0/query?where=1%3D1&geometry={lon}%2C{lat}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&distance=3&units=esriSRUnit_StatuteMile&outFields=*&outSR=4326&f=geojson&resultRecordCount=5",
+      "layers": {
+        "Library_gdb": {"count_2026_10_10": 50, "fields": ["BRANCH", "ADDRESS", "CITY", "ZIPCODE", "PHONE", "WKDAY", "OPERHOUR", "WEBSITE", "LAT", "LON"]},
+        "FireStation_gdb": {"count_2026_10_10": 75, "fields": ["NAME", "ADDRESS", "CITY", "ZIPCODE", "LAT", "LON"]},
+        "EvacuationCenterShelters_Open": {"count_2026_10_10": 0, "fields": ["shelter_name", "address", "city", "zip", "shelter_status", "shelter_type", "petfriendly", "gen_pop", "capacity", "occupancy", "post_storm"]},
+        "EvacuationCenter_gdb": {"count_2026_10_10": 0, "fields": ["ShlName", "Address", "City", "Zipcode", "ShlStatus", "ShlType", "SpeclNeed", "ShlCapcity", "PetFrndly", "Generator", "GenPop", "PostStorm", "LAT", "LON"]},
+        "Hurricane_Bus_Stops": {"count_2026_10_10": 129}
+      },
+      "auth": "none",
+      "verified": "2026-10-10"
+    }
+  },
+  "app_routes": {
+    "POST /api/scan": "{imageBase64, mediaType} -> {meds:[{id,label_text,brand_name,generic_name,strength,dosage_form,route_hint,ndc,confidence}]}",
+    "GET /api/label?brand=&generic=&device=&route=": "-> {rule:{kind,maxTempF,roomTempDays,inUseDays,doNotFreeze,quote,source:{setId,effectiveTime,field}}}",
+    "GET /api/recalls?brand=&ndc=": "-> [{recall_number,status,classification,reason_for_recall,report_date,product_description}]",
+    "GET /api/weather?lat=&lon=": "-> {outdoorF, heatIndexF, observedAt, station, hourly:[{time,tempF}]}",
+    "GET /api/places?lat=&lon=": "-> [{name,kind:'library'|'fire_station'|'ev_charger'|'shelter',address,distanceMi,hours,phone,source,checkedAt}]",
+    "POST /api/explain": "{med, rule, exposure, verdict, lang:'en'|'es'|'ht'} -> {headline, explanation, what_to_do[], call_now_if[]}",
+    "GET /api/health": "-> {ok:true, demoMode}"
+  },
+  "engine": {
+    "statuses": ["OK", "USE_SOON", "OVER_LIMIT", "DO_NOT_USE", "UNKNOWN"],
+    "SAFETY_MARGIN": 0.9,
+    "USE_SOON_HOURS": 48,
+    "rules": [
+      "UNKNOWN if no label limits",
+      "DO_NOT_USE only if frozen && doNotFreeze",
+      "OVER_LIMIT if indoorTempF > maxTempF",
+      "hoursLeft = min(roomTempDays*24*0.9 - hoursOutOfFridge, inUseDays*24*0.9 - openedDaysAgo*24)",
+      "OVER_LIMIT if hoursLeft <= 0",
+      "USE_SOON if hoursLeft < 48 or forecast crosses maxTempF within 48h"
+    ],
+    "indoor_estimate": "hours<4: max(78, outdoorNow-4); else max(80, outdoorNow, max(next 6 hourly)) - heuristic, label as estimate",
+    "test_cases_84F_30h": {"lantus_unopened_h": 574.8, "humalog_opened20d_h": 124.8, "trulicity_unopened_h": 272.4, "metformin": "OK no clock"}
+  },
+  "safety": {
+    "footer": {
+      "en": "This information comes from FDA drug labeling. It is not medical advice. Call your pharmacist or doctor. In an emergency, call 911.",
+      "es": "Esta información proviene del etiquetado de medicamentos de la FDA. No es consejo médico. Llame a su farmacéutico o médico. En una emergencia, llame al 911.",
+      "ht": "Enfòmasyon sa a soti nan etikèt medikaman FDA a. Se pa konsèy medikal. Rele famasyen oswa doktè ou. Si se yon ijans, rele 911."
+    },
+    "never": ["tell user to stop/discard insulin unless DO_NOT_USE (frozen)", "give dosing or product-switching numbers", "store photos"],
+    "banned_phrase_regex": "no (la )?uses|don't use|do not use|stop taking|throw (it )?away|discard|pa sèvi"
+  },
+  "languages": ["en", "es", "ht"],
+  "skill": {
+    "path": "skills/cold-chain-check",
+    "spec": "https://agentskills.io/specification",
+    "frontmatter_required": {"name": "cold-chain-check (must match dir; lowercase, digits, hyphens; <=64)", "description": "<=1024 chars, what + when"},
+    "frontmatter_optional": ["license: MIT", "compatibility (<=500)", "metadata (string map)", "allowed-tools (experimental)"],
+    "files": ["SKILL.md", "scripts/engine.mjs", "scripts/check.mjs", "references/RULES.md", "references/SOURCES.md"],
+    "validate": "skills-ref validate ./skills/cold-chain-check"
+  },
+  "files": [
+    "LICENSE", "README.md", ".env.example", ".gitignore", "package.json", "vite.config.ts", "tsconfig.json",
+    "server/index.ts", "server/cache.ts", "server/ai.ts", "server/openfda.ts", "server/nws.ts", "server/places.ts",
+    "web/index.html", "web/src/main.ts", "web/src/i18n.ts", "web/src/api.ts", "web/src/render.ts", "web/src/styles.css",
+    "skills/cold-chain-check/SKILL.md", "skills/cold-chain-check/scripts/engine.mjs", "skills/cold-chain-check/scripts/check.mjs",
+    "skills/cold-chain-check/references/RULES.md", "skills/cold-chain-check/references/SOURCES.md",
+    "fixtures/", "demo/meds.jpg", "test/engine.test.mjs"
+  ],
+  "sources": {
+    "openfda_label": "https://open.fda.gov/apis/drug/label/",
+    "openfda_enforcement": "https://open.fda.gov/apis/drug/enforcement/",
+    "nws": "https://www.weather.gov/documentation/services-web-api",
+    "nrel_afdc": "https://developer.nlr.gov/api/alt-fuel-stations/v1/nearest.json",
+    "miami_dade_hub": "https://gis-mdc.opendata.arcgis.com",
+    "fda_insulin_emergency": "https://www.fda.gov/drugs/emergency-preparedness-drugs/information-regarding-insulin-storage-and-switching-between-products-emergency",
+    "fl_statute_252_358": "https://www.flsenate.gov/Laws/Statutes/2025/252.358",
+    "agent_skills_spec": "https://agentskills.io/specification",
+    "challenge_repo": "https://github.com/AI-Collective-Hackathons/hack-for-humanity-miami"
+  }
+}
+</script>
+</body>
+</html>

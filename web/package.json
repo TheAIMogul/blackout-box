@@ -1,0 +1,21 @@
+{
+  "name": "blackout-box-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5173",
+    "build": "vite build",
+    "preview": "vite preview --port 5173",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@types/suncalc": "^1.9.2",
+    "idb": "^8.0.4",
+    "maplibre-gl": "^6.13.0",
+    "suncalc": "^2.1.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vite-plugin-pwa": "^2.0.0"
+  }
+}

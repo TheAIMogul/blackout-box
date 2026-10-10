@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blackout Box Brief</title>
+<meta name="description" content="Blackout Box: concept page and build brief for Hack for Humanity Miami. An offline-first hurricane assistant that runs Gemma 4 on the device, caches evacuation zones, shelters, FEMA, FDA and NWS data before the storm, and keeps answering after the power and cell service are gone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6f9; --surface:#ffffff; --surface-2:#eaeef4; --ink:#0b1320; --muted:#4a586b; --line:#d2dae5;
+  --ice:#0a63bd; --ice-ink:#ffffff; --ice-soft:#e2eefa; --ice-deep:#06325f;
+  --lit:#c77700; --lit-soft:#fff3dd; --lit-bright:#ffb020;
+  --heat:#d9480f; --heat-soft:#fff0e5; --danger:#c3201f; --danger-soft:#fdeaea;
+  --ok:#0a7556; --ok-soft:#e0f4ec; --warn:#b35c00; --warn-soft:#fff4e0;
+  --code-bg:#0b1220; --code-ink:#d8e3f0; --code-muted:#8597ad;
+  --black-a:#03060c; --black-b:#0b1428; --black-ink:#e8eef6;
+  --shadow:0 1px 2px rgba(11,19,32,.06),0 4px 14px rgba(11,19,32,.06);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#070b12; --surface:#0e1522; --surface-2:#141e30; --ink:#e4ebf4; --muted:#9bacc2; --line:#223049;
+    --ice:#5aaaf2; --ice-ink:#04182c; --ice-soft:#0f2840; --ice-deep:#cfe5fb;
+    --lit:#ffb020; --lit-soft:#2a1d05; --lit-bright:#ffc450;
+    --heat:#ff8a3d; --heat-soft:#2b1709; --danger:#ff6b66; --danger-soft:#2c1012;
+    --ok:#3fd09e; --ok-soft:#0c2a20; --warn:#ffb84d; --warn-soft:#2a1d07;
+    --code-bg:#04080f; --code-ink:#d8e3f0; --code-muted:#7b8ea6;
+    --black-a:#000306; --black-b:#070e1c; --black-ink:#e8eef6;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#070b12; --surface:#0e1522; --surface-2:#141e30; --ink:#e4ebf4; --muted:#9bacc2; --line:#223049;
+  --ice:#5aaaf2; --ice-ink:#04182c; --ice-soft:#0f2840; --ice-deep:#cfe5fb;
+  --lit:#ffb020; --lit-soft:#2a1d05; --lit-bright:#ffc450;
+  --heat:#ff8a3d; --heat-soft:#2b1709; --danger:#ff6b66; --danger-soft:#2c1012;
+  --ok:#3fd09e; --ok-soft:#0c2a20; --warn:#ffb84d; --warn-soft:#2a1d07;
+  --code-bg:#04080f; --code-ink:#d8e3f0; --code-muted:#7b8ea6;
+  --black-a:#000306; --black-b:#070e1c; --black-ink:#e8eef6;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+a{color:var(--ice);text-underline-offset:2px}
+code,pre,kbd{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+:not(pre)>code{background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:.88em;overflow-wrap:anywhere}
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:8px;padding:14px 16px;overflow-x:auto;max-width:100%;font-size:13px;line-height:1.55;margin:12px 0 18px;white-space:pre}
+pre .c{color:var(--code-muted)}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .5em;font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(1.45rem,3.4vw,1.9rem);margin-top:0}
+h3{font-size:1.15rem;margin-top:1.6em}
+h4{font-size:1rem;margin-top:1.2em}
+p{margin:0 0 1em}
+ul,ol{padding-left:1.25em;margin:0 0 1em}
+li{margin:.25em 0}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:14px;height:52px}
+.brand{font-weight:700;letter-spacing:.02em;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--lit-bright);box-shadow:0 0 0 3px var(--lit-soft)}
+.nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0}
+.nav::-webkit-scrollbar{display:none}
+.nav a{white-space:nowrap;text-decoration:none;color:var(--muted);font-size:.86rem;padding:6px 10px;border-radius:6px}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+
+/* hero: the blackout screen that stays lit */
+.hero{background:linear-gradient(160deg,var(--black-a),var(--black-b));color:var(--black-ink);padding:44px 0 36px}
+.eyebrow{font:600 .78rem/1 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;opacity:.85;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:8px}
+.eyebrow span{border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:5px 10px}
+.hero h1{font-size:clamp(2.2rem,7vw,3.6rem);margin-bottom:.15em}
+.hero .tag{font-size:clamp(1.15rem,3.2vw,1.5rem);font-weight:500;margin-bottom:.9em;color:var(--lit-bright)}
+.hero .pitch{max-width:720px;opacity:.92}
+.screen{margin-top:26px;background:#000;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px;box-shadow:0 0 0 1px #000,0 0 60px rgba(255,176,32,.12)}
+.screen-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;font-size:.88rem}
+.badge{display:inline-flex;align-items:center;gap:7px;font:600 .74rem/1 "IBM Plex Mono",monospace;letter-spacing:.08em;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.2)}
+.badge i{width:8px;height:8px;border-radius:50%;background:#3fd09e;display:inline-block}
+.badge.off i{background:#ffb020;box-shadow:0 0 8px #ffb020}
+.wifi{font:600 .82rem "IBM Plex Mono",monospace;background:transparent;color:#e8eef6;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:7px 12px;cursor:pointer}
+.wifi[aria-pressed="true"]{background:#ffb020;color:#000;border-color:#ffb020}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.item{background:#0c1220;color:#e8eef6;border-radius:10px;padding:12px 14px;border-top:4px solid #5aaaf2}
+.item .nm{font-weight:700}
+.item .sub{font-size:.78rem;color:#9bacc2}
+.item .clock{font:600 1.5rem/1.2 "IBM Plex Mono",monospace;margin:8px 0 2px;font-variant-numeric:tabular-nums}
+.item .st{display:inline-block;font:600 .7rem/1 "IBM Plex Mono",monospace;letter-spacing:.06em;padding:4px 7px;border-radius:4px;background:#0f2840;color:#cfe5fb}
+.item .why{font-size:.76rem;color:#9bacc2;margin-top:6px}
+.item.over{border-top-color:#ff6b66}.item.over .st{background:#2c1012;color:#ff8f8a}.item.over .clock{color:#ff8f8a}
+.item.soon{border-top-color:#ffb020}.item.soon .st{background:#2a1d05;color:#ffc450}
+.item.ok .st{background:#0c2a20;color:#3fd09e}
+.chat{margin-top:10px;background:#0c1220;border-radius:10px;padding:10px 12px;font-size:.84rem;color:#cdd8e6}
+.chat b{color:#ffc450}
+.screen-foot{font-size:.76rem;opacity:.75;margin-top:10px}
+
+section{padding:42px 0;border-bottom:1px solid var(--line)}
+.part{padding:28px 0 6px;border-bottom:0}
+.part .lbl{font:600 .8rem/1 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--lit)}
+.part h2{font-size:clamp(1.7rem,4.5vw,2.3rem);margin-top:8px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow);min-width:0}
+.card h3,.card h4{margin-top:0}
+.step-n{font:700 .8rem/1 "IBM Plex Mono",monospace;color:var(--lit);letter-spacing:.1em;margin-bottom:8px}
+.callout{border-left:4px solid var(--ice);background:var(--ice-soft);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+.callout.lit{border-color:var(--lit);background:var(--lit-soft)}
+.callout.heat{border-color:var(--heat);background:var(--heat-soft)}
+.callout.danger{border-color:var(--danger);background:var(--danger-soft)}
+.callout.ok{border-color:var(--ok);background:var(--ok-soft)}
+.callout p:last-child,.callout ul:last-child{margin-bottom:0}
+.safety{border:2px solid var(--danger);border-radius:10px;padding:16px 18px;background:var(--danger-soft)}
+.safety strong{color:var(--danger)}
+.table-wrap{overflow-x:auto;margin:12px 0 18px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{background:var(--surface-2);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.t{font-family:"IBM Plex Mono",monospace;white-space:nowrap;color:var(--ice);font-weight:600}
+.pill{display:inline-block;font:600 .72rem/1 "IBM Plex Mono",monospace;padding:4px 7px;border-radius:4px;letter-spacing:.04em;white-space:nowrap}
+.pill.v{background:var(--ok-soft);color:var(--ok)}
+.pill.x{background:var(--danger-soft);color:var(--danger)}
+.pill.w{background:var(--warn-soft);color:var(--warn)}
+.pill.i{background:var(--ice-soft);color:var(--ice)}
+.pill.l{background:var(--lit-soft);color:var(--lit)}
+.api{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:16px 18px;margin:16px 0;box-shadow:var(--shadow);min-width:0}
+.api h3{margin-top:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:4px 12px;font-size:.9rem;margin:8px 0 6px}
+.kv dt{color:var(--muted);font-weight:500}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+@media (max-width:560px){.kv{grid-template-columns:1fr}.kv dt{margin-top:6px}}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;margin:14px 0}
+.diagram svg{width:100%;height:auto;display:block}
+.check li{list-style:none;position:relative;padding-left:4px}
+.check{padding-left:1.4em}
+.check li::before{content:"";position:absolute;left:-1.3em;top:.45em;width:12px;height:12px;border:2px solid var(--ice);border-radius:3px}
+.timeline td:first-child{width:1%}
+footer{padding:30px 0 50px;color:var(--muted);font-size:.85rem}
+.ref li{overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="dot" aria-hidden="true"></span>Blackout Box</div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#problem">Problem</a><a href="#modes">Two modes</a><a href="#demo-script">Demo</a><a href="#rubric">Rubric</a><a href="#prizes">Prizes</a><a href="#safety">Safety</a>
+      <a href="#stack">Stack</a><a href="#arch">Architecture</a><a href="#cache">Cache</a><a href="#apis">APIs</a><a href="#prompts">Prompts</a><a href="#fourhour">4-Hour Rule</a>
+      <a href="#skill">Agent Skill</a><a href="#plan">Build plan</a><a href="#submit">Submit</a><a href="#fallback">Fallback</a><a href="#risks">Risks</a><a href="#sources">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span>Hack for Humanity: Miami</span><span>Track 01 · Four Forces, One City</span><span>Best Use of Gemma 4</span><span>Best Open-Source AI</span></div>
+    <h1>Blackout Box</h1>
+    <div class="tag">The app that works when nothing else does.</div>
+    <p class="pitch">Before the storm, Blackout Box uses Gemma 4 through the Gemini API to load your evacuation zone, the nearest places with power, FEMA's steps, Florida's early-refill law, the FDA storage rules for every medication you photograph, and the NWS forecast onto your device. After the storm, with no power and no signal, the same Gemma 4 runs locally through Ollama and keeps answering, in English, Español, and Kreyòl, from what it saved.</p>
+
+    <div class="screen" aria-label="Demo preview: the blackout screen that stays lit">
+      <div class="screen-head">
+        <span class="badge" id="badge"><i></i><span id="badge-txt">ONLINE · gemma-4-26b-a4b-it via Gemini API</span></span>
+        <button type="button" class="wifi" id="wifi" aria-pressed="false">Turn off Wi-Fi</button>
+      </div>
+      <div class="cards" id="cards"></div>
+      <div class="chat" id="chat"><b>Q (Kreyòl):</b> Èske ensilin mwen an toujou bon? Kouran an koupe depi 30 èdtan. <br><b>A:</b> Lantus ou a gen apeprè 23 jou ki rete sou etikèt FDA a (jiska 86°F, 28 jou). Kenbe l fre. Pa sispann pran l san ou pa gen yon lòt. <span class="muted">(source: openFDA set d5e07a0c…, cached 10:40 AM)</span></div>
+      <div class="screen-foot">Preview only. Press the button: the badge flips to offline (Ollama, gemma4:e4b) and the clocks keep ticking. That is the demo moment. Countdown math is the Cold Chain engine (label days × 0.9 safety margin, minus hours out of the fridge) plus the USDA 4-hour rule for food.</div>
+    </div>
+  </div>
+</div>
+
+<main>
+<div class="wrap"><section class="part"><div class="lbl">Part A</div><h2>Concept: for judges and the team</h2></section></div>
+
+<section id="problem"><div class="wrap">
+  <h2>The problem in Miami</h2>
+  <div class="callout lit">
+    <p><strong>One line:</strong> after a hurricane, the information people need most (am I in an evacuation zone, where is there power, is my insulin still good, what does FEMA want from me, what does this insurance letter say) lives on websites, and the websites are the first thing to disappear when the grid and the cell towers go down.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h4>Outages last days, not hours</h4><p>FEMA's own record for Miami-Dade shows the pattern: major disaster declarations for Hurricane Milton (DR-4834, Oct 2024) and Hurricane Nicole (DR-4680, Dec 2022), verified on OpenFEMA this morning. Every one of those came with power and connectivity loss. The apps people installed stop working at exactly the moment they matter.</p></div>
+    <div class="card"><h4>Heat turns a blackout into a medical problem</h4><p>Verified this morning at 10:20 AM ET: Miami International read 87.8°F with a 97.7°F heat index. Every insulin and GLP-1 label pulled today caps room-temperature storage at 86°F. Without a fridge, a closed apartment passes that line fast. USDA says refrigerated perishables are unsafe after 4 hours without power.</p></div>
+    <div class="card"><h4>Three languages, one emergency</h4><p>Miami's emergencies happen in English, Spanish, and Haitian Creole. Official guidance is mostly English PDFs. The people we are building for: a senior on insulin alone in a Little Haiti apartment, a Spanish-speaking family in Zone B who does not know they are in Zone B, a parent with a flooded ground floor and an insurance letter they cannot parse.</p></div>
+    <div class="card"><h4>The data exists, and it is public</h4><p>Miami-Dade publishes its hurricane evacuation zones (2,147 polygons, Zones A to E, verified today), its libraries and fire stations, and its shelters (layer is empty until activation). FEMA, NWS, FDA, USDA, and NREL all have free APIs. Nobody has packaged them to survive a blackout.</p></div>
+  </div>
+  <p class="small muted">Before putting Miami-Dade language or population figures in the pitch, pull them from Census ACS and cite them in the README. This brief does not assert any demographic numbers.</p>
+  <p><strong>The four forces:</strong> Water (surge zones, flooding), Air (the storm), Fire (heat with no AC), Land (where to shelter, where the power is). Blackout Box is the one tool that still answers all four when the grid is gone.</p>
+</div></section>
+
+<section id="modes"><div class="wrap">
+  <h2>Two modes, one model, the same prompts</h2>
+  <div class="grid2">
+    <div class="card"><div class="step-n">PREP MODE · ONLINE · BEFORE THE STORM</div><h4>Gemma 4 through the Gemini API</h4>
+      <ul>
+        <li>User enters an address or allows location. The app queries Miami-Dade's <code>HurricaneEvacZone_gdb</code> layer and caches the zone letter (verified: downtown 25.77,-80.19 is <strong>Zone B</strong>).</li>
+        <li>Caches nearest libraries, fire stations, open shelters (empty until activated; honest empty state), and NREL 24-hour EV chargers as "places likely to have power".</li>
+        <li>Caches the latest OpenFEMA declarations for Miami-Dade, FEMA's "what to do after" steps, Fla. Stat. 252.358 text, FDA emergency insulin guidance, and USDA's outage rule.</li>
+        <li>User photographs their medicine cabinet. Gemma 4 reads the labels into strict JSON; openFDA returns each drug's storage text; the validated rule is cached per drug.</li>
+        <li>Caches the NWS hourly forecast and latest observation. Everything is written to IndexedDB and the app shell to Cache Storage.</li>
+      </ul></div>
+    <div class="card"><div class="step-n">BLACKOUT MODE · OFFLINE · AFTER THE STORM</div><h4>Gemma 4 through Ollama on the laptop</h4>
+      <ul>
+        <li>The PWA loads from the service worker with no network. The server detects no internet and routes every AI call to <code>http://localhost:11434</code> (<code>gemma4:e4b</code>).</li>
+        <li>Photograph the fridge and the medicine cabinet: the <strong>4-Hour Rule</strong> module gives every item a countdown (USDA 4 h / 40°F for food; FDA label days for meds).</li>
+        <li>Photograph a damaged room, a flooded street, or an insurance letter. Gemma 4 describes hazards, extracts deadlines and claim numbers, and says what to do next from FEMA's cached steps.</li>
+        <li>Ask anything in English, Español, or Kreyòl. Answers are grounded only in the cached context; if the answer is not in the cache, the app says so.</li>
+        <li>Same four prompts, same JSON schemas, same banned-phrase filter as online. Only the transport changes.</li>
+      </ul></div>
+  </div>
+</div></section>
+
+<section id="demo-script"><div class="wrap">
+  <h2>The 2-minute demo, second by second</h2>
+  <p class="muted">Laptop mirrored to the screen, browser in phone-width responsive mode. No slides. Ollama is pre-warmed with <code>gemma4:e4b</code> loaded (see <a href="#fallback">fallbacks</a>). Q&amp;A is 1 minute afterward.</p>
+  <div class="table-wrap"><table class="timeline">
+    <thead><tr><th>Time</th><th>On screen</th><th>Say</th></tr></thead>
+    <tbody>
+      <tr><td class="t">0:00–0:12</td><td>Home screen, badge reads <em>ONLINE · gemma-4-26b-a4b-it · Gemini API</em>. Address field shows a downtown address, zone card says <strong>Zone B</strong>.</td><td>"It's Thursday. A Category 3 is coming Saturday. Blackout Box just told this family they live in Miami-Dade Evacuation Zone B, from the county's own map."</td></tr>
+      <tr><td class="t">0:12–0:30</td><td>Tap <em>Pack my box</em>. A progress list fills: zone ✓, 5 places with power ✓, FEMA ✓, NWS forecast ✓, FL early-refill law ✓, then camera → photo of 4 med boxes → 4 label cards with FDA storage rules.</td><td>"Before the storm, Gemma 4 through the Gemini API reads every label, and we pull each drug's real storage limit from the FDA. All of it is saved on the device."</td></tr>
+      <tr><td class="t">0:30–0:45</td><td><strong>Reach up and turn off the Wi-Fi on the laptop.</strong> Reload the page. It loads. Badge flips to <em>OFFLINE · gemma4:e4b · Ollama</em>.</td><td>"It's Sunday. No power. No cell. Watch." (pause) "Still here. Same model, now running on this laptop."</td></tr>
+      <tr><td class="t">0:45–1:10</td><td>Tap <em>4-Hour Rule</em>. Photo of a fridge shelf + the med boxes. Items appear with countdowns: milk <span class="pill x">OVER LIMIT</span>, chicken <span class="pill x">OVER LIMIT</span>, Lantus <span class="pill i">23 d left</span>, Trulicity <span class="pill i">11 d</span>, Humalog opened 20 d <span class="pill w">5 d</span>.</td><td>"Power's been out 30 hours. USDA says fridge food is done after 4 hours. The insulin is still inside its FDA label window, and we show the exact sentence. Notice we never say throw out the insulin; FDA says in an emergency you may still need it."</td></tr>
+      <tr><td class="t">1:10–1:30</td><td>Type in Kreyòl: <em>"Ki kote mwen ka jwenn kouran?"</em> Answer lists the nearest library, fire station, EV garage with distances and "checked Thursday 10:40 AM".</td><td>"Kreyòl question, Kreyòl answer, grounded in the data we cached. If it isn't in the box, the app says so instead of guessing."</td></tr>
+      <tr><td class="t">1:30–1:45</td><td>Photo of a sample insurance letter. Card shows: document type, claim number, a deadline, and "FEMA: register at DisasterAssistance.gov or call 1-800-621-3362 once you have service."</td><td>"Insurance letter, flooded room, downed wire: photograph it and get the next step, offline."</td></tr>
+      <tr><td class="t">1:45–1:55</td><td>GitHub repo: README names Gemma 4 and the Gemini API; <code>skills/blackout-box/SKILL.md</code>.</td><td>"Open source, MIT. The prompts and the countdown engine ship as an Agent Skill any model can run."</td></tr>
+      <tr><td class="t">1:55–2:00</td><td>Safety footer in 3 languages. Wi-Fi back on; badge returns to ONLINE.</td><td>"FDA, USDA, NWS, FEMA data. Not medical advice. In an emergency, call 911. Blackout Box."</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout heat"><p><strong>If Ollama is slow on stage (e4b with an image can take 20 to 60 s on a 16 GB Mac):</strong> the 4-Hour Rule screen shows the countdown cards immediately from the <em>cached</em> label rules while the photo read runs in the background with a visible "Reading photo on device…" bar. The Kreyòl Q&amp;A at 1:10 is text-only and short (under 15 s). If a call exceeds 45 s, the UI falls back to the <code>DEMO_MODE</code> fixture for that exact prompt and shows a small "cached answer" tag. Never stand in silence waiting for a token.</p></div>
+</div></section>
+
+<section id="rubric"><div class="wrap">
+  <h2>How it scores</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Criterion</th><th>Weight</th><th>How Blackout Box earns it</th></tr></thead>
+    <tbody>
+      <tr><td>Community impact</td><td>30%</td><td>It is built for the hours after a hurricane when everything else is dark: the senior on insulin, the Kreyòl and Spanish speakers, the family in Zone B. It answers the four questions that matter (am I in a zone, where is power, is my food and medicine safe, what do FEMA and my insurer need) using the county's and the federal government's own data. Ties go to community impact, and this concept is the one whose whole premise is the community's worst day.</td></tr>
+      <tr><td>Working build</td><td>25%</td><td>Live: address → zone, photo → FDA rules, pack to device, Wi-Fi off, reload, still works, Ollama answers. Every upstream call is cached; <code>DEMO_MODE</code> serves recorded fixtures if a service is down.</td></tr>
+      <tr><td>Use of AI and data</td><td>20%</td><td>One model, Gemma 4, in two deployments (Gemini API online, Ollama offline) with four scoped jobs: label read, grounded Q&amp;A, translation, scene/document read. Seven public data sources: Miami-Dade ArcGIS (evac zones, libraries, fire stations, shelters), OpenFEMA, NWS, openFDA, NREL/NLR, FDA guidance, USDA. Numbers come from deterministic code, never the model.</td></tr>
+      <tr><td>Originality and craft</td><td>15%</td><td>Offline-first is the product, not a feature. The "pack my box" ritual, the countdown UI shared by food and meds, source and checked-at stamps on every fact, and a live on-stage Wi-Fi kill.</td></tr>
+      <tr><td>Demo clarity</td><td>10%</td><td>One unforgettable beat at 0:30: the Wi-Fi goes off and the app keeps going. Then a Kreyòl answer. Done in 2:00.</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="prizes"><div class="wrap">
+  <h2>Prizes entered and what each requires</h2>
+  <div class="grid3">
+    <div class="card"><h4>Build for Miami · Track 01</h4><p>Four Forces, One City. Requires a public repo with an OSS license, a short description, technologies, track selection, and a 2-minute live demo. Blackout Box covers Water (surge zones, flood photos), Air (NWS forecast), Fire (heat and the 4-Hour Rule), Land (shelters, places with power).</p></div>
+    <div class="card"><h4>Best Use of Gemma 4</h4><p><strong>Requires Gemma 4 through the Gemini API</strong>, named in the README, visible in the code, and shown in the demo. Prep mode calls <code>models/gemma-4-26b-a4b-it</code> on <code>generativelanguage.googleapis.com</code> (both <code>gemma-4-26b-a4b-it</code> and <code>gemma-4-31b-it</code> are listed by the API this morning and on Google's Gemma-on-Gemini-API page). The README has a "Gemma 4" section, <code>server/ai/gemini.ts</code> is the file, and the demo badge shows the model ID on screen. The offline Ollama path is the same Gemma 4 family, which is the story.</p></div>
+    <div class="card"><h4>Best Open-Source AI Project (MLH)</h4><p>MIT license, open weights (Gemma 4 through Ollama is fully open; Workers AI Gemma is also open-weights), and an Agent Skill at <code>skills/blackout-box/</code> that runs with any model. The engine and prompts are the open part; say so in the submission text.</p></div>
+  </div>
+  <div class="callout danger"><p><strong>Blocker to clear first:</strong> the Gemini key on this machine returned HTTP 402 "prepayment credits depleted" this morning. The build agent must read <code>GEMINI_API_KEY</code> from env and run the smoke test in <a href="#api-gemini">API 1</a> before writing any other code. If the key is not funded by 11:30, build on the Workers AI path (<a href="#api-workers">API 2</a>) for the demo and keep the Gemini client ready to swap in; without a funded key the Gemma prize cannot be claimed honestly.</p></div>
+</div></section>
+
+<section id="safety"><div class="wrap">
+  <h2>Safety framing (judges will look for this)</h2>
+  <div class="safety">
+    <p><strong>Fixed footer on every result screen, in all 3 languages, hard-coded (never generated by the model):</strong></p>
+    <ul>
+      <li><strong>EN:</strong> This information comes from FDA, USDA, NWS, FEMA and Miami-Dade sources. It is not medical advice. Call your pharmacist or doctor. In an emergency, call 911.</li>
+      <li><strong>ES:</strong> Esta información proviene de fuentes de la FDA, USDA, NWS, FEMA y Miami-Dade. No es consejo médico. Llame a su farmacéutico o médico. En una emergencia, llame al 911.</li>
+      <li><strong>HT:</strong> Enfòmasyon sa a soti nan sous FDA, USDA, NWS, FEMA ak Miami-Dade. Se pa konsèy medikal. Rele famasyen oswa doktè ou. Si se yon ijans, rele 911. <span class="muted small">(Have a Kreyòl speaker at the event check this before the demo.)</span></li>
+    </ul>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="card"><h4>Rules the product follows</h4><ul>
+      <li>Numbers (countdowns, distances, zone letters) come from data plus deterministic code. The model reads photos, answers from the cache, translates, and describes. It never computes a deadline.</li>
+      <li>Every fact shows its source and when it was cached ("Miami-Dade HurricaneEvacZone_gdb, checked Thu 10:40 AM").</li>
+      <li><strong>Never tells anyone to stop or throw out insulin without a replacement</strong> (FDA emergency guidance). Frozen insulin is the one "do not use". Food is different: USDA says discard perishables after 4 h above 40°F, and the app says so plainly.</li>
+      <li>Hazard photos (downed wire, standing water near outlets, gas smell, structural damage) get a fixed "stay out, call 911 when you have service" card, not a generated opinion.</li>
+      <li>If the answer is not in the cached context, the app says "I don't have that saved" and suggests what to check when service returns. No guessing about shelters, roads, or curfews.</li>
+      <li>Banned-phrase filter from Cold Chain stays: reject model output matching <code>/no (la )?uses|don't use|do not use|stop taking|throw (it )?away|discard|pa sèvi/i</code> for any medication item whose status is not DO_NOT_USE, and fall back to fixed i18n copy. (Food items are exempt: "discard" is the correct USDA word there.)</li>
+    </ul></div>
+    <div class="card"><h4>Privacy and honesty</h4><ul>
+      <li>Photos are processed in memory and never uploaded anywhere except the chosen AI endpoint for that one call; offline they never leave the laptop. No accounts, no analytics.</li>
+      <li>openFDA's disclaimer ("do not rely on openFDA to make decisions regarding medical care") appears on the About screen and in the README.</li>
+      <li>"Places likely to have power" is a hint. Shelters show the honest empty state when the county layer is empty (it was, at 10:35 AM today).</li>
+      <li>Insurance-letter reads are labeled "extracted by AI, verify against the letter". Never estimate payouts or coverage.</li>
+    </ul></div>
+  </div>
+</div></section>
+
+<div class="wrap"><section class="part"><div class="lbl">Part B</div><h2>Build intel: for the coding agent</h2>
+<p>Everything marked VERIFIED below was checked with real calls on Sat Oct 10, 2026 between 10:30 and 10:55 AM ET, either in this brief's research (<code>reports/blackout-box-research/</code>) or in the Cold Chain brief's (<code>reports/cold-chain-research/</code>), which this brief reuses without re-running. Build time ends at <strong>3:30 PM ET</strong>; OrganizerHQ submission by <strong>3:45 PM</strong>.</p></section></div>
+
+<section id="stack"><div class="wrap">
+  <h2>Stack</h2>
+  <div class="grid3">
+    <div class="card"><h4>Vite + TypeScript PWA (<code>web/</code>)</h4><p>One line why: a service worker and IndexedDB are the only way a browser app survives a reload with no network, and Vite builds the shell list for precache in one command.</p></div>
+    <div class="card"><h4>Node 20 + Express (<code>server/</code>)</h4><p>One line why: keys stay server-side, every upstream response is cached to disk for DEMO_MODE, and the same process proxies Ollama so the browser never fights CORS.</p></div>
+    <div class="card"><h4>Ollama (<code>localhost:11434</code>)</h4><p>One line why: it is already installed, serves Gemma 4 with vision over a plain REST API, and keeps the model loaded between calls with <code>keep_alive</code>.</p></div>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="card"><h4>Front end details</h4><ul>
+      <li>Vanilla TS, no framework. Mobile-first CSS using this brief's tokens (dark screen, amber "lit" accent).</li>
+      <li>Camera: <code>&lt;input type="file" accept="image/*" capture="environment"&gt;</code>; resize to long edge 1280 px (smaller than Cold Chain's 1568 because Ollama on e4b is slower with big images), JPEG 0.85, base64.</li>
+      <li>Service worker <code>web/public/sw.js</code>: precache the Vite build manifest files + <code>index.html</code> + <code>manifest.webmanifest</code>; cache-first for the shell; network-first with cache fallback for <code>GET /api/cache/*</code>; passthrough for <code>POST /api/ai/*</code>.</li>
+      <li>IndexedDB via the native API (no library) in <code>web/src/db.ts</code>, DB name <code>blackout-box</code>, version 1, stores in the <a href="#cache">cache model</a>.</li>
+      <li>Online detection: <code>navigator.onLine</code> plus a 2-second <code>GET /api/health</code> probe; the server reports which AI provider is reachable.</li>
+      <li>Countdowns: one <code>setInterval(1000)</code> re-rendering from <code>deadlineAt</code>.</li>
+      <li>Vite dev proxy: <code>/api</code> → <code>http://localhost:8787</code>. Register the SW in dev too (<code>vite-plugin-pwa</code> is optional; a hand-written <code>sw.js</code> copied by Vite from <code>public/</code> is enough and has no plugin risk).</li>
+    </ul></div>
+    <div class="card"><h4>Back end details</h4><ul>
+      <li>Express via <code>tsx</code>, <code>express.json({limit:"12mb"})</code>, native <code>fetch</code>, no SDKs.</li>
+      <li><code>server/ai/index.ts</code> picks the provider: <code>AI_PROVIDER=auto</code> tries Gemini → Workers AI → Ollama (first that passes a 3 s health check); or force with <code>gemini|workers|ollama</code>.</li>
+      <li>Disk cache <code>cache/&lt;sha1(url+body)&gt;.json</code>; TTL labels 24 h, weather 10 min, places/zone 24 h, FEMA 6 h. <code>DEMO_MODE=1</code> = cache and <code>fixtures/</code> only.</li>
+      <li>Engine: <code>skills/blackout-box/scripts/engine.mjs</code> (pure ESM, no I/O) shared by server, web, and skill CLI. It contains the 4-Hour Rule and the Cold Chain verdict.</li>
+      <li>Tests: <code>node --test test/*.test.mjs</code>. No jest/vitest (machine load rule).</li>
+    </ul></div>
+  </div>
+  <h3>File tree</h3>
+<pre>blackout-box/
+├── LICENSE                         <span class="c"># MIT</span>
+├── README.md                       <span class="c"># pitch, Gemma 4 + Gemini API section, data sources cited, run, DEMO_MODE</span>
+├── .env.example                    <span class="c"># names only</span>
+├── .gitignore                      <span class="c"># .env, cache/, node_modules, dist</span>
+├── package.json                    <span class="c"># dev, build, start, test, record, warm</span>
+├── server/
+│   ├── index.ts                    <span class="c"># express, routes, static web/dist in prod</span>
+│   ├── cache.ts                    <span class="c"># disk cache + DEMO_MODE</span>
+│   ├── ai/index.ts                 <span class="c"># provider picker + shared callModel(job, input)</span>
+│   ├── ai/gemini.ts                <span class="c"># generateContent, inline_data</span>
+│   ├── ai/workers.ts               <span class="c"># CF AI Gateway OpenAI-compat, @cf/google/gemma-4-26b-a4b-it</span>
+│   ├── ai/ollama.ts                <span class="c"># POST /api/chat, images[], format schema</span>
+│   ├── data/mdc.ts                 <span class="c"># evac zone + libraries + fire stations + shelters</span>
+│   ├── data/fema.ts                <span class="c"># OpenFEMA declarations</span>
+│   ├── data/nws.ts                 <span class="c"># points → stations → latest + hourly</span>
+│   ├── data/openfda.ts             <span class="c"># label + enforcement (Cold Chain picker)</span>
+│   ├── data/nrel.ts                <span class="c"># nearest EV chargers</span>
+│   └── data/static.ts              <span class="c"># 252.358, FDA insulin guidance, USDA rule, FEMA steps (hand-copied, cited)</span>
+├── web/
+│   ├── index.html
+│   ├── public/ sw.js  manifest.webmanifest  icons/
+│   └── src/ main.ts  db.ts  offline.ts  api.ts  i18n.ts  render.ts  fourhour.ts  styles.css
+├── skills/blackout-box/
+│   ├── SKILL.md
+│   ├── scripts/ engine.mjs  pack.mjs  ask.mjs
+│   └── references/ PROMPTS.md  SOURCES.md  RULES.md
+├── fixtures/                       <span class="c"># recorded real responses (npm run record)</span>
+├── demo/ meds.jpg  fridge.jpg  letter.jpg  room.jpg
+└── test/ engine.test.mjs  fourhour.test.mjs  filter.test.mjs</pre>
+</div></section>
+
+<section id="arch"><div class="wrap">
+  <h2>Architecture: online path and offline path</h2>
+  <div class="diagram">
+  <svg viewBox="0 0 960 560" role="img" aria-label="Online path: PWA to Express to Gemini API, Workers AI, and public data APIs, written into IndexedDB and Cache Storage. Offline path: PWA from service worker to Express to Ollama, reading the cache.">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
+      <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--lit)"/></marker>
+    </defs>
+    <style>
+      .bx{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+      .bx.ice{fill:var(--ice-soft);stroke:var(--ice)}
+      .bx.lit{fill:var(--lit-soft);stroke:var(--lit)}
+      .bx.dark{fill:var(--black-b);stroke:var(--lit)}
+      .tt{fill:var(--ink);font:600 15px "IBM Plex Sans",sans-serif}
+      .tw{fill:var(--black-ink);font:600 15px "IBM Plex Sans",sans-serif}
+      .ts{fill:var(--muted);font:12px "IBM Plex Mono",monospace}
+      .tws{fill:#cdd8e6;font:12px "IBM Plex Mono",monospace}
+      .ln{stroke:var(--muted);stroke-width:1.5;fill:none;marker-end:url(#ah)}
+      .ln2{stroke:var(--lit);stroke-width:2;fill:none;marker-end:url(#ah2);stroke-dasharray:6 4}
+      .lbl{fill:var(--lit);font:700 12px "IBM Plex Mono",monospace;letter-spacing:.08em}
+      .lbl2{fill:var(--ice);font:700 12px "IBM Plex Mono",monospace;letter-spacing:.08em}
+    </style>
+    <text class="lbl2" x="20" y="24">ONLINE · PREP MODE</text>
+    <rect class="bx ice" x="20" y="36" width="190" height="150" rx="12"/>
+    <text class="tt" x="36" y="64">PWA (browser)</text>
+    <text class="ts" x="36" y="88">address / location</text>
+    <text class="ts" x="36" y="108">camera → base64</text>
+    <text class="ts" x="36" y="128">"Pack my box"</text>
+    <text class="ts" x="36" y="148">writes IndexedDB</text>
+    <text class="ts" x="36" y="168">SW precaches shell</text>
+    <rect class="bx" x="270" y="36" width="230" height="150" rx="12"/>
+    <text class="tt" x="286" y="64">Express :8787</text>
+    <text class="ts" x="286" y="88">POST /api/ai/:job</text>
+    <text class="ts" x="286" y="108">GET  /api/pack?lat&amp;lon</text>
+    <text class="ts" x="286" y="128">GET  /api/label /places</text>
+    <text class="ts" x="286" y="148">keys + disk cache</text>
+    <text class="ts" x="286" y="168">provider: gemini</text>
+    <rect class="bx" x="580" y="20" width="360" height="54" rx="10"/>
+    <text class="tt" x="596" y="42">Gemini API (Gemma 4 prize path)</text>
+    <text class="ts" x="596" y="62">models/gemma-4-26b-a4b-it:generateContent</text>
+    <rect class="bx" x="580" y="84" width="360" height="54" rx="10"/>
+    <text class="tt" x="596" y="106">Cloudflare AI Gateway → Workers AI (fallback)</text>
+    <text class="ts" x="596" y="126">@cf/google/gemma-4-26b-a4b-it</text>
+    <rect class="bx" x="580" y="148" width="360" height="92" rx="10"/>
+    <text class="tt" x="596" y="170">Public data</text>
+    <text class="ts" x="596" y="190">Miami-Dade ArcGIS: evac zone, libraries, fire, shelters</text>
+    <text class="ts" x="596" y="208">OpenFEMA · NWS · openFDA · NREL/NLR</text>
+    <text class="ts" x="596" y="226">+ static: F.S. 252.358, FDA insulin, USDA 4 h</text>
+    <path class="ln" d="M210,110 L268,110"/>
+    <path class="ln" d="M500,90 C540,90 540,47 578,47"/>
+    <path class="ln" d="M500,100 C540,100 540,111 578,111"/>
+    <path class="ln" d="M500,120 C540,120 540,194 578,194"/>
+    <!-- cache -->
+    <rect class="bx lit" x="20" y="230" width="480" height="70" rx="12"/>
+    <text class="tt" x="36" y="258">Device cache (the "box")</text>
+    <text class="ts" x="36" y="280">IndexedDB: kv · items · chat     Cache Storage: app shell     disk: fixtures/ + cache/</text>
+    <path class="ln" d="M115,186 L115,228"/>
+    <path class="ln" d="M385,186 L385,228"/>
+    <!-- offline -->
+    <text class="lbl" x="20" y="340">OFFLINE · BLACKOUT MODE  (Wi-Fi off, cell down)</text>
+    <rect class="bx dark" x="20" y="352" width="190" height="150" rx="12"/>
+    <text class="tw" x="36" y="380">PWA (from SW)</text>
+    <text class="tws" x="36" y="404">reads IndexedDB</text>
+    <text class="tws" x="36" y="424">fridge / meds photo</text>
+    <text class="tws" x="36" y="444">room / letter photo</text>
+    <text class="tws" x="36" y="464">EN / ES / HT chat</text>
+    <text class="tws" x="36" y="484">countdowns tick</text>
+    <rect class="bx dark" x="270" y="352" width="230" height="150" rx="12"/>
+    <text class="tw" x="286" y="380">Express :8787 (local)</text>
+    <text class="tws" x="286" y="404">health: internet=false</text>
+    <text class="tws" x="286" y="424">provider: ollama</text>
+    <text class="tws" x="286" y="444">same prompts, same JSON</text>
+    <text class="tws" x="286" y="464">engine.mjs computes</text>
+    <text class="tws" x="286" y="484">deadlines, never the model</text>
+    <rect class="bx dark" x="580" y="372" width="360" height="110" rx="10"/>
+    <text class="tw" x="596" y="400">Ollama localhost:11434</text>
+    <text class="tws" x="596" y="422">POST /api/chat · gemma4:e4b (12b optional)</text>
+    <text class="tws" x="596" y="442">messages[].images = [base64]</text>
+    <text class="tws" x="596" y="462">format = JSON schema · keep_alive 2h</text>
+    <path class="ln2" d="M210,427 L268,427"/>
+    <path class="ln2" d="M500,427 L578,427"/>
+    <path class="ln2" d="M115,302 L115,350"/>
+    <text class="ts" x="20" y="540">Only the transport changes between modes. The four prompts, the JSON schemas, the engine, and the banned-phrase filter are identical.</text>
+  </svg>
+  </div>
+</div></section>
+
+<section id="cache"><div class="wrap">
+  <h2>Data model for the cache</h2>
+  <p>IndexedDB database <code>blackout-box</code>, version 1, three object stores. Every record carries <code>source</code> and <code>fetchedAt</code> so the UI can print "checked Thu 10:40 AM". The same shape is exported as <code>blackout-pack.json</code> (download button) so a pack can be moved to a phone over AirDrop later.</p>
+<pre><span class="c">// store "kv"  keyPath: "key"</span>
+{ key: "profile",   value: { lat: 25.77, lon: -80.19, address: "...", lang: "ht" }, fetchedAt: ISO, ttlSec: null, source: "user" }
+{ key: "zone",      value: { zoneId: "B", category: 2, color: "O" } | { zoneId: null },  fetchedAt, ttlSec: 86400,
+                    source: "Miami-Dade HurricaneEvacZone_gdb/FeatureServer/0" }
+{ key: "places",    value: [{ name, kind: "library"|"fire_station"|"shelter"|"ev_charger", address, lat, lon,
+                             distanceMi, hours, phone, note: "likely has power" }], fetchedAt, ttlSec: 86400, source: "MDC ArcGIS + NREL/NLR" }
+{ key: "fema",      value: [{ disasterNumber, declarationType, declarationDate, incidentType, declarationTitle }], fetchedAt, ttlSec: 21600,
+                    source: "OpenFEMA DisasterDeclarationsSummaries v2" }
+{ key: "fema_steps",value: { en: [..], es: [..], ht: [..] }, source: "static.ts, cites fema.gov" }
+{ key: "forecast",  value: { outdoorF, heatIndexF, observedAt, station: "KMIA", hourly: [{ time, tempF }] }, ttlSec: 600, source: "NWS" }
+{ key: "law_252_358", value: { summary_en, summary_es, summary_ht, url }, source: "flsenate.gov" }
+{ key: "fda_insulin", value: { bullets_en: [...] , url }, source: "fda.gov" }
+{ key: "usda_outage", value: { fridgeHours: 4, maxSafeF: 40, freezerFullHours: 48, freezerHalfHours: 24, url }, source: "fsis.usda.gov" }
+{ key: "rule:lantus", value: Rule /* Cold Chain shape: kind,maxTempF,roomTempDays,inUseDays,doNotFreeze,quote,source */ , ttlSec: 86400 }
+
+<span class="c">// store "items"  keyPath: "id"   (scanned meds and food; feeds the 4-Hour Rule)</span>
+{ id: "i1", kind: "medication"|"food", name: "Lantus SoloStar", category: "refrigerated_med", ruleKey: "rule:lantus",
+  openedAt: ISO|null, addedAt: ISO, photoHash: sha1, confidence: 0.98 }
+
+<span class="c">// store "chat"  keyPath: "id"  autoIncrement</span>
+{ id, ts, lang, q, a, provider: "gemini"|"workers"|"ollama", model, sources: ["zone","places"], latencyMs }</pre>
+  <p class="small">Cache Storage (service worker) holds only the app shell: <code>index.html</code>, built JS/CSS, fonts if self-hosted (self-host IBM Plex in <code>web/public/fonts/</code> so the offline page is not unstyled), icons, manifest. Do not put API data in Cache Storage; it belongs in IndexedDB where the app can read and reason over it.</p>
+</div></section>
+
+<section id="apis"><div class="wrap">
+  <h2>APIs: endpoints, auth, real samples, gotchas</h2>
+
+  <div class="api" id="api-gemini">
+    <h3>1. Gemini API: Gemma 4 (prize path) <span class="pill v">MODEL LIST VERIFIED</span> <span class="pill x">KEY 402 THIS MORNING</span> <span class="pill w">JSON MODE UNVERIFIED</span></h3>
+    <dl class="kv">
+      <dt>Endpoint</dt><dd><code>POST https://generativelanguage.googleapis.com/v1beta/models/gemma-4-26b-a4b-it:generateContent</code> (31B: <code>gemma-4-31b-it</code>). Model list source: <code>GET /v1beta/models?pageSize=1000</code> returned both IDs this morning; Google's page <a href="https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api">Gemma on the Gemini API</a> lists the same two.</dd>
+      <dt>Auth</dt><dd>Header <code>x-goog-api-key: ${GEMINI_API_KEY}</code>. Read from env only. The key at <code>~/.config/gemini/nanobanana-key</code> returned <strong>HTTP 402 "prepayment credits depleted"</strong> today; do not assume it works. <strong>First task: run the smoke test below and report the status code.</strong></dd>
+      <dt>Verified features</dt><dd>Per Google's Gemma page: system instructions (<code>systemInstruction</code>), image input, multi-turn, function calling, Google Search grounding. The generateContent reference describes <code>systemInstruction</code> as "text only".</dd>
+      <dt>Image part</dt><dd>The generateContent reference's shell examples use snake_case <code>"inline_data": {"mime_type": "image/jpeg", "data": "&lt;base64&gt;"}</code>. (The REST API also accepts camelCase <code>inlineData/mimeType</code>; snake_case is what the official examples show, so use that.) Inline request total limit 20 MB; MIME types png, jpeg, webp, heic, heif.</dd>
+      <dt>JSON mode</dt><dd><strong>Not verified for Gemma.</strong> Neither the Gemma-on-Gemini-API page nor the structured-output page mentions Gemma, and the key could not be used to test. Do not depend on <code>responseMimeType</code>. Use the prompt-only JSON contract below plus fence stripping and one retry, which is what the Ollama path uses too. If the smoke test shows <code>generationConfig.responseMimeType: "application/json"</code> is accepted without a 400, keep it as a bonus; code must work without it.</dd>
+    </dl>
+    <h4>Smoke test (first thing, 11:00)</h4>
+<pre>curl -s -o /tmp/g.json -w "%{http_code}\n" \
+  "https://generativelanguage.googleapis.com/v1beta/models/gemma-4-26b-a4b-it:generateContent" \
+  -H "x-goog-api-key: $GEMINI_API_KEY" -H "Content-Type: application/json" \
+  -d '{"contents":[{"parts":[{"text":"Reply with the JSON {\"ok\":true}"}]}]}'
+<span class="c"># 200 → build Gemini path. 402/403 → tell Micah, build on Workers AI (API 2), keep gemini.ts ready.</span></pre>
+    <h4>Request shape (label read; same prompt text as Ollama)</h4>
+<pre>{
+  "systemInstruction": { "parts": [{ "text": "&lt;PROMPT P1 SYSTEM&gt;" }] },
+  "contents": [{ "role": "user", "parts": [
+    { "inline_data": { "mime_type": "image/jpeg", "data": "&lt;BASE64&gt;" } },
+    { "text": "Read every medication and food label in this photo." }
+  ]}],
+  "generationConfig": { "temperature": 0, "maxOutputTokens": 2048 }
+}
+<span class="c">// read: candidates[0].content.parts[0].text → strip ``` fences → JSON.parse → retry once on failure
+// also read candidates[0].finishReason and usageMetadata for the latency/cost log</span></pre>
+  </div>
+
+  <div class="api" id="api-workers">
+    <h3>2. Cloudflare AI Gateway → Workers AI Gemma 4 (online fallback) <span class="pill v">VERIFIED THIS MORNING (TEAM)</span></h3>
+    <dl class="kv">
+      <dt>Endpoint</dt><dd><code>POST https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/ai/v1/chat/completions</code> (OpenAI-compatible). CLI equivalent: <code>aig run @cf/google/gemma-4-26b-a4b-it '&lt;json&gt;'</code> (<code>~/.local/bin/aig</code>; skill at <code>~/.claude/skills/cloudflare-ai-gateway/SKILL.md</code>).</dd>
+      <dt>Auth</dt><dd><code>Authorization: Bearer ${CF_AIG_TOKEN}</code> + <code>cf-aig-gateway-id: default</code>. Local sources: <code>~/.config/cloudflare/claude-api-token</code> and <code>~/.config/cloudflare/account-id</code>. Load into env; never print or commit.</dd>
+      <dt>Model</dt><dd><code>@cf/google/gemma-4-26b-a4b-it</code>. Read a synthetic pharmacy label correctly this morning with an <code>image_url</code> data URI.</dd>
+      <dt>Prize note</dt><dd>Counts for Best Open-Source AI (open weights). Does <strong>not</strong> satisfy "Gemma 4 through the Gemini API".</dd>
+    </dl>
+<pre>{ "model": "@cf/google/gemma-4-26b-a4b-it", "max_tokens": 2000, "temperature": 0,
+  "messages": [
+    { "role": "system", "content": "&lt;PROMPT P1 SYSTEM&gt;" },
+    { "role": "user", "content": [
+      { "type": "image_url", "image_url": { "url": "data:image/jpeg;base64,&lt;BASE64&gt;" } },
+      { "type": "text", "text": "Read every medication and food label in this photo." } ] } ] }
+<span class="c">// response: choices[0].message.content (+ choices[0].message.reasoning_content, ignore it)
+// choices[0].finish_reason === "length" means raise max_tokens</span></pre>
+    <ul class="small">
+      <li><strong>Gotcha (verified):</strong> at <code>max_tokens: 400</code> it hit <code>finish_reason: "length"</code> because the model spends tokens in <code>reasoning_content</code>. Use <code>max_tokens ≥ 2000</code>.</li>
+      <li><strong>Gotcha from Cold Chain:</strong> this same OpenAI-compatible endpoint silently dropped images for <em>Anthropic</em> models. For <code>@cf/google/gemma-4-26b-a4b-it</code> the image was read correctly. Log <code>usage.prompt_tokens</code>; if it is under ~200 with an image attached, the image was dropped.</li>
+    </ul>
+  </div>
+
+  <div class="api" id="api-ollama">
+    <h3>3. Ollama: Gemma 4 offline <span class="pill v">REQUEST SHAPE VERIFIED (docs)</span> <span class="pill w">NOT RUN TODAY</span></h3>
+    <dl class="kv">
+      <dt>Install</dt><dd>Ollama is at <code>/opt/homebrew/bin/ollama</code>. Pull <strong>before 12:30 and only once</strong>: <code>ollama pull gemma4:e4b</code> (~7.5 GB; e2b is 4.6 GB if disk is tight; 12b is optional and only if RAM allows). This Mac has 16 GB RAM: run <strong>one</strong> model, never two.</dd>
+      <dt>Endpoint</dt><dd><code>POST http://localhost:11434/api/chat</code>. Source: <a href="https://github.com/ollama/ollama/blob/main/docs/api.md">ollama/docs/api.md</a> (fetched today; saved as <code>reports/blackout-box-research/ollama_api.md</code>).</dd>
+      <dt>Fields</dt><dd><code>model</code>, <code>messages[{role: system|user|assistant|tool, content, images?: [base64]}]</code>, <code>stream:false</code> for one JSON object, <code>format: "json" | &lt;JSON schema&gt;</code> (structured outputs), <code>options.temperature</code>, <code>options.num_ctx</code>, <code>keep_alive</code> (default 5m), <code>think</code> (boolean or "low"/"medium"/"high"/"max" for thinking models).</dd>
+      <dt>Images</dt><dd>Raw base64 strings in <code>messages[].images</code>, <strong>no</strong> <code>data:image/...;base64,</code> prefix (the docs example is a bare PNG base64).</dd>
+      <dt>Response</dt><dd><code>message.content</code> (string, JSON when <code>format</code> set), <code>done</code>, <code>done_reason</code>, <code>total_duration</code> (ns), <code>prompt_eval_count</code>, <code>eval_count</code>, <code>eval_duration</code>. Show <code>total_duration/1e9</code> seconds in the UI as "on-device, 12.4 s".</dd>
+      <dt>Pre-warm</dt><dd>"If the messages array is empty, the model will be loaded into memory": <code>curl localhost:11434/api/chat -d '{"model":"gemma4:e4b","messages":[],"keep_alive":"2h"}'</code>. Run this as <code>npm run warm</code> before the demo. <code>keep_alive: 0</code> unloads.</dd>
+      <dt>CORS</dt><dd>Call Ollama from the Express server, not the browser, so no <code>OLLAMA_ORIGINS</code> setting is needed.</dd>
+    </dl>
+<pre>POST http://localhost:11434/api/chat
+{ "model": "gemma4:e4b", "stream": false, "keep_alive": "2h", "think": false,
+  "format": { "type": "object", "properties": { "items": { "type": "array" }, "unreadable_count": { "type": "integer" } },
+              "required": ["items", "unreadable_count"] },
+  "options": { "temperature": 0, "num_ctx": 8192 },
+  "messages": [
+    { "role": "system", "content": "&lt;PROMPT P1 SYSTEM&gt;" },
+    { "role": "user", "content": "Read every medication and food label in this photo.", "images": ["&lt;BASE64 no prefix&gt;"] } ] }
+
+<span class="c">// documented response shape (api.md, "Chat request (with images)")</span>
+{ "model": "gemma4:e4b", "created_at": "...", "message": { "role": "assistant", "content": "{...json...}" },
+  "done": true, "done_reason": "stop", "total_duration": 1668506709, "prompt_eval_count": 26, "eval_count": 83 }</pre>
+    <ul class="small">
+      <li><strong>Unverified:</strong> that <code>gemma4</code> tags honor <code>think:false</code>, that the <code>format</code> schema works with images on gemma4, and e4b latency with a 1280 px photo on this Mac. Test all three at 12:30 with <code>demo/meds.jpg</code> and write the numbers into the README. If <code>format</code> + image misbehaves, drop <code>format</code> and rely on the prompt JSON contract + fence stripping (same as Gemini).</li>
+      <li>Keep <code>num_ctx</code> at 8192 for e4b on 16 GB; the grounded Q&amp;A context block must be trimmed to fit (see P2: pass only the relevant kv keys, max ~3,000 tokens).</li>
+      <li>One Ollama request at a time. Queue in <code>ai/ollama.ts</code> with a simple promise chain; never fire parallel image reads.</li>
+    </ul>
+  </div>
+
+  <div class="api" id="api-zone">
+    <h3>4. Miami-Dade ArcGIS: Hurricane Evacuation Zone (lat/lon → zone) <span class="pill v">VERIFIED 10:52 ET</span></h3>
+    <dl class="kv">
+      <dt>Layer</dt><dd><code>https://services.arcgis.com/8Pc9XBTAsYuxx9Ny/arcgis/rest/services/HurricaneEvacZone_gdb/FeatureServer/0</code> (found via the hub search API <code>gis-mdc.opendata.arcgis.com/api/search/v1/collections/all/items?q=evacuation zone</code>, title "Hurricane Evacuation Zone"). Polygon layer, <strong>2,147 features</strong>. Auth: none.</dd>
+      <dt>Fields</dt><dd><code>OBJECTID, CATEGORY (smallint 0–5), ZONEID (string, "A"–"E" or null), COLOR, TTRRSS, TRS, SS, GRIDCOL, GRIDROW, GRID, MAPBOOK, EditDate, Shape__Area, Shape__Length</code></dd>
+      <dt>Point query</dt><dd><code>/0/query?geometry={lon}%2C{lat}&amp;geometryType=esriGeometryPoint&amp;inSR=4326&amp;spatialRel=esriSpatialRelIntersects&amp;outFields=ZONEID,CATEGORY,COLOR&amp;returnGeometry=false&amp;f=json</code></dd>
+    </dl>
+<pre><span class="c">// 25.77, -80.19 (downtown)  → 1 feature</span>
+{ "features": [{ "attributes": { "OBJECTID": 848, "CATEGORY": 2, "ZONEID": "B", "COLOR": "O", "MAPBOOK": "Y" } }] }
+<span class="c">// 25.79, -80.13 (Miami Beach) → 1 feature: ZONEID "B", CATEGORY 2</span>
+
+<span class="c">// zone census (groupBy ZONEID, CATEGORY), real:</span>
+A/1: 426 · B/2: 242 · C/3: 313 · D/4: 333 · E/5: 233 · null/0: 579 · A/0: 21</pre>
+    <ul class="small">
+      <li>Read <code>ZONEID</code>. <code>null</code> (579 polygons, CATEGORY 0) means "not in an evacuation zone". 21 polygons have ZONEID "A" with CATEGORY 0; I haven't verified why. Treat ZONEID as authoritative and show CATEGORY only as a secondary number.</li>
+      <li>Zero features returned means the point is outside the county's mapped area: say "no Miami-Dade zone found for this location".</li>
+      <li>Zone letters are <strong>planning</strong> zones. Whether an evacuation is <em>ordered</em> for a zone is a separate decision by the county; the hub lists an "Evacuation Order" web app but no queryable layer was found for it today. Say: "Zone B. Check whether Zone B has been ordered to evacuate (miamidade.gov or 311)."</li>
+      <li>Shelters: <code>EvacuationCenterShelters_Open</code> and <code>EvacuationCenter_gdb</code> both returned <strong>0 features at 10:35 AM</strong> (Cold Chain research). Build the live query with an honest empty state. Libraries (50) and fire stations (75) are the "likely to have power" fallback. A hub search for "cooling center" returned nothing today; do not label libraries as cooling centers.</li>
+    </ul>
+  </div>
+
+  <div class="api" id="api-fema">
+    <h3>5. OpenFEMA: disaster declarations for Miami-Dade <span class="pill v">VERIFIED 10:52 ET</span></h3>
+    <dl class="kv">
+      <dt>Endpoint</dt><dd><code>GET https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?$filter=state eq 'FL' and designatedArea eq 'Miami-Dade (County)'&amp;$orderby=declarationDate desc&amp;$top=3&amp;$select=disasterNumber,declarationType,declarationDate,incidentType,declarationTitle,incidentBeginDate,incidentEndDate,designatedArea,ihProgramDeclared,iaProgramDeclared</code> (URL-encode spaces as <code>%20</code>). Auth: none.</dd>
+      <dt>Fields</dt><dd><code>disasterNumber, declarationType (DR|EM|FM), declarationDate, incidentType, declarationTitle, incidentBeginDate, incidentEndDate, designatedArea, ihProgramDeclared, iaProgramDeclared</code></dd>
+    </dl>
+<pre>{ "metadata": { "rundate": "2026-10-10T14:52:13.975Z", "top": 3, "entityname": "DisasterDeclarationsSummaries", "version": "v2" },
+  "DisasterDeclarationsSummaries": [
+    { "disasterNumber": 4834, "declarationType": "DR", "declarationDate": "2024-10-11T00:00:00.000Z", "incidentType": "Hurricane",
+      "declarationTitle": "HURRICANE MILTON", "incidentBeginDate": "2024-10-05T00:00:00.000Z", "incidentEndDate": "2024-11-02T00:00:00.000Z",
+      "designatedArea": "Miami-Dade (County)", "ihProgramDeclared": false, "iaProgramDeclared": false },
+    { "disasterNumber": 3622, "declarationType": "EM", "declarationDate": "2024-10-07T00:00:00.000Z", "declarationTitle": "HURRICANE MILTON", ... },
+    { "disasterNumber": 4680, "declarationType": "DR", "declarationDate": "2022-12-13T00:00:00.000Z", "declarationTitle": "HURRICANE NICOLE", ... } ] }</pre>
+    <ul class="small">
+      <li><code>metadata.count</code> is 0 unless you add <code>$count=true</code>; ignore it.</li>
+      <li>Use it for two things: (a) the "FEMA declarations for your county" card with the newest DR number, and (b) the trigger check for F.S. 252.358 (a Governor's state of emergency is a separate state action; a federal EM/DR is strong evidence but not the statute's trigger, so word it as "likely qualifies, ask your pharmacy").</li>
+      <li>Individual Assistance (<code>iaProgramDeclared</code>) was <code>false</code> on all three. Only tell users to apply for FEMA IA when it is true for the current declaration; otherwise show the general "register at DisasterAssistance.gov / 1-800-621-3362" step from <code>static.ts</code>.</li>
+    </ul>
+  </div>
+
+  <div class="api" id="api-reuse">
+    <h3>6. Reused from Cold Chain (verified this morning; do not re-verify) <span class="pill v">VERIFIED 10:30–10:45 ET</span></h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Source</th><th>Call</th><th>What Blackout Box caches</th><th>Gotchas to keep</th></tr></thead>
+      <tbody>
+        <tr><td>openFDA drug label</td><td><code>GET https://api.fda.gov/drug/label.json?search=openfda.brand_name:"lantus"+AND+_exists_:storage_and_handling&amp;limit=5</code>, header <code>X-Api-Key</code> optional</td><td>Per-drug <code>Rule</code> from <code>storage_and_handling[0]</code> → fallback <code>how_supplied[0]</code>; <code>set_id</code>, <code>effective_time</code>. Real text today: Lantus 86°F/28 d, Humalog 28 d total, Humalog Mix 10 d, Trulicity 14 d, metformin excursions to 86°F.</td><td>Repackager labels (A-S Medication, NDC 50090) lack storage text; "ozempic" matches oral tablets; victoza/synthroid have no storage field; 404 NOT_FOUND = empty. Regex-first rule parser; LLM only if regex fails; code validates numbers appear in the quote.</td></tr>
+        <tr><td>openFDA enforcement</td><td><code>GET /drug/enforcement.json?search=product_description:"&lt;brand&gt;"+AND+status:"Ongoing"&amp;sort=report_date:desc&amp;limit=5</code></td><td>Recall badge per drug (brand match only).</td><td>Generic words match unrelated products; word it as "recalls mentioning this product".</td></tr>
+        <tr><td>NWS</td><td><code>/points/25.77,-80.19</code> → MFL 110,50 → <code>/stations/KMIA/observations/latest</code> (°C) + <code>/gridpoints/MFL/110,50/forecast/hourly</code> (°F). <code>User-Agent</code> header required.</td><td><code>forecast</code> kv record; feeds the indoor estimate.</td><td>Observations are °C, hourly is °F; values can be null → next station KOPF, KHWO.</td></tr>
+        <tr><td>NREL / NLR AFDC</td><td><code>GET https://developer.nlr.gov/api/alt-fuel-stations/v1/nearest.json?latitude=25.77&amp;longitude=-80.19&amp;fuel_type=ELEC&amp;status=E&amp;access=public&amp;radius=5&amp;limit=5</code>, <code>X-Api-Key</code></td><td>EV chargers as "likely has power" (303 results downtown; ICON Brickell garage 0.09 mi, 24 h).</td><td>Use <code>developer.nlr.gov</code> (nrel.gov host times out); <code>location=</code> param is gone.</td></tr>
+        <tr><td>Miami-Dade ArcGIS places</td><td><code>/Library_gdb/FeatureServer/0/query</code>, <code>/FireStation_gdb/...</code>, <code>/EvacuationCenterShelters_Open/...</code> with the point+distance query from the Cold Chain brief</td><td>Libraries 50, fire stations 75, shelters 0 (today).</td><td>No distance field; compute haversine. Don't call libraries cooling centers.</td></tr>
+        <tr><td>Fla. Stat. § 252.358</td><td>Static text, <a href="https://www.flsenate.gov/Laws/Statutes/2025/252.358">flsenate.gov/Laws/Statutes/2025/252.358</a></td><td>Early-refill card: insurers must waive "refill too soon" and cover at least a 30-day supply under a hurricane warning, a Governor-declared emergency, or an activated county EOC; refills must remain.</td><td>Not a trigger the app can verify offline; say "likely applies, ask your pharmacy".</td></tr>
+        <tr><td>FDA emergency insulin guidance</td><td>Static text, <a href="https://www.fda.gov/drugs/emergency-preparedness-drugs/information-regarding-insulin-storage-and-switching-between-products-emergency">fda.gov</a></td><td>59–86°F up to 28 days; above 86°F in an emergency it may still need to be used; never use frozen insulin; replace when storage is available; no dosing conversions in the app.</td><td>Drives the HARD RULES in P2.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="api" id="api-usda">
+    <h3>7. USDA: food safety after a power outage (citation) <span class="pill w">PAGES 403 TO CURL; RULE FROM USDA SEARCH SNIPPETS</span></h3>
+    <p>Primary citation: USDA FSIS, <a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/emergencies/keep-your-food-safe-during-emergencies">Keep Your Food Safe During Emergencies: Power Outages, Floods &amp; Fires</a>. Both <code>fsis.usda.gov</code> and <code>foodsafety.gov</code> returned HTTP 403 to direct fetches today (Akamai bot block), so the wording below is from USDA search snippets, not a page read; the sibling 4-Hour Rule brief owns the exact quotes. Rule as published by FSIS: keep the refrigerator at 40°F or below; an unopened refrigerator keeps food safe for about <strong>4 hours</strong>; after 4 hours without power, <strong>discard refrigerated perishables</strong> (meat, poultry, fish, eggs, leftovers, cut produce); a full freezer holds about <strong>48 hours</strong> (24 h if half full) unopened; "when in doubt, throw it out". FSIS's refrigeration page also uses a 2-hour-above-40°F test for individual foods; the app uses the 4-hour-without-power rule for the countdown and shows the 2-hour note in the detail view.</p>
+    <p class="small">FoodKeeper dataset (per-food storage times, for the sibling module): <a href="https://catalog.data.gov/dataset/fsis-foodkeeper-data">catalog.data.gov/dataset/fsis-foodkeeper-data</a> (HTTP 200 today; the download link inside it was not fetched). Blackout Box itself only needs the category-level rule above.</p>
+  </div>
+</div></section>
+
+<section id="prompts"><div class="wrap">
+  <h2>The Gemma 4 prompts (identical text for Gemini API and Ollama)</h2>
+  <p>Store these in <code>skills/blackout-box/references/PROMPTS.md</code> and import the same strings in <code>server/ai/index.ts</code>. The system text goes in <code>systemInstruction</code> (Gemini), <code>messages[0].role=system</code> (Workers AI, Ollama). Post-process every reply the same way: strip <code>```</code> fences, <code>JSON.parse</code>, retry once with "Your last reply was not valid JSON. Reply with only the JSON object.", then fall back to fixed copy.</p>
+
+  <h3>P1 · LABEL_READ (vision → strict JSON)</h3>
+<pre>SYSTEM:
+You read medication packaging and food labels in photos for a hurricane blackout assistant.
+Identify every distinct item visible: medication cartons, pens, vials, bottles, blister packs, and food packages.
+Return ONLY minified JSON, no markdown fences, matching exactly:
+{"items":[{"id":"i1","kind":"medication"|"food"|"other","label_text":string,
+  "brand_name":string|null,"generic_name":string|null,"strength":string|null,
+  "dosage_form":"pen"|"vial"|"cartridge"|"tablet"|"capsule"|"liquid"|"other"|null,
+  "route_hint":"subcutaneous"|"oral"|"other"|null,"ndc":string|null,
+  "food_category":"dairy"|"meat_poultry_fish"|"eggs"|"leftovers"|"cut_produce"|"condiment"|"frozen"|"shelf_stable"|null,
+  "position":"left"|"center"|"right"|"top"|"bottom"|null,"confidence":number}],
+ "unreadable_count":number}
+Rules:
+- Copy printed text exactly into label_text. Never invent a name you cannot read.
+- If a field is not visible, use null and lower confidence.
+- One entry per distinct product, even if several identical packages are visible.
+- No medical advice, no commentary, no text outside the JSON.
+USER: [image] + "Read every medication and food label in this photo."</pre>
+
+  <h3>P2 · GROUNDED_QA (cached context → answer in the user's language)</h3>
+<pre>SYSTEM:
+You are Blackout Box, an offline hurricane assistant for Miami-Dade. You are not a doctor, lawyer, or official.
+Answer ONLY from the CONTEXT JSON below. It was saved on this device before the storm; each record has "source" and "fetchedAt".
+If the answer is not in CONTEXT, say in the user's language that you do not have it saved and what to check when service returns.
+Language: {lang} (en = English, es = Spanish, ht = Haitian Creole). Reading level: 6th grade. Maximum 120 words.
+Keep drug names, numbers, zone letters, and °F exactly as written; add °C in parentheses for temperatures.
+HARD RULES:
+- NEVER tell the user to stop taking, skip, or throw away insulin or any medication unless the item's status is DO_NOT_USE.
+  For OVER_LIMIT medication say: keep using only if no replacement, keep it cool, check blood sugar more often, get a replacement.
+- For food with status OVER_LIMIT, say plainly that USDA says to discard it.
+- Never give dosing numbers, product-switching instructions, or legal conclusions. Say "ask your pharmacist / your insurer".
+- If the question describes a downed wire, gas smell, standing water near electricity, chest pain, or trouble breathing, set call_911 true.
+- Do not add a disclaimer; the app adds a fixed one.
+Return ONLY JSON: {"answer":string,"sources":[string],"call_911":boolean}
+CONTEXT: {context_json}
+USER: {question}</pre>
+  <p class="small"><code>context_json</code> is built server-side from the kv store: always include <code>profile</code>, <code>zone</code>, <code>usda_outage</code>, <code>fda_insulin</code>; add <code>places</code> for where/power questions, <code>fema</code> + <code>fema_steps</code> for FEMA/insurance questions, <code>forecast</code> for weather, <code>law_252_358</code> and the relevant <code>rule:*</code> + item verdicts for medication questions. A keyword router in <code>ai/index.ts</code> picks the keys; cap the block at ~3,000 tokens for e4b.</p>
+
+  <h3>P3 · TRANSLATE (fixed copy and answers → es / ht)</h3>
+<pre>SYSTEM:
+Translate the user's text into {lang} (es = Spanish as spoken in Miami, ht = Haitian Creole / Kreyòl ayisyen).
+Keep drug names, product names, numbers, units (°F, °C, hours, days), zone letters, URLs, and phone numbers unchanged.
+Plain, short sentences. Do not add or remove information. Do not add a disclaimer.
+Return ONLY JSON: {"text":string}
+USER: {text}</pre>
+
+  <h3>P4 · SCENE_READ (damaged room, flooded street, insurance letter → structured description)</h3>
+<pre>SYSTEM:
+You describe one photo for a hurricane blackout assistant. Return ONLY minified JSON matching:
+{"scene":"room_damage"|"flooded_street"|"document"|"medication"|"food"|"other",
+ "description":string,
+ "hazards":["downed_wire"|"standing_water"|"water_near_electrical"|"structural_damage"|"mold"|"gas_smell_reported"|"broken_glass"|"none"],
+ "document":{"type":"insurance_letter"|"fema_letter"|"bill"|"prescription"|"other","sender":string|null,
+   "claim_or_case_number":string|null,"dates":[string],"deadlines":[string],"amounts_mentioned":[string],
+   "action_requested":string|null}|null,
+ "confidence":number}
+Rules:
+- Describe only what is visible. Do not estimate repair costs, coverage, or payouts. Do not say whether a claim will be approved.
+- For documents, copy numbers and dates exactly as printed. If unreadable, use null.
+- For damage photos, list every hazard you can see. Do not say a space is safe.
+- No medical, legal, or financial advice. No text outside the JSON.
+USER: [image] + "Describe this photo."</pre>
+  <div class="callout danger"><p><strong>Code-side guards (same as Cold Chain, verified reason):</strong> a soft Spanish prompt once answered "No uses esta pluma hasta hablar con un farmacéutico" for an OVER_LIMIT pen. Run the banned-phrase regex on P2 answers for medication items; if it trips and status ≠ DO_NOT_USE, replace with the fixed i18n status copy. For P4, if <code>hazards</code> contains anything but <code>none</code>, the UI shows the fixed "Stay out. Call 911 when you have service." card above the description, in the user's language, from i18n (not from the model).</p></div>
+</div></section>
+
+<section id="fourhour"><div class="wrap">
+  <h2>The 4-Hour Rule module interface</h2>
+  <p>The sibling brief (<code>docs/four-hour-rule-brief.html</code>) specifies the engine in depth. Blackout Box only needs this contract so the engine plugs in as one file, <code>skills/blackout-box/scripts/engine.mjs</code>, and one UI component, <code>web/src/fourhour.ts</code>.</p>
+<pre><span class="c">// engine.mjs (pure, no I/O) — types as JSDoc</span>
+/** @typedef {"perishable_fridge"|"frozen"|"shelf_stable"|"refrigerated_med"|"room_temp_med"} Category */
+/** @typedef {{ id:string, name:string, category:Category,
+ *   limits:{ maxTempF?:number, hoursWithoutPower?:number, roomTempDays?:number, inUseDays?:number, doNotFreeze?:boolean },
+ *   source:{ kind:"USDA"|"FDA_LABEL"|"USER", ref:string, quote?:string, fetchedAt?:string },
+ *   openedAt?:string|null }} Item */
+/** @typedef {{ outageStartedAt:string, indoorTempF?:number|null, indoorSource?:"user"|"estimate",
+ *   doorOpened?:boolean, freezerFull?:boolean, frozen?:boolean }} Exposure */
+/** @typedef {{ id:string, status:"OK"|"USE_SOON"|"OVER_LIMIT"|"DO_NOT_USE"|"UNKNOWN",
+ *   deadlineAt:string|null, hoursLeft:number|null, reasons:string[], quote?:string, source?:string }} Verdict */
+
+export const SAFETY_MARGIN = 0.9;      <span class="c">// meds only (Cold Chain)</span>
+export const USE_SOON_HOURS = 48;      <span class="c">// meds</span>
+export const USE_SOON_FOOD_HOURS = 1;  <span class="c">// food: warn in the last hour</span>
+
+<span class="c">/** @param {Item[]} items @param {Exposure} x @param {number} [now] @returns {Verdict[]} */</span>
+export function fourHourRule(items, x, now = Date.now()) { /* sibling brief owns the body */ }
+
+<span class="c">// Expected behavior the UI relies on (write these as tests):
+//  perishable_fridge: deadline = outageStartedAt + (limits.hoursWithoutPower ?? 4) h;  OVER_LIMIT after deadline;
+//                     USDA 40°F: if indoorTempF known and fridge opened, same deadline (no extension)
+//  frozen:            deadline = outageStartedAt + (freezerFull ? 48 : 24) h
+//  shelf_stable:      OK, deadlineAt null
+//  refrigerated_med:  Cold Chain verdict(): OVER_LIMIT if indoorTempF > maxTempF; hoursLeft = min(roomTempDays*24*0.9 - hoursOut,
+//                     inUseDays*24*0.9 - openedHours); DO_NOT_USE only if frozen && doNotFreeze
+//  room_temp_med:     OK unless indoorTempF > maxTempF → OVER_LIMIT ("ask pharmacist, don't stop")
+//  anything without limits → UNKNOWN</span></pre>
+  <h4>Shared countdown UI (<code>fourhour.ts</code>)</h4>
+  <ul>
+    <li>One card per item: name, category icon, <code>clock</code> (<code>Xd HH:MM:SS</code> or "Over limit" or "No clock"), status pill, one-line "why" with the quote or USDA rule, and the source + fetchedAt stamp.</li>
+    <li>Colors: OK blue, USE_SOON amber, OVER_LIMIT red, DO_NOT_USE red with a frozen icon, UNKNOWN grey. The hero preview on this page is the reference rendering.</li>
+    <li>Controls above the cards: outage start (datetime, default "30 h ago" in DEMO_MODE), indoor temperature (thermometer entry or NWS estimate, labeled), fridge door opened (toggle), freezer full/half.</li>
+    <li>Food OVER_LIMIT copy uses "discard" (USDA). Medication OVER_LIMIT copy never does.</li>
+    <li>The cards render first from cached rules; the photo read updates or adds items when it returns. Never block the cards on the model.</li>
+  </ul>
+</div></section>
+
+<section id="skill"><div class="wrap">
+  <h2>Agent Skill packaging: <code>skills/blackout-box/</code></h2>
+  <p>Same <a href="https://agentskills.io/specification">Agent Skills spec</a> rules as Cold Chain (verified today): <code>SKILL.md</code> with YAML frontmatter; <code>name</code> must match the directory, lowercase with hyphens, ≤64 chars; <code>description</code> ≤1024 chars saying what and when; optional <code>license</code>, <code>compatibility</code>, <code>metadata</code>. Keep under 500 lines. Validate with <code>skills-ref validate ./skills/blackout-box</code> (install command not verified; check that repo's README).</p>
+<pre>---
+name: blackout-box
+description: Offline-first hurricane assistant for Miami-Dade. Packs a device cache before a storm (evacuation zone from Miami-Dade ArcGIS, nearest libraries/fire stations/shelters/EV chargers, OpenFEMA declarations, NWS forecast, FDA label storage rules for photographed medications, Florida early-refill law 252.358, USDA 4-hour food rule) and answers questions from that cache after power and cell service are lost, in English, Spanish, or Haitian Creole. Includes the 4-Hour Rule countdown engine for food and refrigerated medications. Use when someone is preparing for or living through a hurricane blackout, asks whether food or insulin is still safe, where to find power, what zone they are in, or what FEMA or an insurer letter wants.
+license: MIT
+compatibility: Node 20+. Online packing needs internet; offline answering needs any local or remote chat model (tested with Gemma 4 via Ollama gemma4:e4b and via the Gemini API gemma-4-26b-a4b-it). No model is required for the countdown engine.
+metadata:
+  author: blackout-box-team
+  version: "0.1.0"
+  event: "Hack for Humanity Miami 2026"
+  model-tested: "gemma-4-26b-a4b-it (Gemini API), gemma4:e4b (Ollama)"
+---
+
+# Blackout Box
+
+## When to use
+Before a hurricane: build the pack. After: answer from the pack with no network.
+
+## Steps
+1. Pack (online): `node scripts/pack.mjs --lat 25.77 --lon -80.19 --meds "Lantus,Humalog,Trulicity,metformin" --out pack.json`
+   Writes zone, places, fema, forecast, rules, law_252_358, fda_insulin, usda_outage with source + fetchedAt.
+2. Countdowns (no model): `node scripts/engine.mjs --pack pack.json --outage "2026-10-10T04:00:00-04:00" --temp 84`
+   Prints a Verdict[] for every item in the pack.
+3. Ask (any model): `node scripts/ask.mjs --pack pack.json --lang ht "Ki kote mwen ka jwenn kouran?"`
+   Builds the P2 GROUNDED_QA prompt from references/PROMPTS.md and sends it to OLLAMA_URL (default http://localhost:11434,
+   model gemma4:e4b) or, if GEMINI_API_KEY is set and online, to the Gemini API gemma-4-26b-a4b-it.
+
+## Safety rules (must follow)
+- Numbers and deadlines come from engine.mjs, never from the model.
+- Never tell the user to stop or discard medication unless status is DO_NOT_USE (frozen). Food past the USDA limit: say discard.
+- If the pack does not contain the answer, say so. Do not guess shelters, roads, curfews, or coverage.
+- Hazard photos (downed wires, water near electricity, gas smell): stay out, call 911 when service returns.
+- End every answer with: "FDA, USDA, NWS, FEMA and Miami-Dade data. Not medical advice. In an emergency call 911."
+
+## Details
+[references/PROMPTS.md](references/PROMPTS.md) · [references/RULES.md](references/RULES.md) · [references/SOURCES.md](references/SOURCES.md)</pre>
+  <ul class="small">
+    <li><code>scripts/ask.mjs</code> uses only Node built-ins and <code>fetch</code>; the model is swappable by env (<code>OLLAMA_URL</code>, <code>OLLAMA_MODEL</code>, <code>GEMINI_API_KEY</code>). That is the "works with any model" claim for the open-source prize.</li>
+    <li><code>scripts/engine.mjs</code> is the same file the app imports. README line: "the app is a PWA over this open skill".</li>
+  </ul>
+</div></section>
+
+<section id="plan"><div class="wrap">
+  <h2>Timeboxed build plan (11:00 AM → 3:30 PM ET)</h2>
+  <div class="table-wrap"><table class="timeline">
+    <thead><tr><th>Time</th><th>Work</th><th>Checkpoint (must be true to move on)</th></tr></thead>
+    <tbody>
+      <tr><td class="t">11:00–11:10</td><td><strong>Gemini smoke test</strong> (API 1). Start <code>ollama pull gemma4:e4b</code> in a terminal tab (one pull, nothing else heavy). Report the Gemini status code to Micah.</td><td>Status code known. Pull running. Decision made: Gemini path or Workers AI path for the online mode.</td></tr>
+      <tr><td class="t">11:10–11:30</td><td>Scaffold: Vite + TS, Express + tsx, MIT LICENSE, <code>.env.example</code>, <code>.gitignore</code>, <code>sw.js</code> + manifest, <code>db.ts</code>. Public GitHub repo, first push.</td><td><code>npm run dev</code> serves the page; reload with DevTools "Offline" checked still renders the shell; <code>/api/health</code> returns <code>{ok, internet, provider}</code>.</td></tr>
+      <tr><td class="t">11:30–12:15</td><td><code>data/mdc.ts</code> (zone + places), <code>data/fema.ts</code>, <code>data/nws.ts</code>, <code>data/nrel.ts</code>, <code>data/openfda.ts</code> (copy Cold Chain picker), <code>data/static.ts</code>, <code>cache.ts</code>. <code>GET /api/pack?lat&amp;lon&amp;meds=</code> assembles the kv records.</td><td><code>curl /api/pack?lat=25.77&amp;lon=-80.19&amp;meds=lantus,humalog</code> returns zone "B", 5+ places, 3 FEMA rows, forecast, 2 rules with quotes.</td></tr>
+      <tr><td class="t">12:15–12:50</td><td><code>ai/gemini.ts</code>, <code>ai/workers.ts</code>, <code>ai/ollama.ts</code>, <code>ai/index.ts</code> with the four jobs and shared post-processing. Test P1 on <code>demo/meds.jpg</code> on every reachable provider. Record Ollama latency.</td><td>P1 returns valid JSON with 4 meds on at least one online provider and on Ollama. Latencies written in README. If Ollama &gt; 60 s, switch to e2b or shrink the image to 1024 px.</td></tr>
+      <tr><td class="t">12:50–1:20</td><td><code>engine.mjs</code> with the 4-Hour Rule contract (merge the sibling brief's engine) + <code>node --test</code>: food 4 h, freezer 48/24 h, Lantus 84°F/91°F, Humalog opened 20 d, frozen, unknown.</td><td>All tests pass; numbers match the Cold Chain table (574.8 h, 124.8 h, 272.4 h).</td></tr>
+      <tr><td class="t">1:20–2:10</td><td>UI: home + zone card, "Pack my box" progress, camera → label cards, 4-Hour Rule screen with countdowns, chat screen (P2), scene screen (P4), language toggle, safety footer, online/offline badge with model ID.</td><td><strong>Full path on the laptop:</strong> pack → Wi-Fi off → reload → still loads → Ollama answers a Kreyòl question → countdowns tick.</td></tr>
+      <tr><td class="t">2:10–2:35</td><td>i18n (en/es/ht static strings; generate once with Gemma, commit, have a speaker check), banned-phrase filter test, P4 insurance-letter demo with <code>demo/letter.jpg</code>.</td><td>Toggle works with no layout breaks; filter test passes; letter read shows claim number and deadline.</td></tr>
+      <tr><td class="t">2:35–2:55</td><td>Agent Skill folder (SKILL.md, pack.mjs, ask.mjs, references). README with Gemma 4 + Gemini API section, all sources cited, latency numbers, conservative assumptions.</td><td><code>node skills/blackout-box/scripts/ask.mjs --pack pack.json --lang es "¿Estoy en zona de evacuación?"</code> prints a grounded answer.</td></tr>
+      <tr><td class="t">2:55–3:15</td><td><code>npm run record</code> → fixtures from real calls. <code>npm run warm</code>. Rehearse the 2:00 script twice with Wi-Fi actually off. Record a backup screen capture.</td><td>Demo runs offline end to end; rehearsal ≤ 2:00; backup video exists.</td></tr>
+      <tr><td class="t">3:15–3:30</td><td><strong>Freeze.</strong> Final push; repo public with LICENSE; README screenshots.</td><td>Repo URL opens in an incognito window.</td></tr>
+      <tr><td class="t">3:30–3:45</td><td>Submit in OrganizerHQ.</td><td>Submitted.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout heat"><p><strong>Cut order if behind:</strong> (1) P4 scene/document read (keep the hazard card as a manual checklist), (2) live translation of answers (keep static i18n and answer in English with a note), (3) recall badge, (4) EV chargers (keep libraries and fire stations), (5) FEMA card. <strong>Never cut:</strong> the service worker + reload-offline, zone lookup, pack to IndexedDB, Ollama grounded Q&amp;A, the 4-Hour Rule countdowns with sources, the safety footer, README naming Gemma 4 and the Gemini API, the skill folder.</p></div>
+</div></section>
+
+<section id="submit"><div class="wrap">
+  <h2>README and OrganizerHQ submission checklist</h2>
+  <div class="grid2">
+    <div class="card"><h4>README must have</h4><ul class="check">
+      <li>One-line pitch: "The app that works when nothing else does." Two modes in 3 sentences.</li>
+      <li>GIF of the Wi-Fi-off moment and a screenshot of the countdowns</li>
+      <li><strong>"Gemma 4" section:</strong> model IDs (<code>gemma-4-26b-a4b-it</code> via the Gemini API online; <code>gemma4:e4b</code> via Ollama offline), the file paths (<code>server/ai/gemini.ts</code>, <code>server/ai/ollama.ts</code>), what Gemma is allowed to decide (read, answer from cache, translate, describe) and not (deadlines, numbers, safety copy)</li>
+      <li>Data sources, each with a URL: Miami-Dade Open Data Hub (HurricaneEvacZone_gdb, Library_gdb, FireStation_gdb, EvacuationCenterShelters_Open), OpenFEMA DisasterDeclarationsSummaries v2, NWS API, openFDA Drug Label + Enforcement, NREL/NLR Alternative Fuel Stations, FDA emergency insulin guidance, Fla. Stat. § 252.358, USDA FSIS emergency food safety</li>
+      <li>Safety statement + openFDA disclaimer + "shelter layer empty until activated" note</li>
+      <li>Open Agent Skill: path, spec link, the three commands</li>
+      <li>Run locally: <code>cp .env.example .env</code>, <code>npm i</code>, <code>ollama pull gemma4:e4b</code>, <code>npm run warm</code>, <code>npm run dev</code>; <code>DEMO_MODE=1</code>; <code>AI_PROVIDER=ollama</code> to force offline</li>
+      <li>Measured Ollama latency on a 16 GB M-series Mac (fill in at 12:50)</li>
+      <li>Conservative assumptions: 90% medication margin, 4 h food rule even if the door stayed shut longer, indoor heuristic labeled as estimate</li>
+      <li>License: MIT</li>
+    </ul></div>
+    <div class="card"><h4>OrganizerHQ submission (by 3:45 PM)</h4><ul class="check">
+      <li><strong>Public</strong> GitHub repo URL with LICENSE (MIT)</li>
+      <li>Short description: the one-line pitch + "Gemma 4 via the Gemini API online, Gemma 4 via Ollama offline"</li>
+      <li>Technologies: TypeScript, Vite PWA (service worker, IndexedDB), Node/Express, Gemini API (Gemma 4), Ollama, Cloudflare AI Gateway / Workers AI (fallback), Miami-Dade ArcGIS, OpenFEMA, NWS, openFDA, NREL</li>
+      <li>Track: <strong>Build for Miami, 01 Four Forces, One City</strong></li>
+      <li>Prizes: <strong>Best Use of Gemma 4</strong> (only if the Gemini path ran live), <strong>Best Open-Source AI Project</strong> (MLH)</li>
+      <li>Demo: 2:00 live, no slides, Wi-Fi off at 0:30. Q&amp;A 1:00.</li>
+    </ul></div>
+  </div>
+</div></section>
+
+<section id="fallback"><div class="wrap">
+  <h2>Demo-day fallbacks</h2>
+  <ul>
+    <li><strong><code>DEMO_MODE=1</code></strong>: every <code>/api/*</code> data route answers from <code>fixtures/</code> only, keyed by normalized request, recorded from <em>real</em> calls by <code>npm run record</code> before 3:00. AI routes still call the real provider but fall back to <code>fixtures/ai/&lt;job&gt;_&lt;sha1(input)&gt;.json</code> after 45 s or on error, with a visible "cached answer" tag.</li>
+    <li><strong>Pre-pulled model:</strong> <code>gemma4:e4b</code> pulled by 12:30. Do not pull anything else on stage Wi-Fi.</li>
+    <li><strong>Pre-warmed Ollama:</strong> <code>npm run warm</code> (empty-messages chat with <code>keep_alive: "2h"</code>) 10 minutes before the slot. Check <code>GET http://localhost:11434/api/ps</code> shows the model loaded. Close Comet and other RAM-heavy apps before the demo (this Mac has 16 GB; Comet alone has used ~18 GB in the past).</li>
+    <li><strong>Pack already built:</strong> IndexedDB is populated from the 2:55 rehearsal. The 0:12 "Pack my box" step re-runs live if Wi-Fi is up, otherwise shows the existing pack with its timestamps, which is still an honest demo.</li>
+    <li><strong>Photos:</strong> <code>demo/meds.jpg</code>, <code>fridge.jpg</code>, <code>letter.jpg</code>, <code>room.jpg</code> with a "Use demo photo" button. Bring the physical boxes anyway.</li>
+    <li><strong>Wi-Fi off but Ollama hangs:</strong> the cached answer path above. If Ollama itself is dead, <code>AI_PROVIDER=fixtures</code> serves recorded answers for the three scripted questions; say so out loud ("this is the recorded answer from an hour ago") rather than pretending.</li>
+    <li><strong>Last resort:</strong> the backup screen recording from the 3:10 rehearsal.</li>
+  </ul>
+</div></section>
+
+<section id="risks"><div class="wrap">
+  <h2>Open risks</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Gemini credits:</strong> the only key on this machine is 402 "depleted". No Gemini call = no Gemma prize.</td><td>Smoke test at 11:00; Micah funds or supplies a key via <code>GEMINI_API_KEY</code>; Workers AI Gemma is the online fallback; the README states exactly which path ran in the demo.</td></tr>
+      <tr><td><strong>RAM:</strong> 16 GB Mac; e4b ~7.5 GB on disk, more in memory with an 8K context and an image; browser + Vite + Express on top.</td><td>One model loaded, one request at a time, <code>num_ctx 8192</code>, images at 1280 px, close other apps. e2b as the downgrade. Never run 12b alongside.</td></tr>
+      <tr><td><strong>Ollama latency on e4b with images</strong> is unmeasured today.</td><td>Measure at 12:50 and put the number in the README. Cards render from cache before the photo read returns; 45 s fallback to fixtures; text-only Q&amp;A for the Kreyòl beat.</td></tr>
+      <tr><td><code>format</code> JSON schema + image on gemma4 via Ollama, and <code>think:false</code> support, are unverified.</td><td>Test both at 12:30; prompt-only JSON contract works without either.</td></tr>
+      <tr><td>Gemini JSON mode (<code>responseMimeType</code>) for Gemma models is undocumented.</td><td>Do not depend on it; fence-strip + retry on every provider.</td></tr>
+      <tr><td>Service worker caching a stale shell during development.</td><td>Version the cache name per build (<code>bb-shell-&lt;hash&gt;</code>), <code>skipWaiting</code> + <code>clients.claim</code>; "Clear site data" between rehearsals.</td></tr>
+      <tr><td>Evacuation zone layer is a planning map; orders are separate. 21 polygons have inconsistent CATEGORY.</td><td>Show the zone letter with "check if your zone was ordered to evacuate"; use ZONEID only.</td></tr>
+      <tr><td>Shelter layers empty today; hub has no cooling-center layer.</td><td>Honest empty state; libraries/fire stations/EV chargers as "likely has power", never "cooling center".</td></tr>
+      <tr><td>Model says "don't use your insulin" (seen with a softer prompt this morning).</td><td>HARD RULES in P2, banned-phrase filter, fixed i18n status copy.</td></tr>
+      <tr><td>Kreyòl quality from Gemma 4 is untested.</td><td>Short fixed strings, a speaker check at the event, generated answers capped at 120 words.</td></tr>
+      <tr><td>Secret leakage.</td><td><code>GEMINI_API_KEY</code>, <code>CF_AIG_TOKEN</code>, <code>DATA_GOV_API_KEY</code> live in server env only; <code>.env</code> in gitignore; never logged. For any public deploy, mint a narrow-scope Cloudflare token.</td></tr>
+      <tr><td>Health and document privacy.</td><td>No image storage server-side; offline images never leave the laptop; insurance-letter extraction stays in IndexedDB; "Delete my box" button clears all stores.</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="sources"><div class="wrap">
+  <h2>Sources and verification log</h2>
+  <ul class="ref small">
+    <li>Ollama REST API: <a href="https://github.com/ollama/ollama/blob/main/docs/api.md">github.com/ollama/ollama/blob/main/docs/api.md</a>. Fetched today (raw), saved to <code>reports/blackout-box-research/ollama_api.md</code>. No model was pulled or run.</li>
+    <li>Gemma 4 on the Gemini API: <a href="https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api">ai.google.dev/gemma/docs/core/gemma_on_gemini_api</a>. Fetched today: lists <code>gemma-4-31b-it</code> and <code>gemma-4-26b-a4b-it</code>; system instructions, image input, function calling, search grounding. No statement about JSON mode.</li>
+    <li>Gemini generateContent reference: <a href="https://ai.google.dev/api/generate-content">ai.google.dev/api/generate-content</a>. Fetched today (first 100k chars): endpoint pattern, <code>inline_data</code>/<code>mime_type</code>/<code>data</code> in shell examples, <code>systemInstruction</code> "text only".</li>
+    <li>Gemini image understanding: <a href="https://ai.google.dev/gemini-api/docs/image-understanding">ai.google.dev/gemini-api/docs/image-understanding</a>. Fetched today: 20 MB inline limit; png/jpeg/webp/heic/heif. (Its examples now use the Interactions API; generateContent is still the documented endpoint used here.)</li>
+    <li>Gemini structured output: <a href="https://ai.google.dev/gemini-api/docs/structured-output">ai.google.dev/gemini-api/docs/structured-output</a>. Fetched today: no mention of Gemma.</li>
+    <li>Gemini model list and key status (402): from this morning's team check, not re-run here.</li>
+    <li>Workers AI Gemma 4 through the Cloudflare AI Gateway: this morning's team test (synthetic label read, <code>reasoning_content</code>, <code>finish_reason: length</code> at 400 tokens). Not re-run here.</li>
+    <li>Miami-Dade Open Data Hub search: <a href="https://gis-mdc.opendata.arcgis.com">gis-mdc.opendata.arcgis.com</a>. Called today for "evacuation zone", "cooling center", "community center". Saved as <code>mdc_hub_*.json</code>.</li>
+    <li>HurricaneEvacZone_gdb FeatureServer: <a href="https://services.arcgis.com/8Pc9XBTAsYuxx9Ny/arcgis/rest/services/HurricaneEvacZone_gdb/FeatureServer/0">layer 0</a>. Called today: layer info, two point queries, count, group-by stats. Saved as <code>evac_*.json</code>.</li>
+    <li>OpenFEMA DisasterDeclarationsSummaries v2: <a href="https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2">fema.gov/openfema-data-page/disaster-declarations-summaries-v2</a>. Called today; saved as <code>fema_mdc.json</code>. (The docs page URL was not fetched; the API call was.)</li>
+    <li>USDA FSIS, Keep Your Food Safe During Emergencies: <a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/emergencies/keep-your-food-safe-during-emergencies">fsis.usda.gov/…/keep-your-food-safe-during-emergencies</a>. Direct fetch returned HTTP 403 today (also foodsafety.gov). Rule wording taken from USDA search snippets; sibling brief owns the quotes. FoodKeeper data: <a href="https://catalog.data.gov/dataset/fsis-foodkeeper-data">catalog.data.gov/dataset/fsis-foodkeeper-data</a> (HTTP 200 today).</li>
+    <li>Reused without re-verification from the Cold Chain brief (verified 10:30–10:45 today, raw in <code>reports/cold-chain-research/</code>): openFDA label and enforcement, NWS points/stations/latest/hourly (KMIA 31°C, heat index 36.5°C at 10:20), NREL/NLR nearest, Miami-Dade Library_gdb (50), FireStation_gdb (75), shelters (0), Fla. Stat. § 252.358, FDA emergency insulin guidance, Agent Skills spec.</li>
+    <li>Challenge repo: <a href="https://github.com/AI-Collective-Hackathons/hack-for-humanity-miami">github.com/AI-Collective-Hackathons/hack-for-humanity-miami</a>. Rubric and prize rules as given in the team brief; not re-fetched.</li>
+  </ul>
+</div></section>
+</main>
+
+<footer><div class="wrap">Blackout Box. Concept and build brief, Hack for Humanity: Miami, Sat Oct 10, 2026. FDA, USDA, NWS, FEMA and Miami-Dade data. Not medical advice. In an emergency, call 911.</div></footer>
+
+<script>
+(function(){
+  var items=[
+    {nm:"Milk, opened",sub:"food · perishable_fridge",kind:"food",limitH:4,why:"USDA: fridge perishables 4 h without power"},
+    {nm:"Chicken, raw",sub:"food · perishable_fridge",kind:"food",limitH:4,why:"USDA: discard after 4 h above 40°F"},
+    {nm:"Lantus SoloStar",sub:"insulin glargine · unopened",kind:"med",max:86,days:28,opened:null,why:"FDA label: up to 86°F, 28 days"},
+    {nm:"Humalog KwikPen",sub:"insulin lispro · opened 20 d",kind:"med",max:86,days:28,opened:20,why:"FDA label: 28 days total at room temp"},
+    {nm:"Trulicity",sub:"dulaglutide pen · unopened",kind:"med",max:86,days:14,opened:null,why:"FDA label: ≤86°F, 14 days"}
+  ];
+  var HOURS_OUT=30, M=0.9, temp=84, t0=Date.now();
+  var el=document.getElementById("cards");
+  function fmt(h){ if(h==null) return "No clock"; var s=Math.max(0,Math.floor(h*3600)); var d=Math.floor(s/86400); s%=86400; var hh=Math.floor(s/3600); s%=3600; var mm=Math.floor(s/60); var ss=s%60; function p(n){return (n<10?"0":"")+n} return d+"d "+p(hh)+":"+p(mm)+":"+p(ss); }
+  function v(m){
+    if(m.kind==="food"){ var hl=m.limitH-HOURS_OUT; return hl<=0?{st:"OVER_LIMIT",h:0}:{st:hl<1?"USE_SOON":"OK",h:hl}; }
+    if(temp>m.max) return {st:"OVER_LIMIT",h:0};
+    var b=[m.days*24*M-HOURS_OUT]; if(m.opened!=null) b.push(m.days*24*M-m.opened*24);
+    var h=Math.min.apply(null,b); if(h<=0) return {st:"OVER_LIMIT",h:0};
+    return {st:h<48?"USE_SOON":"OK",h:h};
+  }
+  function render(){
+    var el2=(Date.now()-t0)/36e5; var html="";
+    items.forEach(function(m){
+      var r=v(m); var h=r.h==null?null:Math.max(0,r.h-el2);
+      var cls=r.st==="OVER_LIMIT"?"over":(r.st==="USE_SOON"?"soon":"ok");
+      var clock=r.st==="OVER_LIMIT"?"Over limit":fmt(h);
+      var why=r.st==="OVER_LIMIT"?(m.kind==="food"?"USDA: discard. 30 h without power.":"Keep cool. Don't stop without a replacement."):m.why;
+      html+='<div class="item '+cls+'"><div class="nm">'+m.nm+'</div><div class="sub">'+m.sub+'</div><div class="clock">'+clock+'</div><span class="st">'+r.st.replace("_"," ")+'</span><div class="why">'+why+'</div></div>';
+    });
+    el.innerHTML=html;
+  }
+  var btn=document.getElementById("wifi"), badge=document.getElementById("badge"), bt=document.getElementById("badge-txt");
+  btn.addEventListener("click",function(){
+    var off=btn.getAttribute("aria-pressed")!=="true";
+    btn.setAttribute("aria-pressed",off?"true":"false");
+    btn.textContent=off?"Turn Wi-Fi back on":"Turn off Wi-Fi";
+    badge.classList.toggle("off",off);
+    bt.textContent=off?"OFFLINE · gemma4:e4b via Ollama (on this device)":"ONLINE · gemma-4-26b-a4b-it via Gemini API";
+  });
+  render(); setInterval(render,1000);
+})();
+</script>
+
+<script type="application/json" id="build-spec">
+{
+  "project": "blackout-box",
+  "pitch": "The app that works when nothing else does. Offline-first hurricane assistant for Miami-Dade: Gemma 4 via the Gemini API packs the device before the storm; Gemma 4 via Ollama answers after power and cell service are gone. EN/ES/HT.",
+  "event": {
+    "name": "Hack for Humanity: Miami",
+    "date": "2026-10-10",
+    "build_ends": "2026-10-10T15:30:00-04:00",
+    "submit_by": "2026-10-10T15:45:00-04:00",
+    "track": "Build for Miami - 01 Four Forces, One City",
+    "prizes": ["Best Use of Gemma 4 (requires Gemma 4 via Gemini API, named in README, in code, in demo)", "Best Open-Source AI Project (MLH)"],
+    "rubric": {"community_impact": 30, "working_build": 25, "ai_and_data": 20, "originality_craft": 15, "demo_clarity": 10, "tiebreak": "community impact"},
+    "demo": "2 min live, no slides, Wi-Fi off at 0:30; 1 min Q&A"
+  },
+  "stack": {
+    "frontend": "Vite + TypeScript PWA (vanilla), service worker sw.js, IndexedDB db 'blackout-box' v1 (stores: kv, items, chat), mobile-first",
+    "backend": "Node 20 + Express (tsx), port 8787, holds keys, disk cache, DEMO_MODE, proxies Ollama",
+    "offline_model_runtime": "Ollama at http://localhost:11434 (binary /opt/homebrew/bin/ollama)",
+    "engine": "skills/blackout-box/scripts/engine.mjs (pure ESM; 4-Hour Rule + Cold Chain verdict; shared by server, web, skill CLI)",
+    "tests": "node --test test/*.test.mjs (no jest/vitest)"
+  },
+  "env": {
+    "GEMINI_API_KEY": "Gemini API key; header x-goog-api-key; server-side only; key on this machine returned 402 today, re-test first",
+    "CF_ACCOUNT_ID": "Cloudflare account id (local source: ~/.config/cloudflare/account-id)",
+    "CF_AIG_TOKEN": "Cloudflare API token for AI Gateway (local source: ~/.config/cloudflare/claude-api-token); never commit/print",
+    "CF_AIG_GATEWAY": "default",
+    "DATA_GOV_API_KEY": "api.data.gov key for openFDA + NREL; optional for openFDA",
+    "NWS_USER_AGENT": "BlackoutBox-hackathon (contact email)",
+    "OLLAMA_URL": "http://localhost:11434",
+    "OLLAMA_MODEL": "gemma4:e4b",
+    "AI_PROVIDER": "auto|gemini|workers|ollama|fixtures (auto = first reachable of gemini, workers, ollama)",
+    "DEMO_MODE": "0|1 - 1 serves fixtures/ for data routes; AI routes fall back to fixtures after 45 s",
+    "PORT": "8787"
+  },
+  "models": {
+    "gemini": {"online": "gemma-4-26b-a4b-it", "alt": "gemma-4-31b-it", "endpoint": "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent", "prize_path": true},
+    "workers_ai": {"online_fallback": "@cf/google/gemma-4-26b-a4b-it", "endpoint": "https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/ai/v1/chat/completions", "prize_path": false, "max_tokens_min": 2000},
+    "ollama": {"offline": "gemma4:e4b", "optional": "gemma4:12b (only if RAM allows; never two models)", "downgrade": "gemma4:e2b", "pull": "ollama pull gemma4:e4b", "warm": "POST /api/chat {\"model\":\"gemma4:e4b\",\"messages\":[],\"keep_alive\":\"2h\"}"}
+  },
+  "endpoints": {
+    "gemini_generate_content": {
+      "method": "POST",
+      "url": "https://generativelanguage.googleapis.com/v1beta/models/gemma-4-26b-a4b-it:generateContent",
+      "headers": {"x-goog-api-key": "${GEMINI_API_KEY}", "Content-Type": "application/json"},
+      "body": {"systemInstruction": {"parts": [{"text": "<SYSTEM>"}]}, "contents": [{"role": "user", "parts": [{"inline_data": {"mime_type": "image/jpeg", "data": "<b64>"}}, {"text": "<USER>"}]}], "generationConfig": {"temperature": 0, "maxOutputTokens": 2048}},
+      "read": "candidates[0].content.parts[0].text; finishReason; usageMetadata",
+      "notes": ["JSON mode (responseMimeType) not documented for Gemma: do not depend on it", "strip ``` fences, JSON.parse, retry once", "inline request limit 20MB; png/jpeg/webp/heic/heif"],
+      "verified": "docs 2026-10-10; live call blocked by 402 key"
+    },
+    "workers_ai_chat": {
+      "method": "POST",
+      "url": "https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/ai/v1/chat/completions",
+      "headers": {"Authorization": "Bearer ${CF_AIG_TOKEN}", "cf-aig-gateway-id": "${CF_AIG_GATEWAY}", "content-type": "application/json"},
+      "body": {"model": "@cf/google/gemma-4-26b-a4b-it", "max_tokens": 2000, "temperature": 0, "messages": [{"role": "system", "content": "<SYSTEM>"}, {"role": "user", "content": [{"type": "image_url", "image_url": {"url": "data:image/jpeg;base64,<b64>"}}, {"type": "text", "text": "<USER>"}]}]},
+      "read": "choices[0].message.content (ignore reasoning_content); finish_reason",
+      "verified": "team test 2026-10-10 morning"
+    },
+    "ollama_chat": {
+      "method": "POST",
+      "url": "${OLLAMA_URL}/api/chat",
+      "body": {"model": "${OLLAMA_MODEL}", "stream": false, "keep_alive": "2h", "think": false, "format": "<json schema or 'json'>", "options": {"temperature": 0, "num_ctx": 8192}, "messages": [{"role": "system", "content": "<SYSTEM>"}, {"role": "user", "content": "<USER>", "images": ["<b64 without data: prefix>"]}]},
+      "read": "message.content; done; done_reason; total_duration (ns); prompt_eval_count; eval_count",
+      "notes": ["one request at a time", "think:false and format+image on gemma4 unverified; prompt-only JSON works without them", "call from Express, not browser (no CORS config)"],
+      "verified": "docs 2026-10-10 (api.md); not run"
+    },
+    "mdc_evac_zone": {
+      "method": "GET",
+      "url": "https://services.arcgis.com/8Pc9XBTAsYuxx9Ny/arcgis/rest/services/HurricaneEvacZone_gdb/FeatureServer/0/query?geometry={lon}%2C{lat}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=ZONEID,CATEGORY,COLOR&returnGeometry=false&f=json",
+      "auth": "none",
+      "fields": ["ZONEID (A-E or null)", "CATEGORY (0-5)", "COLOR"],
+      "sample": {"25.77,-80.19": {"ZONEID": "B", "CATEGORY": 2}, "25.79,-80.13": {"ZONEID": "B", "CATEGORY": 2}},
+      "count": 2147,
+      "notes": ["null ZONEID = not in a zone", "planning zones; evacuation orders are separate", "21 polygons have ZONEID A with CATEGORY 0"],
+      "verified": "2026-10-10"
+    },
+    "mdc_places": {
+      "base": "https://services.arcgis.com/8Pc9XBTAsYuxx9Ny/arcgis/rest/services",
+      "near_query": "/{layer}/FeatureServer/0/query?where=1%3D1&geometry={lon}%2C{lat}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&distance=3&units=esriSRUnit_StatuteMile&outFields=*&outSR=4326&f=geojson&resultRecordCount=5",
+      "layers": {"Library_gdb": 50, "FireStation_gdb": 75, "EvacuationCenterShelters_Open": 0, "EvacuationCenter_gdb": 0, "Hurricane_Bus_Stops": 129},
+      "notes": ["no distance field: haversine", "shelters 0 today: honest empty state", "no cooling-center layer on the hub"],
+      "verified": "2026-10-10 (Cold Chain)"
+    },
+    "openfema_declarations": {
+      "method": "GET",
+      "url": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?$filter=state%20eq%20'FL'%20and%20designatedArea%20eq%20'Miami-Dade%20(County)'&$orderby=declarationDate%20desc&$top=3&$select=disasterNumber,declarationType,declarationDate,incidentType,declarationTitle,incidentBeginDate,incidentEndDate,designatedArea,ihProgramDeclared,iaProgramDeclared",
+      "auth": "none",
+      "sample": [{"disasterNumber": 4834, "declarationType": "DR", "declarationDate": "2024-10-11", "declarationTitle": "HURRICANE MILTON", "iaProgramDeclared": false}, {"disasterNumber": 3622, "declarationType": "EM", "declarationTitle": "HURRICANE MILTON"}, {"disasterNumber": 4680, "declarationType": "DR", "declarationTitle": "HURRICANE NICOLE"}],
+      "verified": "2026-10-10"
+    },
+    "openfda_label": {"method": "GET", "url": "https://api.fda.gov/drug/label.json", "headers": {"X-Api-Key": "${DATA_GOV_API_KEY}"}, "query_example": "search=openfda.brand_name:\"lantus\"+AND+_exists_:storage_and_handling&limit=5", "fields": ["storage_and_handling[0]", "how_supplied[0]", "set_id", "effective_time", "openfda.brand_name", "openfda.generic_name", "openfda.route"], "verified": "2026-10-10 (Cold Chain)"},
+    "openfda_enforcement": {"method": "GET", "url": "https://api.fda.gov/drug/enforcement.json", "query_example": "search=product_description:\"<brand>\"+AND+status:\"Ongoing\"&sort=report_date:desc&limit=5", "verified": "2026-10-10 (Cold Chain)"},
+    "nws": {"points": "https://api.weather.gov/points/25.77,-80.19", "latest": "https://api.weather.gov/stations/KMIA/observations/latest", "hourly": "https://api.weather.gov/gridpoints/MFL/110,50/forecast/hourly", "headers": {"User-Agent": "${NWS_USER_AGENT}"}, "notes": ["latest is degC, hourly is degF", "fallback stations KOPF, KHWO"], "verified": "2026-10-10 (Cold Chain)"},
+    "nrel_ev_nearest": {"method": "GET", "url": "https://developer.nlr.gov/api/alt-fuel-stations/v1/nearest.json?latitude={lat}&longitude={lon}&fuel_type=ELEC&status=E&access=public&radius=5&limit=5", "headers": {"X-Api-Key": "${DATA_GOV_API_KEY}"}, "verified": "2026-10-10 (Cold Chain)"},
+    "static_content": {
+      "fl_statute_252_358": "https://www.flsenate.gov/Laws/Statutes/2025/252.358",
+      "fda_insulin_emergency": "https://www.fda.gov/drugs/emergency-preparedness-drugs/information-regarding-insulin-storage-and-switching-between-products-emergency",
+      "usda_outage": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/emergencies/keep-your-food-safe-during-emergencies",
+      "usda_rule": {"fridgeHours": 4, "maxSafeF": 40, "freezerFullHours": 48, "freezerHalfHours": 24},
+      "foodkeeper_data": "https://catalog.data.gov/dataset/fsis-foodkeeper-data",
+      "fema_register": "DisasterAssistance.gov / 1-800-621-3362"
+    }
+  },
+  "app_routes": {
+    "GET /api/health": "-> {ok, internet:boolean, provider:'gemini'|'workers'|'ollama'|'fixtures', model, demoMode}",
+    "GET /api/pack?lat=&lon=&meds=": "-> {zone, places[], fema[], forecast, rules{}, law_252_358, fda_insulin, usda_outage, fema_steps} each with source+fetchedAt",
+    "POST /api/ai/label_read": "{imageBase64, mediaType} -> P1 JSON",
+    "POST /api/ai/qa": "{question, lang, contextKeys?} -> {answer, sources[], call_911, provider, model, latencyMs}",
+    "POST /api/ai/translate": "{text, lang} -> {text}",
+    "POST /api/ai/scene_read": "{imageBase64, mediaType} -> P4 JSON",
+    "GET /api/label?brand=&generic=&device=&route=": "-> {rule} (Cold Chain shape)",
+    "GET /api/recalls?brand=": "-> [...]",
+    "POST /api/verdicts": "{items[], exposure} -> Verdict[] (engine.mjs; also runs client-side)"
+  },
+  "cache_model": {
+    "indexeddb": "blackout-box v1",
+    "stores": {
+      "kv": "keyPath key; records {key, value, fetchedAt, ttlSec, source}; keys: profile, zone, places, fema, fema_steps, forecast, law_252_358, fda_insulin, usda_outage, rule:<drugKey>",
+      "items": "keyPath id; {id, kind:'medication'|'food', name, category, ruleKey, openedAt, addedAt, photoHash, confidence}",
+      "chat": "keyPath id autoIncrement; {id, ts, lang, q, a, provider, model, sources[], latencyMs}"
+    },
+    "cache_storage": "app shell only (index.html, built assets, self-hosted fonts, icons, manifest); cache name bb-shell-<buildHash>",
+    "export": "blackout-pack.json download of all kv + items"
+  },
+  "four_hour_rule": {
+    "categories": ["perishable_fridge", "frozen", "shelf_stable", "refrigerated_med", "room_temp_med"],
+    "statuses": ["OK", "USE_SOON", "OVER_LIMIT", "DO_NOT_USE", "UNKNOWN"],
+    "function": "fourHourRule(items: Item[], exposure: Exposure, now?: number): Verdict[]",
+    "rules": ["perishable_fridge: deadline = outageStart + 4h (USDA)", "frozen: outageStart + 48h full / 24h half", "shelf_stable: OK", "refrigerated_med: Cold Chain verdict, SAFETY_MARGIN 0.9, USE_SOON < 48h, DO_NOT_USE only frozen+doNotFreeze", "room_temp_med: OVER_LIMIT if indoorTempF > maxTempF", "no limits: UNKNOWN"]
+  },
+  "prompts": {
+    "P1_LABEL_READ": "vision -> {items[{id,kind,label_text,brand_name,generic_name,strength,dosage_form,route_hint,ndc,food_category,position,confidence}],unreadable_count}",
+    "P2_GROUNDED_QA": "CONTEXT json + question + lang -> {answer,sources[],call_911}; HARD RULES; max 120 words",
+    "P3_TRANSLATE": "text + lang -> {text}",
+    "P4_SCENE_READ": "vision -> {scene,description,hazards[],document{...}|null,confidence}",
+    "post_process": "strip ``` fences; JSON.parse; retry once; fallback fixed copy",
+    "banned_phrase_regex_meds": "no (la )?uses|don't use|do not use|stop taking|throw (it )?away|discard|pa sèvi",
+    "identical_across": ["gemini", "workers", "ollama"]
+  },
+  "safety": {
+    "footer": {
+      "en": "This information comes from FDA, USDA, NWS, FEMA and Miami-Dade sources. It is not medical advice. Call your pharmacist or doctor. In an emergency, call 911.",
+      "es": "Esta información proviene de fuentes de la FDA, USDA, NWS, FEMA y Miami-Dade. No es consejo médico. Llame a su farmacéutico o médico. En una emergencia, llame al 911.",
+      "ht": "Enfòmasyon sa a soti nan sous FDA, USDA, NWS, FEMA ak Miami-Dade. Se pa konsèy medikal. Rele famasyen oswa doktè ou. Si se yon ijans, rele 911."
+    },
+    "never": ["tell user to stop/discard medication unless DO_NOT_USE", "dosing or product-switching numbers", "estimate insurance payouts or coverage", "say a damaged space is safe", "guess shelters/roads/curfews not in cache", "store photos server-side"]
+  },
+  "languages": ["en", "es", "ht"],
+  "skill": {
+    "path": "skills/blackout-box",
+    "spec": "https://agentskills.io/specification",
+    "files": ["SKILL.md", "scripts/engine.mjs", "scripts/pack.mjs", "scripts/ask.mjs", "references/PROMPTS.md", "references/RULES.md", "references/SOURCES.md"],
+    "validate": "skills-ref validate ./skills/blackout-box"
+  },
+  "files": [
+    "LICENSE", "README.md", ".env.example", ".gitignore", "package.json", "vite.config.ts", "tsconfig.json",
+    "server/index.ts", "server/cache.ts", "server/ai/index.ts", "server/ai/gemini.ts", "server/ai/workers.ts", "server/ai/ollama.ts",
+    "server/data/mdc.ts", "server/data/fema.ts", "server/data/nws.ts", "server/data/openfda.ts", "server/data/nrel.ts", "server/data/static.ts",
+    "web/index.html", "web/public/sw.js", "web/public/manifest.webmanifest", "web/public/icons/", "web/public/fonts/",
+    "web/src/main.ts", "web/src/db.ts", "web/src/offline.ts", "web/src/api.ts", "web/src/i18n.ts", "web/src/render.ts", "web/src/fourhour.ts", "web/src/styles.css",
+    "skills/blackout-box/SKILL.md", "skills/blackout-box/scripts/engine.mjs", "skills/blackout-box/scripts/pack.mjs", "skills/blackout-box/scripts/ask.mjs",
+    "skills/blackout-box/references/PROMPTS.md", "skills/blackout-box/references/RULES.md", "skills/blackout-box/references/SOURCES.md",
+    "fixtures/", "demo/meds.jpg", "demo/fridge.jpg", "demo/letter.jpg", "demo/room.jpg",
+    "test/engine.test.mjs", "test/fourhour.test.mjs", "test/filter.test.mjs"
+  ],
+  "cut_order": ["P4 scene/document read", "live translation of answers", "recall badge", "EV chargers", "FEMA card"],
+  "never_cut": ["service worker + offline reload", "zone lookup", "pack to IndexedDB", "Ollama grounded Q&A", "4-Hour Rule countdowns with sources", "safety footer", "README naming Gemma 4 + Gemini API", "skill folder"],
+  "sources": {
+    "ollama_api": "https://github.com/ollama/ollama/blob/main/docs/api.md",
+    "gemma_on_gemini_api": "https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api",
+    "gemini_generate_content": "https://ai.google.dev/api/generate-content",
+    "gemini_image_understanding": "https://ai.google.dev/gemini-api/docs/image-understanding",
+    "gemini_structured_output": "https://ai.google.dev/gemini-api/docs/structured-output",
+    "mdc_hub": "https://gis-mdc.opendata.arcgis.com",
+    "mdc_evac_zone_layer": "https://services.arcgis.com/8Pc9XBTAsYuxx9Ny/arcgis/rest/services/HurricaneEvacZone_gdb/FeatureServer/0",
+    "openfema_v2": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries",
+    "openfda_label": "https://open.fda.gov/apis/drug/label/",
+    "openfda_enforcement": "https://open.fda.gov/apis/drug/enforcement/",
+    "nws": "https://www.weather.gov/documentation/services-web-api",
+    "nrel_afdc": "https://developer.nlr.gov/api/alt-fuel-stations/v1/nearest.json",
+    "fda_insulin_emergency": "https://www.fda.gov/drugs/emergency-preparedness-drugs/information-regarding-insulin-storage-and-switching-between-products-emergency",
+    "fl_statute_252_358": "https://www.flsenate.gov/Laws/Statutes/2025/252.358",
+    "usda_fsis_emergencies": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/emergencies/keep-your-food-safe-during-emergencies",
+    "foodkeeper_data": "https://catalog.data.gov/dataset/fsis-foodkeeper-data",
+    "agent_skills_spec": "https://agentskills.io/specification",
+    "challenge_repo": "https://github.com/AI-Collective-Hackathons/hack-for-humanity-miami"
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{
+  "kind": "library",
+  "features": [
+    {
+      "name": "Main Library",
+      "lat": 25.7743616066567,
+      "lon": -80.1971798351007,
+      "address": "101 W Flagler St, Miami, 33130",
+      "phone": "305-375-2665",
+      "hours": "Mon,Tue,Wed,Thu,Fri,Sat 9:30 am. - 6 p.m.",
+      "url": "https://mdpls.org/branch-main",
+      "distanceMi": 0.54
+    },
+    {
+      "name": "Culmer/Overtown Branch",
+      "lat": 25.7858054218371,
+      "lon": -80.2010767277015,
+      "address": "350 NW 13th St, Miami, 33136",
+      "phone": "305-579-5322",
+      "hours": "Mon,Tue,Wed,Thu 9:30 a.m. - 8 p.m.; Fri,Sat 9:30 am - 6 p.m.",
+      "url": "https://mdpls.org/branch-culmerovertown",
+      "distanceMi": 1.29
+    },
+    {
+      "name": "Hispanic Branch",
+      "lat": 25.7721348207047,
+      "lon": -80.2176100875551,
+      "address": "1398 SW 1st St, Miami, 33135",
+      "phone": "305-643-8574",
+      "hours": "Mon,Tue,Wed,Thu 9:30 am - 8 p.m.; Fri,Sat 9:30 am. - 6 p.m.",
+      "url": "https://mdpls.org/branch-hispanic",
+      "distanceMi": 1.72
+    },
+    {
+      "name": "UHealth Jackson Station Library Kiosk",
+      "lat": 25.7896961285592,
+      "lon": -80.2148300954998,
+      "address": "1501 NW 12th Ave, Miami, 33136",
+      "phone": "305-324-0291",
+      "hours": "Mon,Tue,Wed,Thu,Fri 7 a.m. - 6 p.m.",
+      "url": "https://mdpls.org/branch-civic-center",
+      "distanceMi": 2.06
+    },
+    {
+      "name": "Shenandoah Branch",
+      "lat": 25.7553584175912,
+      "lon": -80.2290099465641,
+      "address": "2111 SW 19th St, Miami, 33145",
+      "phone": "305-250-4688",
+      "hours": "Mon,Tue,Wed,Thu 9:30 am - 8 p.m.; Fri,Sat 9:30 am - 6 p.m.",
+      "url": "https://mdpls.org/branch-shenandoah",
+      "distanceMi": 2.63
+    },
+    {
+      "name": "South Shore Branch",
+      "lat": 25.7704060667151,
+      "lon": -80.1377641258402,
+      "address": "131 Alton Rd, Miami Beach, 33139",
+      "phone": "305-535-4223",
+      "hours": "Mon,Tue,Wed,Thu 9:30 am - 8 p.m; Fri,Sat 9:30 am - 6 p.m.",
+      "url": "https://mdpls.org/branch-south-shore",
+      "distanceMi": 3.25
+    },
+    {
+      "name": "Allapattah Branch",
+      "lat": 25.8087449371477,
+      "lon": -80.2256372829153,
+      "address": "1799 NW 35th St, Miami, 33142",
+      "phone": "305-638-6086",
+      "hours": "Temporarily Closed null; null null",
+      "url": "https://mdpls.org/branch-allapattah",
+      "distanceMi": 3.48
+    },
+    {
+      "name": "Miami Beach Regional",
+      "lat": 25.7980372097599,
+      "lon": -80.1288016629967,
+      "address": "227 22nd St, Miami Beach, 33139",
+      "phone": "305-535-4219",
+      "hours": "Mon,Tue,Wed,Thu 9:30 am. - 8 p.m.; Fri,Sat 9:30 am - 6 p.m.",
+      "url": "https://mdpls.org/branch-miami-beach-regional",
+      "distanceMi": 4.27
+    },
+    {
+      "name": "Lemon City Branch",
+      "lat": 25.8323908804003,
+      "lon": -80.1870328016212,
+      "address": "430 NE 61st St, Miami, 33137",
+      "phone": "305-757-0662",
+      "url": "https://mdpls.org/branch-lemon-city",
+      "distanceMi": 4.31
+    },
+    {
+      "name": "Coconut Grove Branch",
+      "lat": 25.726782698512,
+      "lon": -80.2403401232566,
+      "address": "2875 McFarlane Rd, Miami, 33133",
+      "phone": "305-442-8695",
+      "hours": "Mon,Tue,Wed,Thu 9:30 a.m. - 8 p.m.; Fri,Sat 9:30 am - 6 p.m.",
+      "url": "https://mdpls.org/branch-coconut-grove",
+      "distanceMi": 4.33
+    }
+  ],
+  "fetchedAt": "2026-10-10T15:57:36.216Z",
+  "_source": "Miami-Dade County Library_gdb/FeatureServer/0",
+  "_recordedAt": "2026-10-10T15:57:36.869Z"
+}

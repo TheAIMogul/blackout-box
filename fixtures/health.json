@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "online": true,
+  "demo": false,
+  "provider": "claude",
+  "models": {
+    "vision": "anthropic/claude-sonnet-5.5",
+    "chat": "anthropic/claude-fable-5.1"
+  },
+  "modelReachable": true,
+  "_recordedAt": "2026-10-10T16:06:32.960Z"
+}

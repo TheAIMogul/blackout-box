@@ -1,0 +1,15 @@
+{
+  "now": "2026-10-10T16:00:00Z",
+  "outage": { "startedAt": "2026-10-10T13:30:00Z", "doorOpenedAt": [], "freezerFull": true },
+  "env": { "indoorTempF": 84, "estimated": false },
+  "items": [
+    { "id": "f1", "name": "2% milk", "category": "food", "location": "fridge" },
+    { "id": "f2", "name": "cheddar", "category": "food", "location": "fridge" },
+    { "id": "f3", "name": "baby formula", "category": "food", "opened": true, "location": "fridge" },
+    { "id": "f4", "name": "chicken thighs", "category": "food", "location": "freezer" },
+    { "id": "m1", "name": "Trulicity pen", "category": "med",
+      "label": { "brand": "Trulicity", "setId": "463050bd-2b1c-40f5-b3c3-0a04bb433309",
+        "storageText": "Store TRULICITY in the refrigerator at 36°F to 46°F (2°C to 8°C). If needed, each single-dose pen can be kept at room temperature, not to exceed 86°F (30°C) for a total of 14 days. Do not freeze TRULICITY. Do not use TRULICITY if it has been frozen. Protect TRULICITY from light." } },
+    { "id": "m2", "name": "eye drops", "category": "med" }
+  ]
+}

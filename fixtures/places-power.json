@@ -1,0 +1,209 @@
+{
+  "kind": "power",
+  "features": [
+    {
+      "name": "ICON GARAGE ICONBRICKELL 1",
+      "lat": 25.768851,
+      "lon": -80.189356,
+      "address": "465 Brickell Ave, Miami, FL, 33131",
+      "phone": "888-758-4389",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.09
+    },
+    {
+      "name": "ICON GARAGE ICONBRICKELL 2",
+      "lat": 25.768858,
+      "lon": -80.189171,
+      "address": "465 Brickell Ave, Miami, FL, 33131",
+      "phone": "888-758-4389",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.09
+    },
+    {
+      "name": "Wells Fargo Center-Miami",
+      "lat": 25.7712942,
+      "lon": -80.1894492,
+      "address": "333 SE 2nd Ave., #3300, Miami, FL, 33131",
+      "phone": "888-998-2546",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.1
+    },
+    {
+      "name": "ICON GARAGE ICONBRICKELL 3",
+      "lat": 25.768906,
+      "lon": -80.189026,
+      "address": "495 Brickell Ave, Miami, FL, 33131",
+      "phone": "888-758-4389",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.1
+    },
+    {
+      "name": "ICON GARAGE ICONBRICKELL 4",
+      "lat": 25.768944,
+      "lon": -80.188875,
+      "address": "485 Brickell Ave, Miami, FL, 33131",
+      "phone": "888-758-4389",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.1
+    },
+    {
+      "name": "Brickell on the River",
+      "lat": 25.769623,
+      "lon": -80.191636,
+      "address": "31 SE 5th St, Miami, FL, 33131",
+      "phone": "888-998-2546",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.11
+    },
+    {
+      "name": "OBE 500 BRICKELL R",
+      "lat": 25.768437,
+      "lon": -80.191511,
+      "address": "55 Southeast 6th Street, Miami, FL, 33131",
+      "phone": "888-758-4389",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.14
+    },
+    {
+      "name": "OBE 500 BRICKELL L",
+      "lat": 25.768462,
+      "lon": -80.191554,
+      "address": "55 Southeast 6th Street, Miami, FL, 33131",
+      "phone": "888-758-4389",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.14
+    },
+    {
+      "name": "Down Town Miami 1",
+      "lat": 25.7719345,
+      "lon": -80.1890472,
+      "address": "299 Se 3Rd St, Miami, FL, 33131",
+      "phone": "305-995-0600",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.15
+    },
+    {
+      "name": "Monarc at Met 3 Residential Parking",
+      "lat": 25.7721236,
+      "lon": -80.1894522,
+      "address": "201 SE 2nd Ave., Miami, FL, 33131",
+      "phone": "888-998-2546",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.15
+    },
+    {
+      "name": "Reach Residential",
+      "lat": 25.76832389831543,
+      "lon": -80.19189453125,
+      "address": "68 Southeast 6th Street, Miami, FL, 33131",
+      "phone": "888-998-2546",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.17
+    },
+    {
+      "name": "MET 1 CONDO STATION 1",
+      "lat": 25.771433,
+      "lon": -80.187758,
+      "address": "300 Biscayne Blvd Way, Miami, FL, 33131",
+      "phone": "888-758-4389",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.17
+    },
+    {
+      "name": "SEFC LEGACY SEFC",
+      "lat": 25.772033,
+      "lon": -80.188402,
+      "address": "200 S Biscayne Blvd, Miami, FL, 33131",
+      "phone": "888-758-4389",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.17
+    },
+    {
+      "name": "Reach Commercial",
+      "lat": 25.76837,
+      "lon": -80.1922,
+      "address": "66 Southeast 6th Street, Miami, FL, 33131",
+      "phone": "888-998-2546",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.18
+    },
+    {
+      "name": "600 Brickell World Plaza",
+      "lat": 25.7674922,
+      "lon": -80.1910373,
+      "address": "600 Brickell Avenue, Miami, FL, 33131",
+      "phone": "888-998-2546",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.18
+    },
+    {
+      "name": "OBE MPA KNIGHT CENT",
+      "lat": 25.772608,
+      "lon": -80.19097,
+      "address": "117 SE 2nd St, Miami, FL, 33131",
+      "phone": "888-758-4389",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.19
+    },
+    {
+      "name": "Legacy Parking",
+      "lat": 25.767087,
+      "lon": -80.189801,
+      "address": "701 Brickell Avenue, Miami, FL, 33131",
+      "phone": "888-998-2546",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.2
+    },
+    {
+      "name": "620 Brickell World Plaza",
+      "lat": 25.7674204,
+      "lon": -80.1915305,
+      "address": "33 se 7th street, miami, FL, 33131",
+      "phone": "888-998-2546",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.2
+    },
+    {
+      "name": "SEFC SEFCLEGACY 3",
+      "lat": 25.772355,
+      "lon": -80.187721,
+      "address": "200 S Biscayne Blvd, Miami, FL, 33131",
+      "phone": "888-758-4389",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.22
+    },
+    {
+      "name": "SEFC SEFC/LEGACY 2",
+      "lat": 25.772317,
+      "lon": -80.187668,
+      "address": "200 S Biscayne Blvd, Miami, FL, 33131",
+      "phone": "888-758-4389",
+      "hours": "24 hours daily",
+      "open24h": true,
+      "distanceMi": 0.22
+    }
+  ],
+  "total": 303,
+  "fetchedAt": "2026-10-10T15:57:36.860Z",
+  "_source": "NREL/NLR Alternative Fuel Stations API (developer.nlr.gov), public EV chargers",
+  "_recordedAt": "2026-10-10T15:57:36.868Z"
+}

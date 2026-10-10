@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Four-Hour Rule Brief</title>
+<meta name="description" content="The 4-Hour Rule: concept page and build brief for Hack for Humanity Miami. Photo of the fridge and the medicine shelf becomes a sorted list of countdown clocks from USDA, FoodSafety.gov and FDA label rules.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f7fb; --surface:#ffffff; --surface-2:#eaf1f8; --ink:#0c1a2a; --muted:#4b5c70; --line:#d3dce7;
+  --ice:#0a63bd; --ice-ink:#ffffff; --ice-soft:#e2eefa; --ice-deep:#06325f;
+  --heat:#d9480f; --heat-soft:#fff0e5; --danger:#c3201f; --danger-soft:#fdeaea;
+  --ok:#0a7556; --ok-soft:#e0f4ec; --warn:#b35c00; --warn-soft:#fff4e0;
+  --code-bg:#0e1a29; --code-ink:#d8e5f3; --code-muted:#8aa1ba;
+  --hero-a:#06325f; --hero-b:#0a4f8f; --hero-ink:#eaf3fc;
+  --shadow:0 1px 2px rgba(12,26,42,.06),0 4px 14px rgba(12,26,42,.06);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#08111b; --surface:#0f1a27; --surface-2:#142338; --ink:#e4edf7; --muted:#9bb0c7; --line:#223650;
+    --ice:#5aaaf2; --ice-ink:#04182c; --ice-soft:#0f2840; --ice-deep:#cfe5fb;
+    --heat:#ff8a3d; --heat-soft:#2b1709; --danger:#ff6b66; --danger-soft:#2c1012;
+    --ok:#3fd09e; --ok-soft:#0c2a20; --warn:#ffb84d; --warn-soft:#2a1d07;
+    --code-bg:#050c15; --code-ink:#d8e5f3; --code-muted:#7d93ab;
+    --hero-a:#04182c; --hero-b:#0a2d52; --hero-ink:#eaf3fc;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#08111b; --surface:#0f1a27; --surface-2:#142338; --ink:#e4edf7; --muted:#9bb0c7; --line:#223650;
+  --ice:#5aaaf2; --ice-ink:#04182c; --ice-soft:#0f2840; --ice-deep:#cfe5fb;
+  --heat:#ff8a3d; --heat-soft:#2b1709; --danger:#ff6b66; --danger-soft:#2c1012;
+  --ok:#3fd09e; --ok-soft:#0c2a20; --warn:#ffb84d; --warn-soft:#2a1d07;
+  --code-bg:#050c15; --code-ink:#d8e5f3; --code-muted:#7d93ab;
+  --hero-a:#04182c; --hero-b:#0a2d52; --hero-ink:#eaf3fc;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+a{color:var(--ice);text-underline-offset:2px}
+code,pre,kbd{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+:not(pre)>code{background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:.88em;overflow-wrap:anywhere}
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:8px;padding:14px 16px;overflow-x:auto;max-width:100%;font-size:13px;line-height:1.55;margin:12px 0 18px;white-space:pre}
+pre .c{color:var(--code-muted)}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .5em;font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(1.45rem,3.4vw,1.9rem);margin-top:0}
+h3{font-size:1.15rem;margin-top:1.6em}
+h4{font-size:1rem;margin-top:1.2em}
+p{margin:0 0 1em}
+ul,ol{padding-left:1.25em;margin:0 0 1em}
+li{margin:.25em 0}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:14px;height:52px}
+.brand{font-weight:700;letter-spacing:.02em;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--ice),var(--heat))}
+.nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0}
+.nav::-webkit-scrollbar{display:none}
+.nav a{white-space:nowrap;text-decoration:none;color:var(--muted);font-size:.86rem;padding:6px 10px;border-radius:6px}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.hero{background:linear-gradient(160deg,var(--hero-a),var(--hero-b));color:var(--hero-ink);padding:44px 0 36px}
+.eyebrow{font:600 .78rem/1 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;opacity:.85;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:8px}
+.eyebrow span{border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:5px 10px}
+.hero h1{font-size:clamp(2.2rem,7vw,3.6rem);margin-bottom:.15em}
+.hero .tag{font-size:clamp(1.15rem,3.2vw,1.5rem);font-weight:500;margin-bottom:.9em}
+.hero .pitch{max-width:720px;opacity:.92}
+.demo{margin-top:26px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:16px}
+.demo-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;font-size:.9rem}
+.ctrls{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:14px}
+@media (min-width:700px){.ctrls{grid-template-columns:2fr 1fr 1fr}}
+.ctrl{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:10px 12px;font-size:.85rem}
+.ctrl label{display:block;font:600 .72rem/1 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-bottom:8px}
+.ctrl input[type=range]{width:100%;accent-color:#ff8a3d}
+.ctrl .val{font:600 1.1rem/1 "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.toggle{display:inline-flex;border:1px solid rgba(255,255,255,.3);border-radius:8px;overflow:hidden}
+.toggle button,.btn{font:600 .82rem "IBM Plex Mono",monospace;background:transparent;color:var(--hero-ink);border:0;padding:7px 11px;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--hero-ink);color:var(--hero-a)}
+.btn{border:1px solid rgba(255,255,255,.3);border-radius:8px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.it{background:#ffffff;color:#0c1a2a;border-radius:10px;padding:11px 12px;border-top:5px solid #0a63bd;transition:border-color .3s;min-width:0}
+.it .nm{font-weight:700;font-size:.95rem;line-height:1.25}
+.it .sub{font-size:.76rem;color:#4b5c70;margin-top:2px}
+.it .clock{font:600 1.35rem/1.2 "IBM Plex Mono",monospace;margin:8px 0 6px;font-variant-numeric:tabular-nums}
+.it .bar{height:6px;border-radius:3px;background:#e2eefa;overflow:hidden;margin-bottom:7px}
+.it .bar i{display:block;height:100%;background:linear-gradient(90deg,#0a63bd,#ff8a3d);transition:width .3s}
+.it .st{display:inline-block;font:600 .7rem/1 "IBM Plex Mono",monospace;letter-spacing:.06em;padding:4px 7px;border-radius:4px;background:#e0f4ec;color:#075c43}
+.it .why{font-size:.74rem;color:#4b5c70;margin-top:6px}
+.it.use{border-top-color:#d9480f}.it.use .st{background:#fff0e5;color:#9a3007}.it.use .clock{color:#9a3007}
+.it.dis{border-top-color:#c3201f}.it.dis .st{background:#fdeaea;color:#a1100f}.it.dis .clock{color:#a1100f}.it.dis .bar i{background:#c3201f}
+.it.unk{border-top-color:#8aa1ba}.it.unk .st{background:#eaf1f8;color:#3b4b60}
+.demo-foot{font-size:.78rem;opacity:.8;margin-top:10px}
+section{padding:42px 0;border-bottom:1px solid var(--line)}
+.part{padding:28px 0 6px;border-bottom:0}
+.part .lbl{font:600 .8rem/1 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--heat)}
+.part h2{font-size:clamp(1.7rem,4.5vw,2.3rem);margin-top:8px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow);min-width:0}
+.card h3,.card h4{margin-top:0}
+.step-n{font:700 .8rem/1 "IBM Plex Mono",monospace;color:var(--ice);letter-spacing:.1em;margin-bottom:8px}
+.callout{border-left:4px solid var(--ice);background:var(--ice-soft);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+.callout.heat{border-color:var(--heat);background:var(--heat-soft)}
+.callout.danger{border-color:var(--danger);background:var(--danger-soft)}
+.callout.ok{border-color:var(--ok);background:var(--ok-soft)}
+.callout p:last-child,.callout ul:last-child{margin-bottom:0}
+.safety{border:2px solid var(--danger);border-radius:10px;padding:16px 18px;background:var(--danger-soft)}
+.safety strong{color:var(--danger)}
+.table-wrap{overflow-x:auto;margin:12px 0 18px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{background:var(--surface-2);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.t{font-family:"IBM Plex Mono",monospace;white-space:nowrap;color:var(--ice);font-weight:600}
+.pill{display:inline-block;font:600 .72rem/1 "IBM Plex Mono",monospace;padding:4px 7px;border-radius:4px;letter-spacing:.04em;white-space:nowrap}
+.pill.v{background:var(--ok-soft);color:var(--ok)}
+.pill.x{background:var(--danger-soft);color:var(--danger)}
+.pill.w{background:var(--warn-soft);color:var(--warn)}
+.pill.i{background:var(--ice-soft);color:var(--ice)}
+.api{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:16px 18px;margin:16px 0;box-shadow:var(--shadow);min-width:0}
+.api h3{margin-top:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:4px 12px;font-size:.9rem;margin:8px 0 6px}
+.kv dt{color:var(--muted);font-weight:500}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+@media (max-width:560px){.kv{grid-template-columns:1fr}.kv dt{margin-top:6px}}
+.check li{list-style:none;position:relative;padding-left:4px}
+.check{padding-left:1.4em}
+.check li::before{content:"";position:absolute;left:-1.3em;top:.45em;width:12px;height:12px;border:2px solid var(--ice);border-radius:3px}
+.timeline td:first-child{width:1%}
+footer{padding:30px 0 50px;color:var(--muted);font-size:.85rem}
+.ref li{overflow-wrap:anywhere}
+.scale{display:flex;height:10px;border-radius:5px;overflow:hidden;margin:6px 0 4px;background:linear-gradient(90deg,#0a63bd 0%,#5aaaf2 40%,#ff8a3d 70%,#c3201f 100%)}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="dot" aria-hidden="true"></span>The 4-Hour Rule</div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#problem">Problem</a><a href="#how">How</a><a href="#demo-script">Demo</a><a href="#rubric">Rubric</a><a href="#stack-bb">Blackout Box</a><a href="#safety">Safety</a>
+      <a href="#module">Module</a><a href="#engine">Engine</a><a href="#rules">Rules</a><a href="#prompts">Prompts</a><a href="#apis">Data</a><a href="#plan">Plan</a><a href="#submit">Submit</a><a href="#fixtures">Fixtures</a><a href="#risks">Risks</a><a href="#sources">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span>Hack for Humanity: Miami</span><span>Sat Oct 10, 2026 · build ends 3:30 PM ET</span><span>Module of Blackout Box</span><span>Gemma 4 via Gemini API</span></div>
+    <h1>The 4-Hour Rule</h1>
+    <div class="tag">Everything in your fridge and medicine cabinet has a clock.</div>
+    <p class="pitch">The power is out and the apartment is 88°F. One photo of the open fridge, one of the medicine shelf. Gemma 4 lists every item. A rules engine built on USDA, FoodSafety.gov and FDA label text gives each item its own countdown, sorted by what dies first: <strong>SAFE</strong>, <strong>USE NOW</strong>, <strong>DISCARD</strong>. In English, Español and Kreyòl. Works offline inside Blackout Box.</p>
+
+    <div class="demo" aria-label="Demo preview">
+      <div class="demo-head">
+        <div><strong>Demo moment:</strong> 2 photos → 10 clocks. Drag "power went out" and watch cards flip.</div>
+        <div class="toggle" role="group" aria-label="Indoor temperature">
+          <button type="button" data-temp="84" aria-pressed="true">Indoor 84°F</button>
+          <button type="button" data-temp="91" aria-pressed="false">Indoor 91°F</button>
+        </div>
+      </div>
+      <div class="ctrls">
+        <div class="ctrl"><label for="hrs">Power went out · hours ago</label><input id="hrs" type="range" min="0" max="72" step="0.5" value="2.5"><div class="val" id="hrsv">2.5 h</div></div>
+        <div class="ctrl"><label>Fridge door opened</label><button type="button" class="btn" id="open">I opened the fridge</button> <span class="val" id="opens">0×</span></div>
+        <div class="ctrl"><label>Freezer</label><div class="toggle" role="group" aria-label="Freezer fullness"><button type="button" data-frz="full" aria-pressed="true">Full</button><button type="button" data-frz="half" aria-pressed="false">Half</button></div></div>
+      </div>
+      <div class="cards" id="cards"></div>
+      <div class="demo-foot">Preview only. Food clocks: USDA/FoodSafety.gov (fridge keeps food safe up to 4 h closed; full freezer ~48 h, half ~24 h). Med clocks: openFDA label text × 0.9 margin, minus hours out of the fridge. Each door opening subtracts 30 min from the fridge clock (our assumption, labeled as such in the app). Numbers tick live in the real build.</div>
+    </div>
+  </div>
+</div>
+
+<main>
+<div class="wrap"><section class="part"><div class="lbl">Part A</div><h2>Concept: for judges and the team</h2></section></div>
+
+<section id="problem"><div class="wrap">
+  <h2>The problem</h2>
+  <div class="callout heat"><p><strong>Checked this morning:</strong> Miami International read <strong>87.8°F</strong> with a heat index of <strong>97.7°F</strong> at 10:20 AM (NWS KMIA, from the Cold Chain brief). A closed refrigerator keeps food safe for only <strong>4 hours</strong> without power (USDA via FoodSafety.gov). A full freezer, about <strong>48 hours</strong>. Insulin labels cap room temperature at <strong>86°F</strong>. After a hurricane, every one of those clocks is running at once and nobody can see them.</p></div>
+  <div class="grid2">
+    <div class="card"><h4>Who it is for</h4><ul>
+      <li><strong>Everyone with a fridge.</strong> After an outage, the question is always "is this still good?" The official answer is a 60-row chart nobody reads by phone light.</li>
+      <li><strong>Seniors</strong> managing meds alone, and anyone whose phone is on its last 10%.</li>
+      <li><strong>Families with insulin or baby formula.</strong> Opened formula goes on the USDA discard list. Insulin has a label clock in days, not hours.</li>
+      <li><strong>Spanish and Kreyòl speakers.</strong> Miami emergencies happen in three languages.</li>
+    </ul></div>
+    <div class="card"><h4>Why a clock, not a chatbot</h4><ul>
+      <li>People do not want a conversation at 2 AM with no AC. They want a list sorted by what dies first.</li>
+      <li>Every number comes from a rules table with a citation, never from the model. The model only reads the photo and writes the plain-language explanation.</li>
+      <li>When the engine is unsure about food, it says <strong>DISCARD</strong>. "When in Doubt, Throw it Out!" is the USDA line, verbatim.</li>
+      <li>When it is unsure about a medication, it says <strong>UNKNOWN: ask your pharmacist</strong>, and it never tells anyone to throw out insulin without a replacement (FDA emergency guidance).</li>
+    </ul></div>
+  </div>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <h2>How it works in 3 steps</h2>
+  <div class="grid3">
+    <div class="card"><div class="step-n">01 · SNAP</div><h4>Two photos</h4><p>Open fridge (and freezer if you have one), then the medicine shelf. <strong>Gemma 4</strong> (via the Gemini API online; <code>gemma4:e4b</code> on Ollama offline through Blackout Box) returns strict JSON: name, category, container, quantity, opened or not, visible brand text, confidence. It never assigns a limit.</p></div>
+    <div class="card"><div class="step-n">02 · MATCH</div><h4>Rules, not vibes</h4><p>Code maps each food to a USDA FoodSafety.gov keep/discard class (hard cheese: keep; milk: discard after 4 h) using FoodKeeper keywords bundled in the repo. Each medication gets its openFDA label storage sentence (Lantus 28 d ≤86°F; amoxicillin suspension 14 d). Unknown food: DISCARD. Unknown med: UNKNOWN.</p></div>
+    <div class="card"><div class="step-n">03 · COUNT DOWN</div><h4>One sorted screen</h4><p>You set when the power went out, tap "I opened the fridge" each time you do, and give an indoor temperature (or accept an estimate from NWS, labeled as an estimate). Every item gets a live clock and a status. Drag the outage slider and cards flip in real time.</p></div>
+  </div>
+</div></section>
+
+<section id="demo-script"><div class="wrap">
+  <h2>The 2-minute demo, second by second</h2>
+  <p class="muted">Phone mirrored to the screen. No slides. Fixture photos pre-loaded in case the camera or the key fails.</p>
+  <div class="table-wrap"><table class="timeline">
+    <thead><tr><th>Time</th><th>On screen</th><th>Say</th></tr></thead>
+    <tbody>
+      <tr><td class="t">0:00–0:10</td><td>Blackout Box home. Tap <em>The 4-Hour Rule</em>.</td><td>"Power's been out since 7 this morning. The apartment is 88 degrees. What in my fridge is still good, and is my insulin still good?"</td></tr>
+      <tr><td class="t">0:10–0:30</td><td>Take photo of the open fridge (or tap <em>Use demo photo</em>). Item chips appear: milk, eggs, cooked chicken, cheddar, butter, ketchup, baby formula (opened), frozen chicken.</td><td>"Gemma 4 reads the photo and lists what it sees. It's not allowed to decide anything. It's a pair of eyes."</td></tr>
+      <tr><td class="t">0:30–0:45</td><td>Take photo of the medicine shelf: Lantus, Humalog KwikPen, amoxicillin suspension, metformin.</td><td>"Second photo. Same thing."</td></tr>
+      <tr><td class="t">0:45–1:10</td><td>Countdown screen. Slider reads <em>2.5 h ago</em>. Milk, eggs, chicken: USE NOW, 1:30 left. Cheddar, butter, ketchup: SAFE, no clock. Insulin: SAFE, 25 days. Frozen chicken: SAFE, 45 h.</td><td>"USDA: a closed fridge keeps food safe for four hours. So milk has ninety minutes. Cheddar and butter are on the USDA keep list. Insulin has twenty-five days because its FDA label says 28 days under 86 degrees, and we keep a 10 percent margin."</td></tr>
+      <tr><td class="t">1:10–1:30</td><td>Drag the slider to <em>5 h</em>. Milk, eggs, chicken, formula flip to DISCARD. Tap <em>I opened the fridge</em> twice; the frozen chicken clock shortens.</td><td>"Five hours. That's it for the perishables. Opened formula too. We say discard, not 'probably fine', because the USDA says when in doubt, throw it out."</td></tr>
+      <tr><td class="t">1:30–1:45</td><td>Tap <em>Indoor 91°F</em>. Insulin cards turn red: PAST LABEL LIMIT, keep cool, get a replacement. Not "discard".</td><td>"Push the room past 86 and insulin is over its label limit. Notice we don't tell you to throw it out. FDA says if it's keeping you alive and there's no replacement, use it until you get a new supply."</td></tr>
+      <tr><td class="t">1:45–1:55</td><td>Tap <em>Kreyòl</em>, then <em>Español</em>. Whole screen switches.</td><td>"Three languages, same clocks."</td></tr>
+      <tr><td class="t">1:55–2:00</td><td>Safety footer. Repo: <code>modules/four-hour-rule/</code>, README names Gemma 4.</td><td>"USDA and FDA sourced. Not medical advice. In an emergency, call 911. The 4-Hour Rule."</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="rubric"><div class="wrap">
+  <h2>How it scores</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Criterion</th><th>Weight</th><th>How The 4-Hour Rule earns it</th></tr></thead>
+    <tbody>
+      <tr><td>Community impact</td><td>30%</td><td>Every household in a post-storm outage asks this. It turns two official charts and a stack of package inserts into one sorted list, in the three languages Miami speaks, for the people with the most to lose: seniors, families with insulin or formula. Food poisoning after storms and insulin potency loss are both real, and the fix is a phone screen.</td></tr>
+      <tr><td>Working build</td><td>25%</td><td>End-to-end on a phone: camera → Gemma 4 → rules engine → live clocks. The engine is a pure function with <code>node --test</code> cases. <code>DEMO_MODE</code> fixtures (two photos with pre-baked JSON) keep the demo alive without Wi-Fi or credits.</td></tr>
+      <tr><td>Use of AI and data</td><td>20%</td><td>Gemma 4 does vision (list items as JSON) and explanation (multilingual, grounded in the quoted rule). Data: FoodSafety.gov chart, USDA FoodKeeper (661 products, CC0, bundled), openFDA drug labels, NWS observations, optional USDA FoodData Central. The model never computes a limit.</td></tr>
+      <tr><td>Originality and craft</td><td>15%</td><td>Countdown cards that go ice-blue to heat-red, sorted by what dies first. Door-open events and an outage slider that re-run the engine live. Food and meds on one screen under one rule set, with the source sentence under every card.</td></tr>
+      <tr><td>Demo clarity</td><td>10%</td><td>Two photos, ten clocks, one drag, cards flip. Then a language switch. Done in 2:00.</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="stack-bb"><div class="wrap">
+  <h2>How it stacks with Blackout Box, and which prizes it supports</h2>
+  <div class="grid2">
+    <div class="card"><h4>Position in the parent app</h4><ul>
+      <li>Blackout Box is the offline-first shell (Gemma 4 on Ollama, per <code>docs/blackout-box-brief.html</code>). The 4-Hour Rule is its first module: <code>modules/four-hour-rule/</code>, one route, one engine file, one fixtures folder.</li>
+      <li>Shared: the vision provider switch (<code>AI_PROVIDER=gemini|workers|ollama</code>), the i18n dictionary, the safety footer, the NWS fetch, and the disk cache. Do not duplicate them; import them.</li>
+      <li>Cold Chain's openFDA label picker and verdict engine are reused as the medication half. Its verified rules for Lantus, Humalog, Trulicity and metformin are copied into <code>rules/meds.json</code> with their <code>set_id</code>s.</li>
+    </ul></div>
+    <div class="card"><h4>Prizes</h4><ul>
+      <li><strong>Best Use of Gemma 4</strong> (requires Gemma 4 through the Gemini API, named in the README, shown in code and demo): the online path calls <code>models/gemma-4-26b-a4b-it</code> on <code>generativelanguage.googleapis.com</code>. Needs a <strong>funded</strong> <code>GEMINI_API_KEY</code>; the key on this machine returned HTTP 402 today. Demo must show the Gemini call, not only Ollama.</li>
+      <li><strong>Best Open-Source AI</strong>: the engine ships as a dependency-free Agent Skill script and the offline path runs an open model (gemma4 on Ollama, or <code>@cf/google/gemma-4-26b-a4b-it</code> on Workers AI as the online fallback). This does not qualify for the Gemma prize.</li>
+      <li><strong>Track 01, Four Forces</strong>: water (hurricane outage), fire/air (heat), land (what is in the home). Same track as Blackout Box; submit once, as one app.</li>
+    </ul></div>
+  </div>
+</div></section>
+
+<section id="safety"><div class="wrap">
+  <h2>Safety framing</h2>
+  <div class="safety">
+    <p><strong>Fixed footer on every result screen, in all 3 languages, hard-coded, never generated:</strong></p>
+    <ul>
+      <li><strong>EN:</strong> Food guidance from USDA and FoodSafety.gov. Medication information from FDA drug labeling. Not medical advice. When in doubt, throw food out. Ask your pharmacist about medicine. In an emergency, call 911.</li>
+      <li><strong>ES:</strong> Guía de alimentos del USDA y FoodSafety.gov. Información de medicamentos del etiquetado de la FDA. No es consejo médico. Ante la duda, deseche la comida. Consulte a su farmacéutico sobre los medicamentos. En una emergencia, llame al 911.</li>
+      <li><strong>HT:</strong> Konsèy sou manje soti nan USDA ak FoodSafety.gov. Enfòmasyon sou medikaman soti nan etikèt FDA a. Se pa konsèy medikal. Si ou pa sèten, jete manje a. Mande famasyen ou pou medikaman. Si se yon ijans, rele 911. <span class="muted small">(Have a Kreyòl speaker at the event check this before the demo.)</span></li>
+    </ul>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="card"><h4>Rules the product follows</h4><ul>
+      <li><strong>Food bias: DISCARD when unsure.</strong> Unknown item, unknown class, unknown outage start → DISCARD with "USDA: when in doubt, throw it out." Never "probably fine".</li>
+      <li><strong>Never suggest smelling or tasting.</strong> FoodSafety.gov: "never taste food to determine its safety."</li>
+      <li><strong>Med bias: UNKNOWN, not DISCARD.</strong> No label text → "Ask your pharmacist." Insulin over its limit → PAST LABEL LIMIT: keep cool, check blood sugar, get a replacement; keep using only if no replacement (FDA). DO NOT USE only when frozen.</li>
+      <li>Every card shows the source sentence and where it came from (FoodSafety.gov chart row, FoodKeeper ID, or openFDA <code>set_id</code>).</li>
+      <li>The indoor temperature estimate is labeled "estimate" and the app asks for a thermometer reading first.</li>
+      <li>Door-open penalties and the 90% medication margin are <em>our</em> conservative choices, stated in the README, not USDA or FDA numbers.</li>
+    </ul></div>
+    <div class="card"><h4>Privacy and honesty</h4><ul>
+      <li>Photos are processed in memory and never stored. No accounts, no tracking. Offline mode sends nothing anywhere.</li>
+      <li>openFDA's disclaimer ("do not rely on openFDA to make decisions regarding medical care") is shown on the About screen and in the README.</li>
+      <li>FoodKeeper is a shelf-life table, not an outage table. The outage clocks come only from the FoodSafety.gov chart. Say so in the README.</li>
+      <li>Nutrition data (FoodData Central) is a demo nicety, not safety data. If it is on screen, it is clearly separate from the clock.</li>
+    </ul></div>
+  </div>
+</div></section>
+
+<div class="wrap"><section class="part"><div class="lbl">Part B</div><h2>Build intel: for the coding agent</h2>
+<p>Checked with real calls on Sat Oct 10, 2026 between 10:50 and 11:00 AM ET unless marked otherwise. Raw captures are in <code>reports/four-hour-rule-research/</code>. Medication facts marked "from Cold Chain" were verified by the sibling brief (<code>docs/cold-chain-brief.html</code>, raw in <code>reports/cold-chain-research/</code>) and were not re-run. Build ends <strong>3:30 PM ET</strong>.</p></section></div>
+
+<section id="module"><div class="wrap">
+  <h2>Module interface</h2>
+  <div class="callout"><p><strong>Where it lives:</strong> <code>modules/four-hour-rule/</code> inside the Blackout Box repo. The engine is pure TypeScript compiled to one ESM file with <strong>no model and no network dependency</strong>, so the same file runs in the browser, on the server, and as <code>skills/four-hour-rule/scripts/assess.mjs</code>.</p></div>
+<pre>modules/four-hour-rule/
+├── engine/
+│   ├── types.ts            <span class="c"># Item, Limit, Verdict, Outage, Env</span>
+│   ├── assess.ts           <span class="c"># assess(items, outage, env, now) → Verdict[]  (pure)</span>
+│   ├── classify.ts         <span class="c"># name → FoodClass via rules/food-classes.json + FoodKeeper keywords (pure)</span>
+│   ├── estimate.ts         <span class="c"># estimateIndoorF(outdoorNowF, hourlyF, hoursSinceOutage) (from Cold Chain)</span>
+│   └── engine.test.mjs     <span class="c"># node --test</span>
+├── rules/
+│   ├── food-classes.json   <span class="c"># FoodSafety.gov chart rows → class + hours + quote + url</span>
+│   ├── meds.json           <span class="c"># verified openFDA rules (Lantus, Humalog, Trulicity, metformin, amoxicillin)</span>
+│   └── foodkeeper.en.json  <span class="c"># USDA FoodKeeper v128 (CC0), bundled; ES/PT optional</span>
+├── ai/
+│   ├── vision.ts           <span class="c"># provider switch: gemini | workers | ollama → ItemsJSON</span>
+│   ├── explain.ts          <span class="c"># grounded explanation per (item, status, lang) + banned-phrase filter</span>
+│   └── prompts.ts
+├── ui/
+│   ├── Countdown.tsx (or .ts)  <span class="c"># cards, slider, door-open, temp, language</span>
+│   └── i18n.ts             <span class="c"># en / es / ht  (extends Blackout Box dictionary)</span>
+├── fixtures/
+│   ├── fridge.jpg  fridge.items.json
+│   ├── meds.jpg    meds.items.json
+│   └── nws_kmia.json
+└── README.md               <span class="c"># module section merged into the main README</span></pre>
+
+  <h3>Types</h3>
+<pre><span class="c">// engine/types.ts</span>
+export type Category = "food_refrigerated" | "food_frozen" | "food_shelf_stable" | "med_refrigerated" | "med_room_temp" | "unknown";
+export type FoodClass =
+  | "discard_4h"        <span class="c">// FoodSafety.gov "Discard" rows: meat, dairy, eggs, cut produce, cooked food, opened formula</span>
+  | "keep"              <span class="c">// "Keep" rows: hard cheese, butter, condiments, uncut produce, bread, PB</span>
+  | "mayo_8h_50f"       <span class="c">// opened mayo/tartar/horseradish: discard if above 50°F for more than 8 h</span>
+  | "frozen_refreeze"   <span class="c">// refreeze OK while ice crystals: meat, juices, breads, hard cheese</span>
+  | "frozen_discard"    <span class="c">// ice cream / frozen yogurt: discard once thawed</span>
+  | "frozen_veg_6h"     <span class="c">// frozen vegetables: discard after 6 h above 40°F</span>
+  | "shelf_stable"
+  | "unknown";          <span class="c">// treated as discard_4h (bias to DISCARD)</span>
+
+export interface Item {
+  id: string;                      <span class="c">// "f1", "m1"</span>
+  name: string;                    <span class="c">// as read: "2% milk"</span>
+  category: Category;
+  container: "carton"|"bottle"|"jar"|"bag"|"box"|"tub"|"pen"|"vial"|"blister"|"other"|null;
+  quantity: string|null;           <span class="c">// "1 gallon", "5 pens"</span>
+  opened: boolean|null;
+  brandText: string|null;          <span class="c">// exact printed text, for openFDA / FoodKeeper lookup</span>
+  location: "fridge"|"freezer"|"door"|"shelf"|"cabinet"|null;
+  confidence: number;              <span class="c">// 0..1 from the vision model</span>
+  foodClass?: FoodClass;           <span class="c">// set by classify(), never by the model</span>
+  foodkeeperId?: number|null;
+  medRule?: MedRule;               <span class="c">// set from rules/meds.json or openFDA</span>
+  openedDaysAgo?: number|null;     <span class="c">// meds: user-entered; suspensions: days since mixed</span>
+  frozen?: boolean;                <span class="c">// meds: user says it froze</span>
+}
+
+export interface MedRule {         <span class="c">// identical to Cold Chain's Rule</span>
+  kind: "refrigerated"|"room_temp"|"unknown";
+  maxTempF: number|null; roomTempDays: number|null; inUseDays: number|null; doNotFreeze: boolean;
+  quote: string; source: { setId: string; effectiveTime: string; field: string };
+}
+
+export interface Limit {
+  kind: "fridge_4h"|"freezer_48h"|"freezer_24h"|"after_warm_8h"|"after_warm_6h"|"label_days"|"label_max_temp"|"none"|"unknown";
+  hours: number|null;              <span class="c">// total allowance from outage start (food) or from fridge removal (meds)</span>
+  maxTempF: number|null;
+  source: { name: string; url: string; quote: string; ref?: string };  <span class="c">// ref = chart row / FoodKeeper ID / set_id</span>
+}
+
+export interface Outage {
+  startedAt: string;               <span class="c">// ISO; user-entered</span>
+  doorOpens: string[];             <span class="c">// ISO timestamps of "I opened the fridge" taps</span>
+  freezerFull: boolean;            <span class="c">// true → 48 h, false → 24 h</span>
+  freezerDoorOpens: string[];
+}
+
+export interface Env {
+  indoorTempF: number|null;        <span class="c">// thermometer reading, or estimate</span>
+  indoorSource: "user"|"estimate"|null;
+  forecastIndoorF?: { time: string; tempF: number }[];   <span class="c">// optional, from NWS hourly</span>
+}
+
+export type Status = "SAFE"|"USE_NOW"|"DISCARD"|"PAST_LIMIT"|"DO_NOT_USE"|"UNKNOWN";
+
+export interface Verdict {
+  itemId: string; status: Status;
+  hoursLeft: number|null;          <span class="c">// null = no clock</span>
+  expiresAt: string|null;          <span class="c">// ISO, for the ticking UI</span>
+  limit: Limit; reasons: string[]; <span class="c">// machine keys → i18n copy</span>
+  assumptions: string[];           <span class="c">// "door_open_penalty", "indoor_estimate", "unknown_item_discard"</span>
+}
+
+export function assess(items: Item[], outage: Outage, env: Env, now?: number): Verdict[];
+<span class="c">// Sorted: DO_NOT_USE, DISCARD, PAST_LIMIT first (hoursLeft 0), then ascending hoursLeft, then no-clock SAFE, then UNKNOWN.</span></pre>
+</div></section>
+
+<section id="engine"><div class="wrap">
+  <h2>Engine (deterministic, conservative)</h2>
+  <div class="grid2">
+    <div class="card"><h4>Food clocks (from FoodSafety.gov, verbatim)</h4><ul>
+      <li>"your refrigerator will keep food safe for up to <strong>4 hours</strong> during a power outage. Keep the door closed as much as possible. Discard refrigerated perishable food such as meat, poultry, fish, eggs, and leftovers after 4 hours without power."</li>
+      <li>Chart column: "Exposed to temperatures of 40°F (4°C) or above for more than <strong>2 hours</strong>" → the last 2 h of the 4 h window is USE NOW (cook it or move it to a cooler with ice).</li>
+      <li>"A full freezer will hold a safe temperature for approximately <strong>48 hours</strong> (<strong>24 hours</strong> if it is half full and the door remains closed). Food may be safely refrozen if it still contains ice crystals or is at 40°F (4°C) or below".</li>
+      <li>Frozen vegetables: "Discard after held above 40°F (4°C) for 6 hours". Ice cream: discard even with ice crystals.</li>
+      <li>Opened mayonnaise, tartar sauce, horseradish: discard "if above 50°F (10°C) for more than 8 hrs".</li>
+    </ul></div>
+    <div class="card"><h4>Our conservative choices (state them in the README)</h4><ul>
+      <li><code>DOOR_OPEN_PENALTY_H = 0.5</code> per tap, capped at 2 h total, applied to the fridge and freezer clocks separately. Not a USDA number.</li>
+      <li>Mayo and frozen-vegetable rules start their 8 h / 6 h counters <em>after</em> the fridge (4 h) or freezer (48/24 h) window ends. Our assumption of when the box passes 40°F / 50°F.</li>
+      <li><code>FREEZER_USE_NOW_H = 12</code>: last 12 h of the freezer window is USE NOW ("cook it or add ice"). Our number.</li>
+      <li>Unknown or low-confidence food (&lt; 0.5) is <code>discard_4h</code>.</li>
+      <li>Meds: <code>SAFETY_MARGIN = 0.9</code>, shortest limit when a label covers several products, every hour since outage counts as room temperature (all from Cold Chain).</li>
+      <li>If the user never set an outage start, every refrigerated food is DISCARD and every refrigerated med is UNKNOWN until they do.</li>
+    </ul></div>
+  </div>
+<pre><span class="c">// engine/assess.ts (pure; no I/O; same file ships as skills/four-hour-rule/scripts/assess.mjs)</span>
+import { verdict as medVerdict } from "./medVerdict";   <span class="c">// Cold Chain engine.mjs, unchanged</span>
+export const FRIDGE_H = 4, FRIDGE_USE_NOW_H = 2, FREEZER_FULL_H = 48, FREEZER_HALF_H = 24, FREEZER_USE_NOW_H = 12;
+export const DOOR_OPEN_PENALTY_H = 0.5, DOOR_OPEN_CAP_H = 2, MAYO_AFTER_WARM_H = 8, FROZEN_VEG_AFTER_WARM_H = 6;
+const FS = "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage";
+
+export function assess(items, outage, env, now = Date.now()) {
+  const t0 = Date.parse(outage.startedAt);
+  const hoursOut = Number.isFinite(t0) ? Math.max(0, (now - t0) / 36e5) : null;
+  const pen = (opens) => Math.min(DOOR_OPEN_CAP_H, (opens?.length ?? 0) * DOOR_OPEN_PENALTY_H);
+  const fridgeH  = FRIDGE_H - pen(outage.doorOpens);
+  const freezerH = (outage.freezerFull ? FREEZER_FULL_H : FREEZER_HALF_H) - pen(outage.freezerDoorOpens);
+
+  const out = items.map((it) => {
+    const a = [];
+    if (it.category.startsWith("med")) return medCard(it, hoursOut, env, now, a);
+    if (hoursOut == null) return v(it, "DISCARD", 0, lim("unknown", null, "No outage start time"), ["no_outage_start"], a);
+    const cls = it.foodClass ?? "unknown";
+    if (cls === "unknown") a.push("unknown_item_discard");
+    if (outage.doorOpens?.length) a.push("door_open_penalty");
+    switch (cls) {
+      case "shelf_stable": case "keep":
+        return v(it, "SAFE", null, lim("none", null, cls === "keep" ? "USDA chart: Keep" : "Shelf stable"), [], a);
+      case "mayo_8h_50f":
+        return clock(it, fridgeH + MAYO_AFTER_WARM_H, hoursOut, FRIDGE_USE_NOW_H, "after_warm_8h",
+          "Opened mayonnaise, tartar sauce, horseradish: Discard (if above 50°F (10°C) for more than 8 hrs)", a.concat("warm_start_assumed"));
+      case "frozen_refreeze": case "frozen_discard":
+        return clock(it, freezerH, hoursOut, FREEZER_USE_NOW_H, outage.freezerFull ? "freezer_48h" : "freezer_24h",
+          "A full freezer will hold a safe temperature for approximately 48 hours (24 hours if it is half full and the door remains closed).",
+          a, cls === "frozen_refreeze" ? ["check_ice_crystals_refreeze_ok"] : ["ice_cream_discard_if_thawed"]);
+      case "frozen_veg_6h":
+        return clock(it, freezerH + FROZEN_VEG_AFTER_WARM_H, hoursOut, FREEZER_USE_NOW_H, "after_warm_6h",
+          "Vegetables: Discard after held above 40°F (4°C) for 6 hours", a.concat("warm_start_assumed"));
+      default: <span class="c">// discard_4h and unknown</span>
+        return clock(it, fridgeH, hoursOut, FRIDGE_USE_NOW_H, "fridge_4h",
+          "Discard refrigerated perishable food such as meat, poultry, fish, eggs, and leftovers after 4 hours without power.", a);
+    }
+  });
+  return out.sort(order);
+}
+
+function clock(it, allowH, hoursOut, useNowH, kind, quote, assumptions, extraReasons = []) {
+  const left = allowH - hoursOut;
+  const status = left &lt;= 0 ? "DISCARD" : left &lt;= useNowH ? "USE_NOW" : "SAFE";
+  return v(it, status, Math.max(0, left), lim(kind, allowH, quote), extraReasons, assumptions);
+}
+function medCard(it, hoursOut, env, now, a) {
+  if (!it.medRule || it.medRule.kind === "unknown") return v(it, "UNKNOWN", null, lim("unknown", null, "No label storage text"), ["ask_pharmacist"], a);
+  if (hoursOut == null || env.indoorTempF == null) return v(it, "UNKNOWN", null, lim("unknown", null, it.medRule.quote), ["need_outage_and_temp"], a);
+  if (env.indoorSource === "estimate") a.push("indoor_estimate");
+  const r = medVerdict(it.medRule, { indoorTempF: env.indoorTempF, indoorSource: env.indoorSource, hoursOutOfFridge: hoursOut,
+                                     openedDaysAgo: it.openedDaysAgo, frozen: it.frozen, forecastIndoorF: env.forecastIndoorF }, now);
+  const map = { OK: "SAFE", USE_SOON: "USE_NOW", OVER_LIMIT: "PAST_LIMIT", DO_NOT_USE: "DO_NOT_USE", UNKNOWN: "UNKNOWN" };
+  const kind = r.status === "OVER_LIMIT" &amp;&amp; r.reasons.includes("temp_above_label_max") ? "label_max_temp" : "label_days";
+  return v(it, map[r.status], r.hoursLeft, { kind, hours: it.medRule.roomTempDays ? it.medRule.roomTempDays * 24 * 0.9 : null,
+           maxTempF: it.medRule.maxTempF, source: { name: "FDA label (openFDA)", url: "https://api.fda.gov/drug/label.json",
+           quote: it.medRule.quote, ref: it.medRule.source.setId } }, r.reasons, a.concat("safety_margin_0_9"));
+}
+function lim(kind, hours, quote) { return { kind, hours, maxTempF: null, source: { name: "FoodSafety.gov (USDA)", url: FS, quote } }; }
+function v(it, status, hoursLeft, limit, reasons, assumptions) {
+  return { itemId: it.id, status, hoursLeft, expiresAt: hoursLeft == null ? null : new Date(Date.now() + hoursLeft * 36e5).toISOString(), limit, reasons, assumptions };
+}
+const RANK = { DO_NOT_USE: 0, DISCARD: 0, PAST_LIMIT: 0, USE_NOW: 1, SAFE: 2, UNKNOWN: 3 };
+function order(a, b) {
+  if (RANK[a.status] !== RANK[b.status]) return RANK[a.status] - RANK[b.status];
+  if (a.hoursLeft == null) return b.hoursLeft == null ? 0 : 1;
+  if (b.hoursLeft == null) return -1;
+  return a.hoursLeft - b.hoursLeft;
+}</pre>
+  <h4>Test cases for <code>node --test</code> (write all of them)</h4>
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Input</th><th>Expected</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>milk (<code>discard_4h</code>), outage 1 h, no opens</td><td>SAFE, hoursLeft 3</td></tr>
+      <tr><td>2</td><td>milk, outage 2.5 h</td><td>USE_NOW, hoursLeft 1.5</td></tr>
+      <tr><td>3</td><td>milk, outage 3 h, 3 door opens</td><td>DISCARD (4 − 1.5 = 2.5 &lt; 3), assumptions has <code>door_open_penalty</code></td></tr>
+      <tr><td>4</td><td>cheddar (<code>keep</code>), outage 30 h</td><td>SAFE, hoursLeft null, limit.kind none</td></tr>
+      <tr><td>5</td><td>frozen chicken (<code>frozen_refreeze</code>), full freezer, outage 30 h</td><td>SAFE, 18 h left, reason <code>check_ice_crystals_refreeze_ok</code>; with half freezer → DISCARD</td></tr>
+      <tr><td>6</td><td>ice cream, full freezer, outage 40 h</td><td>USE_NOW (8 h left), reason <code>ice_cream_discard_if_thawed</code></td></tr>
+      <tr><td>7</td><td>unknown item "sauce?" confidence 0.3</td><td>treated as discard_4h; assumptions has <code>unknown_item_discard</code></td></tr>
+      <tr><td>8</td><td>no outage start set</td><td>every food DISCARD with <code>no_outage_start</code>; every med UNKNOWN</td></tr>
+      <tr><td>9</td><td>Lantus unopened, outage 30 h, indoor 84°F</td><td>SAFE, 574.8 h (matches Cold Chain)</td></tr>
+      <tr><td>10</td><td>Lantus, indoor 91°F</td><td>PAST_LIMIT, limit.kind <code>label_max_temp</code>, never DISCARD</td></tr>
+      <tr><td>11</td><td>amoxicillin suspension mixed 10 d ago, indoor 84°F</td><td>SAFE, (14×24×0.9 − 240) = 62.4 h; mixed 13 d ago → USE_NOW</td></tr>
+      <tr><td>12</td><td>Humalog frozen=true</td><td>DO_NOT_USE</td></tr>
+      <tr><td>13</td><td>sort order</td><td>DISCARD/PAST_LIMIT first, then ascending hoursLeft, SAFE no-clock, UNKNOWN last</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="rules"><div class="wrap">
+  <h2>Rules table (ship as <code>rules/food-classes.json</code> and <code>rules/meds.json</code>)</h2>
+  <h3>Food: FoodSafety.gov chart → class <span class="pill v">VERIFIED 10:55 ET (browser pane)</span></h3>
+  <p class="small">Source: <a href="https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage">foodsafety.gov/food-safety-charts/food-safety-during-power-outage</a>, "Date Last Reviewed August 8, 2024". The host returns HTTP 403 to curl and WebFetch; it loaded in a real browser. Full verbatim capture: <code>reports/four-hour-rule-research/foodsafety_gov_power_outage_verbatim.txt</code>. Keywords below are our mapping; the chart rows are USDA's.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Class</th><th>Chart rows (verbatim, trimmed)</th><th>Clock</th><th>Keyword hints for <code>classify()</code></th></tr></thead>
+    <tbody>
+      <tr><td><code>discard_4h</code></td><td>Raw or leftover cooked meat, poultry, fish, seafood, soy meat substitutes · Lunchmeats, hot dogs, bacon, sausage · Pizza with any topping · Casseroles, soups, stews · Soft cheeses (brie, cottage, cream, mozzarella, queso fresco…) · Shredded cheeses · Milk, cream, sour cream, buttermilk, yogurt, eggnog, soy milk · <strong>Baby formula, opened</strong> · Fresh shell eggs, hard-cooked eggs, egg dishes · Custards, puddings, quiche · Fresh fruits, cut · Opened creamy dressings · Spaghetti sauce, opened · Refrigerator dough · Cooked pasta, rice, potatoes · Fresh pasta · Cheesecake · Cream-filled pastries · Fresh vegetables, cut · Pre-cut greens · Cooked vegetables · Cooked tofu · Vegetable juice, opened · Garlic in oil · Potato salad</td><td>4 h from outage (−door penalty); USE NOW in the last 2 h</td><td>milk, leche, lèt, cream, yogurt, egg, huevo, ze, chicken, pollo, poul, beef, carne, vyann, fish, pescado, pwason, shrimp, deli, ham, jamón, hot dog, leftover, sobras, rice, arroz, diri, pasta, formula, fórmula, soft cheese, queso fresco, cut fruit, salad</td></tr>
+      <tr><td><code>keep</code></td><td>Hard cheeses: Cheddar, Colby, Swiss, Parmesan, provolone, Romano · Processed cheeses · Grated Parmesan (can/jar) · Butter, margarine · Fresh fruits, uncut · Fruit juices, opened · Canned fruits, opened · Dried fruits · Peanut butter · Jelly, relish, taco sauce, mustard, catsup, olives, pickles · Worcestershire, soy, barbecue, hoisin sauces · Opened vinegar-based dressings · Bread, rolls, cakes, muffins, tortillas · Waffles, pancakes, bagels · Fruit pies · Fresh vegetables, uncut · Fresh mushrooms, herbs, spices</td><td>No clock (SAFE)</td><td>cheddar, swiss, parmesan, butter, mantequilla, bè, ketchup, mustard, mostaza, pickles, jelly, peanut butter, soy sauce, bbq, bread, pan, tortilla, whole fruit, apple, orange, banana, uncut vegetable, pepper, onion, juice (opened)</td></tr>
+      <tr><td><code>mayo_8h_50f</code></td><td>Opened mayonnaise, tartar sauce, horseradish: Discard (if above 50°F (10°C) for more than 8 hrs)</td><td>4 h + 8 h (warm-start assumption)</td><td>mayo, mayonnaise, mayonesa, tartar, horseradish</td></tr>
+      <tr><td><code>frozen_refreeze</code></td><td>Frozen meat, poultry, seafood; stews; milk; eggs; cheeses; juices; breads; flour; casseroles; frozen meals → Refreeze while ice crystals, Discard after 40°F+ for more than 2 h (hard cheese, juices, breads, flour: Refreeze either way)</td><td>48 h full / 24 h half (−door penalty); USE NOW in the last 12 h; then DISCARD unless user confirms ice crystals</td><td>any item with location freezer, "frozen", "congelado", "glase", "ice"</td></tr>
+      <tr><td><code>frozen_discard</code></td><td>Ice cream, frozen yogurt → Discard, Discard</td><td>same clock; copy says discard once thawed</td><td>ice cream, helado, krèm glase, frozen yogurt, popsicle</td></tr>
+      <tr><td><code>frozen_veg_6h</code></td><td>Vegetables (juices, packaged, blanched) → Discard after held above 40°F (4°C) for 6 hours</td><td>freezer window + 6 h</td><td>frozen vegetables, peas, corn, mixed veg</td></tr>
+      <tr><td><code>shelf_stable</code></td><td>Not on the refrigerated chart (canned, dry goods, unopened shelf-stable formula, water)</td><td>No clock</td><td>can, lata, rice (dry), beans (dry), cereal, crackers, water, unopened formula powder</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small"><strong>Classifier rule:</strong> exact FoodKeeper keyword match first (<code>Product.Keywords</code>, 661 rows, EN; ES file exists for Spanish names), then our keyword hints, then <code>unknown → discard_4h</code>. FoodKeeper gives the card its subtitle ("Cooked poultry dishes: 3–4 days refrigerated, USDA FoodKeeper ID 135") and nothing else; it has no outage fields.</p>
+
+  <h3>Meds: openFDA label rules (<code>rules/meds.json</code>)</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Drug</th><th>Rule</th><th>Label quote (trimmed)</th><th>openFDA ref</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Lantus SoloStar (insulin glargine)</td><td>refrigerated · max 86°F · 28 d room · in-use 28 d · do not freeze</td><td>"Room Temperature (up to 86°F [30°C]) … 28 days"; "Discard LANTUS if it has been frozen"</td><td>set <code>d5e07a0c-…</code>, eff. 20250602</td><td><span class="pill v">from Cold Chain</span></td></tr>
+      <tr><td>Basaglar KwikPen</td><td>same: 86°F · 28 d · do not freeze</td><td>"In-use BASAGLAR prefilled pens must be used within 28 days or be discarded … Room Temperature (up to 86°F [30°C])"</td><td>set <code>0ad21db3-2b1c-4ed9-a687-bdd6a74d0aae</code>, eff. 20260616</td><td><span class="pill v">from Cold Chain</span></td></tr>
+      <tr><td>Humalog U-100 KwikPen</td><td>86°F · 28 d total (unopened + opened)</td><td>"can only be used for a total of 28 days, including both not in-use (unopened) and in-use (opened) storage time … (Up to 86°F [30°C])"</td><td>set <code>c8ecbd7a-…</code>, eff. 20260616</td><td><span class="pill v">from Cold Chain</span></td></tr>
+      <tr><td>Humalog Mix50/50 KwikPen</td><td>86°F · <strong>10 d</strong></td><td>"can only be used for a total of 10 days"</td><td>same label</td><td><span class="pill v">from Cold Chain</span></td></tr>
+      <tr><td>Trulicity (dulaglutide)</td><td>86°F · 14 d · do not freeze</td><td>"kept at room temperature, not to exceed 86°F (30°C) for a total of 14 days"</td><td>set <code>463050bd-…</code>, eff. 20260616</td><td><span class="pill v">from Cold Chain</span></td></tr>
+      <tr><td>Metformin tablets</td><td>room_temp · excursions to 86°F · no clock</td><td>"Store at 20°C to 25°C (68°F to 77°F), excursions permitted between 15°C and 30°C (59°F and 86°F)"</td><td>see Cold Chain gotchas (combo product hit first)</td><td><span class="pill v">from Cold Chain</span></td></tr>
+      <tr><td><strong>Amoxicillin for oral suspension</strong> (Hikma, 250 mg/5 mL)</td><td>room_temp-ok · <strong>inUseDays 14 from mixing</strong> · no heat max stated</td><td>"Shake well before using. Refrigeration is preferable but not required. Discard suspension after 14 days."</td><td>set <code>077f4a65-3cfb-4cb1-99f2-e27ffc5939c0</code>, eff. 20240201, field <code>how_supplied</code> (no <code>storage_and_handling</code> field on this label); 46 amoxicillin labels contain "reconstituted"</td><td><span class="pill v">VERIFIED 10:57 ET</span></td></tr>
+      <tr><td>Amoxicillin-clavulanate suspension (Chartwell RX)</td><td>refrigerated · <strong>inUseDays 10</strong> · no heat max stated</td><td>"Store reconstituted suspension under refrigeration. Discard unused suspension after 10 days."</td><td>set <code>00b86913-50c8-443f-8467-f4f499d358af</code>, eff. 20260723 (first hit for <code>generic_name:"amoxicillin"</code>, total 379)</td><td><span class="pill v">VERIFIED 10:56 ET</span></td></tr>
+      <tr><td>Anything else (vaccines, eye drops, other refrigerated liquids)</td><td>live openFDA lookup; if no "Store…" sentence → <code>unknown</code></td><td>UNKNOWN: "Ask your pharmacist." FDA: "contact a pharmacist, health care provider, or the manufacturer to find out if it can still be used."</td><td>—</td><td><span class="pill w">not verified</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout"><p><strong>Suspension rule shape:</strong> for labels that say "refrigeration preferable but not required, discard after N days", the engine runs the in-use clock only (<code>inUseDays × 24 × 0.9 − openedDaysAgo × 24</code>) and adds reason <code>no_heat_limit_on_label</code> so the explanation says heat may shorten it and to ask the pharmacist. For "store under refrigeration" suspensions with no stated max temperature, do the same and add <code>refrigeration_required_ask_pharmacist</code>. Never invent a °F number.</p></div>
+</div></section>
+
+<section id="prompts"><div class="wrap">
+  <h2>Prompts (Gemma 4)</h2>
+  <h3>A. Vision: list every item (strict JSON)</h3>
+<pre>SYSTEM (systemInstruction on Gemini; "system" role on Workers AI / Ollama):
+You list the contents of a refrigerator, freezer, or medicine shelf from a photo for an emergency food- and
+medication-safety app. You do NOT judge safety and you do NOT give limits, dates, or advice.
+Return ONLY minified JSON, no markdown fences, exactly:
+{"items":[{"id":"i1","name":string,"category":"food"|"medication"|"other",
+  "container":"carton"|"bottle"|"jar"|"bag"|"box"|"tub"|"pen"|"vial"|"blister"|"other"|null,
+  "quantity":string|null,"opened":boolean|null,"brand_text":string|null,
+  "location":"fridge"|"freezer"|"door"|"shelf"|"cabinet"|null,"confidence":number}],
+ "unreadable_count":number}
+Rules:
+- One entry per distinct product. Copy printed text exactly into brand_text; never invent a brand or drug name.
+- For medications, brand_text must include the drug name and strength exactly as printed, if visible.
+- "opened" is true only if you can see it is open (cap off, seal broken, partly used). Otherwise null.
+- If unsure what something is, still list it with a generic name ("sauce", "leftovers") and confidence below 0.5.
+- No commentary, no safety statements, no dates.
+USER: [image] + "List everything in this photo."</pre>
+  <p class="small">Post-process: strip <code>```</code> fences, <code>JSON.parse</code>, validate against the schema in code (reject unknown enum values, clamp confidence), retry once with "Your last reply was not valid JSON. Reply with JSON only." Any item with confidence &lt; 0.5 gets an editable chip. Food is classified by <code>classify()</code> in code; medications go to <code>rules/meds.json</code>, then openFDA.</p>
+  <p class="small">What the step receives: on this machine a synthetic pharmacy label test image exists at <code>reports/decision-models/label.png</code> (and <code>reports/cold-chain-research/test_label.png</code>). Workers AI <code>@cf/google/gemma-4-26b-a4b-it</code> read it correctly (parent's run). Real fridge photos are untested as of this brief.</p>
+
+  <h3>B. Explanation (per item, per language, grounded)</h3>
+<pre>SYSTEM:
+You explain one item's status during a power outage to someone with no AC and a dying phone. You are not a doctor.
+The engine already decided STATUS, HOURS_LEFT and the SOURCE_QUOTE. Never change, round differently, or contradict them.
+Use ONLY the SOURCE_QUOTE and the fixed guidance below. Reading level: 6th grade. Language: {lang} (en|es|ht). Max 45 words.
+Fixed guidance:
+- Food: USDA says never taste food to decide if it is safe. When in doubt, throw it out. A cooler with ice keeps food at 40°F or below.
+- Medication: FDA says if a medicine is needed to sustain life (for example insulin) and a replacement is not readily
+  available, it may be used until you can get a new supply. Keep it as cool as possible, out of sun. Do not use insulin that has been frozen.
+HARD RULES:
+- Food with STATUS DISCARD: say discard. Never say "probably fine", "should be OK", "smell it", "taste it", "check it".
+- Medication: NEVER say stop, skip, throw away, discard, or "do not use" unless STATUS is DO_NOT_USE (frozen).
+  For PAST_LIMIT say: keep it cool, check your blood sugar more often, get a replacement; keep using only if there is no replacement.
+- Never give dosing numbers or product-switching instructions. Say "ask your pharmacist".
+- Do not add a disclaimer; the app adds a fixed one.
+Return ONLY JSON: {"headline":string,"explanation":string,"what_to_do":[string]}
+USER: {"item":"2% milk","category":"food","status":"DISCARD","hours_left":0,"source_quote":"Discard refrigerated perishable food such as meat, poultry, fish, eggs, and leftovers after 4 hours without power.","lang":"es"}</pre>
+  <div class="callout danger"><p><strong>Code-side banned-phrase filter (run on every explanation, fall back to fixed i18n copy on a hit):</strong><br>
+  Food, status DISCARD: <code>/probably (fine|ok)|should be (fine|ok)|smell|taste|sniff|still (good|safe)|huele|prueba|probablemente|pran sant|goute|toujou bon/i</code><br>
+  Medication, status ≠ DO_NOT_USE: <code>/no (la |lo )?uses?|don'?t use|do not use|stop taking|throw (it )?away|discard|deseche|desechar|deja de|pa sèvi|jete/i</code> (Cold Chain saw a Spanish run say "No uses esta pluma"; keep the filter.)<br>
+  Any status: dosing numbers (<code>/\d+\s?(units?|unidades|mg)\b/i</code>) → reject.</p></div>
+</div></section>
+
+<section id="apis"><div class="wrap">
+  <h2>Data sources: endpoints, auth, real samples, gotchas</h2>
+
+  <div class="api">
+    <h3>1. FoodSafety.gov power-outage chart (content, bundled) <span class="pill v">VERIFIED 10:55 ET</span></h3>
+    <dl class="kv">
+      <dt>URL</dt><dd><a href="https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage">https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage</a> ("Date Last Reviewed August 8, 2024")</dd>
+      <dt>Auth</dt><dd>None, but <strong>curl and WebFetch get HTTP 403</strong> (Akamai). Do not fetch it at runtime. Bundle the rows as <code>rules/food-classes.json</code> with the URL and the review date; the verbatim capture is in <code>reports/four-hour-rule-research/foodsafety_gov_power_outage_verbatim.txt</code>.</dd>
+      <dt>Verbatim</dt><dd>"your refrigerator will keep food safe for up to 4 hours during a power outage. Keep the door closed as much as possible. Discard refrigerated perishable food such as meat, poultry, fish, eggs, and leftovers after 4 hours without power." · "After a power outage never taste food to determine its safety. … When in Doubt, Throw it Out!" · "A full freezer will hold a safe temperature for approximately 48 hours (24 hours if it is half full and the door remains closed). Food may be safely refrozen if it still contains ice crystals or is at 40°F (4°C) or below, however, its quality may suffer."</dd>
+      <dt>Gotcha</dt><dd>The headline says 4 h; the chart column says "40°F (4°C) or above for more than 2 hours". Both are USDA. The engine uses 4 h as the closed-fridge window and 2 h as the USE NOW band. Say this in the README so judges see it was read, not guessed.</dd>
+      <dt>FSIS line</dt><dd>The FSIS source page ("Keeping Food Safe During an Emergency") returned <em>Page Not Found</em> at its old URL today. The wording "refrigerator will keep food safely cold for about 4 hours if it is unopened" appeared only in search snippets (fsis.usda.gov/es/node/3347 and state mirrors); <strong>I did not fetch that page</strong>. Cite FoodSafety.gov, which attributes the 4-hour line to USDA.</dd>
+    </dl>
+  </div>
+
+  <div class="api">
+    <h3>2. USDA FSIS FoodKeeper data (bundled JSON) <span class="pill v">VERIFIED 10:56 ET (browser pane)</span></h3>
+    <dl class="kv">
+      <dt>Catalog</dt><dd><a href="https://catalog.data.gov/dataset/fsis-foodkeeper-data">https://catalog.data.gov/dataset/fsis-foodkeeper-data</a>. License on the page's JSON-LD: <code>https://creativecommons.org/publicdomain/zero/1.0/</code> (CC0). The CKAN API (<code>/api/3/action/package_show</code>) returned 404; the HTML page loads.</dd>
+      <dt>Files</dt><dd>EN/ES/PT: <code>https://www.fsis.usda.gov/shared/data/EN/foodkeeper.json</code> (631,732 bytes) and <code>FoodKeeper-Data.xls</code>; data dictionary PDF linked from the catalog page. <strong>fsis.usda.gov returns 403 to curl</strong>; it loaded in the browser pane. Bundle the file in the repo with the catalog URL and license; do not fetch at runtime.</dd>
+      <dt>Version</dt><dd><code>fileName "FMA-Data-v128.xlsx"</code>, Version sheet: Data_Version_Number 128, Current_Version "Yes", Modified_Date "09-06-2018". It is old; say so.</dd>
+      <dt>Shape</dt><dd><code>{ fileName, sheets:[{ name, data:[ [ {col:val}, {col:val}, … ] ] }] }</code>. Each row is an <em>array of single-key objects</em>; flatten with <code>Object.assign({}, ...row)</code>. Sheets: Version (21), Category (25), <strong>Product (661)</strong>, CookingTips (93), CookingMethods (89), Data Dictionary (62).</dd>
+      <dt>Product cols</dt><dd><code>ID, Category_ID, Name, Name_subtitle, Keywords, Pantry_Min/Max/Metric/tips, DOP_Pantry_*, Pantry_After_Opening_*, Refrigerate_Min/Max/Metric/tips, DOP_Refrigerate_*, Refrigerate_After_Opening_*, Refrigerate_After_Thawing_*, Freeze_Min/Max/Metric/Tips, DOP_Freeze_*</code>. DOP = from date of purchase. Metric is "Days" | "Weeks" | "Months" | text ("Package use-by date", "Not Recommended").</dd>
+    </dl>
+<pre><span class="c">// three flattened Product rows (real)</span>
+{ "ID": 27,  "Category_ID": 7,  "Name": "Milk", "Name_subtitle": "plain or flavored", "Keywords": "Milk,plain,flavored,flavor",
+  "Refrigerate_Metric": "Package use-by date", "DOP_Freeze_Min": 3, "DOP_Freeze_Max": 3, "DOP_Freeze_Metric": "Months" }
+{ "ID": 21,  "Category_ID": 7,  "Name": "Eggs", "Name_subtitle": "in shell", "Keywords": "Eggs,in shell,egg,shell",
+  "DOP_Refrigerate_Min": 3, "DOP_Refrigerate_Max": 5, "DOP_Refrigerate_Metric": "Weeks", "Freeze_Metric": "Not Recommended" }
+{ "ID": 135, "Category_ID": 14, "Name": "Cooked poultry dishes", "Keywords": "Cooked poultry dishes,poultry dishes,...",
+  "Refrigerate_Min": 3, "Refrigerate_Max": 4, "Refrigerate_Metric": "Days", "Freeze_Min": 4, "Freeze_Max": 6, "Freeze_Metric": "Months" }
+<span class="c">// also captured: Butter (ID 1, Pantry_tips "May be left at room temperature for 1 - 2 days."), Cheese hard (ID 3), Beef ground (ID 43), Hot dogs (ID 98), Chicken whole (ID 113), Yogurt (ID 33)</span>
+<span class="c">// Categories: 1 Baby Food · 5 Beverages · 6 Condiments, Sauces &amp; Canned Goods · 7 Dairy Products &amp; Eggs · 8 Food Purchased Frozen · 10-13 Meat · 14-17 Poultry · 18-19 Produce · 20-22 Seafood · 23 Shelf Stable Foods · 24 Vegetarian Proteins · 25 Deli &amp; Prepared Foods</span></pre>
+    <ul class="small">
+      <li><strong>Gotcha:</strong> FoodKeeper has <em>no</em> power-outage or above-40°F fields. It is a normal shelf-life table. Use it for names, keywords, category and the subtitle only. The outage clocks come from source 1.</li>
+      <li>Category_ID 8 ("Food Purchased Frozen") and <code>location:"freezer"</code> from the photo both map to the frozen classes.</li>
+      <li>Schema notes with more sample rows: <code>reports/four-hour-rule-research/foodkeeper_schema_notes.txt</code>.</li>
+    </ul>
+  </div>
+
+  <div class="api">
+    <h3>3. openFDA drug label: storage text <span class="pill v">VERIFIED (Cold Chain + amoxicillin today)</span></h3>
+    <dl class="kv">
+      <dt>Endpoint</dt><dd><code>GET https://api.fda.gov/drug/label.json</code> · header <code>X-Api-Key: ${DATA_GOV_API_KEY}</code> (works without a key at lower limits). Server-side only.</dd>
+      <dt>Queries</dt><dd>Brand with storage section: <code>?search=openfda.brand_name:"lantus"+AND+_exists_:storage_and_handling&amp;limit=5</code><br>Single-ingredient generic: <code>openfda.generic_name.exact:"METFORMIN HYDROCHLORIDE"</code><br>Suspensions (worked today, 46 hits): <code>openfda.generic_name.exact:"AMOXICILLIN"+AND+how_supplied:"reconstituted"&amp;limit=8</code></dd>
+      <dt>Read</dt><dd><code>storage_and_handling[0]</code> → fallback <code>how_supplied[0]</code> (substring from "Store") → fallback <code>package_label_principal_display_panel[0]</code>; plus <code>set_id</code>, <code>effective_time</code>, <code>openfda.brand_name/generic_name/manufacturer_name/route</code>.</dd>
+    </dl>
+<pre>GET /drug/label.json?search=openfda.generic_name.exact:"AMOXICILLIN"+AND+how_supplied:"reconstituted"&amp;limit=8   <span class="c"># total: 46</span>
+{ "results": [{
+  "set_id": "077f4a65-3cfb-4cb1-99f2-e27ffc5939c0", "effective_time": "20240201",
+  "openfda": { "brand_name": ["Amoxicillin"], "manufacturer_name": ["Hikma Pharmaceuticals USA Inc."], "route": ["ORAL"] },
+  "how_supplied": ["... Amoxicillin for Oral Suspension USP, 250 mg/5mL ... Store dry powder at 20° to 25°C (68° to 77°F)
+    [See USP Controlled Room Temperature]. Shake well before using. Refrigeration is preferable but not required.
+    Discard suspension after 14 days. Keep container tightly closed."] }] }</pre>
+    <ul class="small">
+      <li><strong>Gotchas (all observed):</strong> repackager labels come first and lack storage text (add <code>_exists_:storage_and_handling</code> or parse <code>how_supplied</code>); "Ozempic" matches oral tablets; Victoza and Synthroid have no <code>storage_and_handling</code> hit; generic search matches combination products (the first "amoxicillin" hit today was amoxicillin-clavulanate); one label can cover several products with different limits (take the shortest); 404 with <code>{"error":{"code":"NOT_FOUND"}}</code> means empty, not crash. <strong>New today:</strong> <code>openfda.dosage_form</code> is not a searchable field on label records (every variant returned NOT_FOUND) and <code>count=openfda.dosage_form.exact</code> returns "Nothing to count"; filter by text in <code>how_supplied</code> instead.</li>
+      <li>Every response's <code>meta.disclaimer</code> says not to rely on openFDA for medical decisions. Show it.</li>
+      <li>Raw: <code>reports/four-hour-rule-research/fda_label_amoxicillin_suspension.json</code>, plus Cold Chain's <code>fda_label_*.json</code>.</li>
+    </ul>
+  </div>
+
+  <div class="api">
+    <h3>4. FDA emergency guidance (content) <span class="pill v">VERIFIED TEXT 10:57 ET</span></h3>
+    <p><a href="https://www.fda.gov/drugs/emergency-preparedness-drugs/safe-drug-use-after-natural-disaster">FDA, "Safe Drug Use After a Natural Disaster"</a> (content current as of 09/01/2026): "Some medicines require refrigeration (for example, insulin and certain liquid antibiotics)." · "If a medicine has not been kept at the recommended temperature during a power outage, contact a pharmacist, health care provider, or the manufacturer to find out if it can still be used." · "If the medicine is needed to sustain life (for example, insulin) and a replacement is not readily available, it may be used until you can get a new supply." · "Replace medicines that can no longer be used with a new supply as soon as possible." Plus the insulin-specific page already in Cold Chain (59–86°F up to 28 days; above 86°F may still need to be used; do not use frozen insulin). Both go in the explanation prompt and the README. Vaccines and eye drops: <strong>not verified</strong>; the engine returns UNKNOWN and the copy says ask a pharmacist.</p>
+  </div>
+
+  <div class="api">
+    <h3>5. Gemma 4 on the Gemini API (vision + explanation, the prize path) <span class="pill w">DOCS READ · CALL NOT VERIFIED (key depleted)</span></h3>
+    <dl class="kv">
+      <dt>Models</dt><dd><code>gemma-4-26b-a4b-it</code> (use this; faster), <code>gemma-4-31b-it</code>. Both listed on the Gemma-on-Gemini-API page and seen in this machine's model list today (<code>models/gemma-4-26b-a4b-it</code>, <code>models/gemma-4-31b-it</code>).</dd>
+      <dt>Endpoint</dt><dd><code>POST https://generativelanguage.googleapis.com/v1beta/models/gemma-4-26b-a4b-it:generateContent</code> · header <code>x-goog-api-key: ${GEMINI_API_KEY}</code> (pass the key in the header, never in the URL). Needs a <strong>funded</strong> key: the key on this machine returned <code>402 RESOURCE_EXHAUSTED "Your prepayment credits are depleted"</code> today.</dd>
+      <dt>Image</dt><dd>The Gemma doc's REST example uses the Files API (<code>parts:[{file_data:{mime_type,file_uri}},{text}]</code>). The general image doc says inline data is allowed up to 20 MB total request and lists <code>image/png, image/jpeg, image/webp, image/heic, image/heif</code>; it now documents the newer Interactions API (<code>/v1beta/interactions</code>, <code>input:[{type:"image",data,mime_type}]</code>). The sibling's saved request to the Gemma model used <code>inline_data</code> and got the 402 (billing), so <strong>inline acceptance for Gemma is unconfirmed</strong>. Plan: try <code>inline_data</code> first; if it 400s, upload via the Files API and pass <code>file_data</code>.</dd>
+      <dt>Thinking</dt><dd><code>"generationConfig":{"thinkingConfig":{"thinkingLevel":"minimal"}}</code> for the vision call (speed); the doc documents "high" and "minimal". <code>systemInstruction</code> and function calling are documented for Gemma 4; 256K context.</dd>
+      <dt>JSON mode</dt><dd>Neither the Gemma page nor the structured-output page says whether <code>response_mime_type: "application/json"</code> / <code>responseSchema</code> is honored for Gemma. <strong>Do not depend on it.</strong> Ask for JSON in the prompt, strip fences, validate in code, retry once. If a funded key arrives, test it once at 12:15 and note the result in the README.</dd>
+    </dl>
+<pre><span class="c">// request shape to try first (classic generateContent; this is what the saved 402 request looked like)</span>
+POST /v1beta/models/gemma-4-26b-a4b-it:generateContent
+{ "systemInstruction": { "parts": [{ "text": "&lt;VISION SYSTEM PROMPT&gt;" }] },
+  "contents": [{ "role": "user", "parts": [
+      { "inline_data": { "mime_type": "image/jpeg", "data": "&lt;BASE64&gt;" } },
+      { "text": "List everything in this photo." } ] }],
+  "generationConfig": { "thinkingConfig": { "thinkingLevel": "minimal" }, "maxOutputTokens": 1500 } }
+<span class="c">// read: candidates[0].content.parts[].text  → strip ``` → JSON.parse → validate</span></pre>
+    <ul class="small">
+      <li>Resize on the phone to a 1280 px long edge, JPEG 0.8, before base64 (fridge photos are big; the 20 MB cap is on the whole request).</li>
+      <li>README must say "Gemma 4 (<code>gemma-4-26b-a4b-it</code>) via the Gemini API" and the demo must show that call (a provider badge on screen: "Gemma 4 · Gemini API").</li>
+    </ul>
+  </div>
+
+  <div class="api">
+    <h3>6. Fallbacks: Workers AI Gemma 4, and Ollama offline <span class="pill v">Workers AI VERIFIED by parent</span></h3>
+    <ul class="small">
+      <li><strong>Workers AI through Micah's Cloudflare AI Gateway:</strong> model <code>@cf/google/gemma-4-26b-a4b-it</code>, OpenAI-style <code>messages</code> with <code>{"type":"image_url","image_url":{"url":"data:image/png;base64,..."}}</code>; it read the synthetic label correctly; it emits a <code>reasoning_content</code> channel and needs <code>max_tokens ≥ 2000</code>. Auth: <code>CF_AIG_TOKEN</code> + <code>cf-aig-gateway-id: default</code> + <code>CF_ACCOUNT_ID</code> in env (files at <code>~/.config/cloudflare/</code>; never print or commit). CLI for tests: <code>aig run @cf/google/gemma-4-26b-a4b-it '&lt;json&gt;'</code>. Qualifies for Best Open-Source AI, <em>not</em> the Gemma prize.</li>
+      <li><strong>Offline:</strong> Blackout Box's Ollama path with <code>gemma4:e4b</code> (vision). Do not pull or run any model from this brief; follow <code>docs/blackout-box-brief.html</code> for the Ollama request shape. Set <code>AI_PROVIDER=ollama</code>.</li>
+      <li>One provider call at a time; no parallel image calls (machine rule).</li>
+    </ul>
+  </div>
+
+  <div class="api">
+    <h3>7. NWS: outdoor heat for the indoor estimate <span class="pill v">from Cold Chain</span></h3>
+    <p class="small">No key; <code>User-Agent</code> header required (<code>NWS_USER_AGENT</code>). <code>GET https://api.weather.gov/points/25.77,-80.19</code> → grid MFL/110,50 → <code>stations/KMIA/observations/latest</code> (°C!) and <code>gridpoints/MFL/110,50/forecast/hourly</code> (°F). Today 10:20 ET: KMIA 31°C / 87.8°F, heat index 36.5°C. Cache points forever, observations 10 min. Indoor estimate (Cold Chain heuristic, not validated, label as estimate): <code>hoursSinceOutage &lt; 4 → max(78, outdoorNowF − 4); else max(80, outdoorNowF, next 6 hourly °F)</code>. The only official line on fridge warming is USDA's 4-hour closed-door window; nothing else here is sourced. Always ask for a thermometer reading first.</p>
+  </div>
+
+  <div class="api">
+    <h3>8. USDA FoodData Central (optional nutrition tie-in) <span class="pill w">optional · cut first</span></h3>
+    <p class="small"><code>GET https://api.nal.usda.gov/fdc/v1/foods/search?query=milk&amp;pageSize=1</code> with header <code>X-Api-Key: ${DATA_GOV_API_KEY}</code> (api.data.gov key; keep server-side). The parent's api.data.gov inventory shows this key works (<code>reports/api-data-gov-inventory/body_USDA_FoodData_Central.txt</code>). Use only for a one-line "what you lose if you toss it" footnote on DISCARD cards (calories, protein from <code>foodNutrients</code>). It is not safety data and must never change a status. If it costs more than 20 minutes, cut it.</p>
+  </div>
+</div></section>
+
+<section id="i18n"><div class="wrap">
+  <h2>Languages (EN / ES / HT)</h2>
+  <p class="small">Extend Blackout Box's <code>i18n.ts</code>. Statuses and the safety footer are fixed strings; explanations are generated per (item, status, lang) and cached. Drug names, numbers and °F stay untranslated (°C in parentheses). Have a Kreyòl speaker at the event check the HT column.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Key</th><th>EN</th><th>ES</th><th>HT (draft)</th></tr></thead>
+    <tbody>
+      <tr><td><code>status.SAFE</code></td><td>Safe</td><td>Seguro</td><td>San danje</td></tr>
+      <tr><td><code>status.USE_NOW</code></td><td>Use now</td><td>Úselo ahora</td><td>Sèvi avè l kounye a</td></tr>
+      <tr><td><code>status.DISCARD</code></td><td>Discard</td><td>Deséchelo</td><td>Jete l</td></tr>
+      <tr><td><code>status.PAST_LIMIT</code></td><td>Past label limit. Keep it cool, get a replacement.</td><td>Fuera del límite de la etiqueta. Manténgalo fresco y consiga un reemplazo.</td><td>Li depase limit etikèt la. Kenbe l fre epi jwenn yon lòt.</td></tr>
+      <tr><td><code>status.DO_NOT_USE</code></td><td>Do not use (frozen)</td><td>No lo use (se congeló)</td><td>Pa sèvi avè l (li te jele)</td></tr>
+      <tr><td><code>status.UNKNOWN</code></td><td>Unknown. Ask your pharmacist.</td><td>Desconocido. Consulte a su farmacéutico.</td><td>Nou pa konnen. Mande famasyen ou.</td></tr>
+      <tr><td><code>power_out</code></td><td>Power went out</td><td>Se fue la luz</td><td>Kouran an ale</td></tr>
+      <tr><td><code>opened_fridge</code></td><td>I opened the fridge</td><td>Abrí el refrigerador</td><td>Mwen te louvri frijidè a</td></tr>
+      <tr><td><code>doubt</code></td><td>When in doubt, throw it out.</td><td>Ante la duda, deséchelo.</td><td>Si ou pa sèten, jete l.</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="plan"><div class="wrap">
+  <h2>Timeboxed plan (11:05 AM → 3:30 PM ET)</h2>
+  <div class="table-wrap"><table class="timeline">
+    <thead><tr><th>Time</th><th>Work</th><th>Checkpoint</th></tr></thead>
+    <tbody>
+      <tr><td class="t">11:05–11:25</td><td>Create <code>modules/four-hour-rule/</code> in the Blackout Box repo. Copy <code>engine.mjs</code> from Cold Chain as <code>medVerdict</code>. Write <code>rules/food-classes.json</code> from the verbatim capture, <code>rules/meds.json</code> from the table above. Save <code>foodkeeper.en.json</code> from the browser pane (File → Save) into <code>rules/</code> with the catalog URL and CC0 in a sidecar <code>SOURCES.md</code>.</td><td>Files exist; <code>node -e</code> loads all three JSON files.</td></tr>
+      <tr><td class="t">11:25–12:05</td><td><code>types.ts</code>, <code>classify.ts</code>, <code>assess.ts</code>, 13 tests in <code>node --test</code>.</td><td>All 13 pass; case 9 equals Cold Chain's 574.8 h.</td></tr>
+      <tr><td class="t">12:05–12:45</td><td><code>ai/vision.ts</code> with the provider switch. Try Gemini with a funded key (if none, Workers AI). Photograph a real fridge and the demo meds now. Save both photos and the model's JSON as fixtures.</td><td>Two real photos → item JSON that validates. Provider badge shows which model answered.</td></tr>
+      <tr><td class="t">12:45–1:35</td><td>Countdown UI: cards sorted by the engine, 1 s tick from <code>expiresAt</code>, outage slider/time picker, "I opened the fridge", freezer full/half, temp input with NWS estimate (labeled), source sentence under each card, status colors ice → heat.</td><td><strong>Happy path on a phone:</strong> 2 photos → ~10 clocks → drag slider → cards flip.</td></tr>
+      <tr><td class="t">1:35–2:05</td><td>Medication half: openFDA lookup through Cold Chain's picker for anything not in <code>rules/meds.json</code>; amoxicillin "days since mixed" input; UNKNOWN path.</td><td>Lantus at 91°F shows PAST_LIMIT, never DISCARD. Unknown med shows "ask your pharmacist".</td></tr>
+      <tr><td class="t">2:05–2:35</td><td>i18n (en/es/ht) + <code>ai/explain.ts</code> with the banned-phrase filter; pre-warm 3 languages × 10 demo items into the cache.</td><td>Language toggle works; filter test passes on the three seeded bad outputs.</td></tr>
+      <tr><td class="t">2:35–2:55</td><td><code>DEMO_MODE=1</code> run with Wi-Fi off. Rehearse the 2:00 script twice. Record a backup screen capture.</td><td>Fully offline demo; rehearsal ≤ 2:00.</td></tr>
+      <tr><td class="t">2:55–3:15</td><td>README module section (sources, Gemma 4 via Gemini API named, assumptions, disclaimers), Agent Skill folder <code>skills/four-hour-rule/</code> with <code>assess.mjs</code> CLI.</td><td><code>node skills/four-hour-rule/scripts/assess.mjs --fixture fixtures/fridge.items.json --outage 2026-10-10T07:00-04:00 --temp 88</code> prints sorted JSON.</td></tr>
+      <tr><td class="t">3:15–3:30</td><td><strong>Freeze.</strong> Push, confirm public repo + LICENSE, screenshots in README.</td><td>Repo opens in incognito. Submit by 3:45 with Blackout Box.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout heat"><p><strong>Cut order if behind:</strong> (1) FoodData Central footnote, (2) NWS indoor estimate (keep the manual temp input), (3) live ES/HT explanations (keep the static i18n), (4) freezer door-open events (keep fridge ones), (5) openFDA live lookup (keep <code>rules/meds.json</code>). <strong>Never cut:</strong> two photos → sorted clocks, the outage slider, the source sentence under each card, DISCARD-when-unsure, the safety footer, the Gemma 4 + Gemini API line in the README.</p></div>
+</div></section>
+
+<section id="submit"><div class="wrap">
+  <h2>README and submission lines for this module</h2>
+  <div class="grid2">
+    <div class="card"><h4>README section "The 4-Hour Rule"</h4><ul class="check">
+      <li>One line: "Photo your fridge and your meds; get a countdown for every item, sorted by what dies first."</li>
+      <li>Screenshot/GIF: 10 clocks, then the slider drag flipping cards to DISCARD.</li>
+      <li>AI: "Vision and explanations by <strong>Gemma 4 (<code>gemma-4-26b-a4b-it</code>) via the Gemini API</strong>; offline via gemma4 on Ollama; fallback Workers AI <code>@cf/google/gemma-4-26b-a4b-it</code>. The model lists items and writes explanations. It never computes a limit or a status."</li>
+      <li>Data, each with URL: FoodSafety.gov power-outage chart (reviewed Aug 8, 2024); USDA FSIS FoodKeeper v128 (CC0, bundled, data.gov catalog); openFDA Drug Label API; FDA "Safe Drug Use After a Natural Disaster" and the insulin emergency page; NWS API; optional USDA FoodData Central.</li>
+      <li>Rules stated plainly: 4 h fridge / 2 h USE NOW band / 48 h–24 h freezer / 90% label margin / 30-min door penalty (ours) / unknown food = DISCARD / unknown med = UNKNOWN.</li>
+      <li>Disclaimers: USDA "When in Doubt, Throw it Out"; FDA "not medical advice"; openFDA disclaimer; "indoor temperature is an estimate unless you enter a thermometer reading".</li>
+      <li>Agent Skill: <code>skills/four-hour-rule/</code> (spec at agentskills.io), how to run <code>assess.mjs</code> with no model and no network.</li>
+      <li>Run: <code>cp .env.example .env</code>, <code>npm i</code>, <code>npm run dev</code>; <code>DEMO_MODE=1</code>; <code>AI_PROVIDER=gemini|workers|ollama</code>.</li>
+    </ul></div>
+    <div class="card"><h4>OrganizerHQ (one submission with Blackout Box)</h4><ul class="check">
+      <li>Public repo URL, MIT LICENSE present</li>
+      <li>Description: Blackout Box one-liner + "includes The 4-Hour Rule: countdown clocks for food and medicine after an outage"</li>
+      <li>Technologies: TypeScript, Vite, Node, Gemma 4 (Gemini API), Ollama, Cloudflare Workers AI, openFDA, USDA FoodKeeper, FoodSafety.gov, NWS</li>
+      <li>Track: Build for Miami, 01 Four Forces, One City</li>
+      <li>Prizes: Best Use of Gemma 4 (Gemini API path shown in demo) + Best Open-Source AI (Agent Skill + open model offline)</li>
+      <li>Demo: 2:00 live on a phone, no slides</li>
+    </ul></div>
+  </div>
+</div></section>
+
+<section id="fixtures"><div class="wrap">
+  <h2>DEMO_MODE fixtures</h2>
+  <p>Record from <em>real</em> model calls at 12:30; never hand-write the vision output. The engine input below is what the fixture must contain after classification, so the demo screen matches the script.</p>
+<pre><span class="c">// fixtures/fridge.items.json (post-classification; 8 items)</span>
+[ { "id":"f1", "name":"2% milk", "category":"food_refrigerated", "container":"carton", "quantity":"1 gallon", "opened":true,  "brandText":null, "location":"door",    "confidence":0.93, "foodClass":"discard_4h", "foodkeeperId":27 },
+  { "id":"f2", "name":"Eggs",     "category":"food_refrigerated", "container":"carton", "quantity":"12", "opened":true, "brandText":null, "location":"fridge", "confidence":0.95, "foodClass":"discard_4h", "foodkeeperId":21 },
+  { "id":"f3", "name":"Cooked chicken (leftovers)", "category":"food_refrigerated", "container":"tub", "quantity":null, "opened":true, "brandText":null, "location":"fridge", "confidence":0.78, "foodClass":"discard_4h", "foodkeeperId":135 },
+  { "id":"f4", "name":"Cheddar cheese block", "category":"food_refrigerated", "container":"bag", "quantity":null, "opened":true, "brandText":null, "location":"fridge", "confidence":0.88, "foodClass":"keep", "foodkeeperId":3 },
+  { "id":"f5", "name":"Butter",   "category":"food_refrigerated", "container":"box", "quantity":null, "opened":true, "brandText":null, "location":"door", "confidence":0.9, "foodClass":"keep", "foodkeeperId":1 },
+  { "id":"f6", "name":"Ketchup",  "category":"food_refrigerated", "container":"bottle", "quantity":null, "opened":true, "brandText":"Heinz", "location":"door", "confidence":0.97, "foodClass":"keep", "foodkeeperId":null },
+  { "id":"f7", "name":"Baby formula (ready-to-feed), opened", "category":"food_refrigerated", "container":"bottle", "quantity":null, "opened":true, "brandText":null, "location":"fridge", "confidence":0.7, "foodClass":"discard_4h", "foodkeeperId":null },
+  { "id":"f8", "name":"Frozen chicken breasts", "category":"food_frozen", "container":"bag", "quantity":null, "opened":false, "brandText":null, "location":"freezer", "confidence":0.86, "foodClass":"frozen_refreeze", "foodkeeperId":117 } ]
+
+<span class="c">// fixtures/meds.items.json (4 items; rules copied from rules/meds.json)</span>
+[ { "id":"m1", "name":"Lantus SoloStar", "category":"med_refrigerated", "container":"pen", "quantity":"5 pens", "opened":false, "brandText":"LANTUS SoloStar insulin glargine injection 100 units/mL", "location":"shelf", "confidence":0.96, "openedDaysAgo":null },
+  { "id":"m2", "name":"Humalog KwikPen", "category":"med_refrigerated", "container":"pen", "quantity":null, "opened":true, "brandText":"HUMALOG KwikPen insulin lispro injection 100 units/mL", "location":"shelf", "confidence":0.94, "openedDaysAgo":20 },
+  { "id":"m3", "name":"Amoxicillin for oral suspension 250 mg/5 mL", "category":"med_room_temp", "container":"bottle", "quantity":"150 mL", "opened":true, "brandText":"Amoxicillin for Oral Suspension USP 250 mg/5 mL", "location":"shelf", "confidence":0.9, "openedDaysAgo":10 },
+  { "id":"m4", "name":"Metformin 500 mg tablets", "category":"med_room_temp", "container":"bottle", "quantity":null, "opened":true, "brandText":"Metformin HCl 500 mg", "location":"cabinet", "confidence":0.92 } ]
+
+<span class="c">// fixtures/outage.json for the script: started 07:00 ET today, 0 door opens, freezer full; env indoor 84°F (user)</span></pre>
+  <ul class="small">
+    <li><code>fixtures/fridge.jpg</code> and <code>fixtures/meds.jpg</code>: the real photos taken at 12:30. Fixture lookup key = sha1 of the uploaded image; "Use demo photo" bypasses the camera.</li>
+    <li><code>fixtures/explain.&lt;lang&gt;.json</code>: pre-warmed explanations keyed by <code>(itemId, status)</code>.</li>
+    <li><code>fixtures/nws_kmia.json</code>: today's 10:20 ET observation (31°C) with its timestamp shown on screen when used.</li>
+  </ul>
+</div></section>
+
+<section id="risks"><div class="wrap">
+  <h2>Open risks</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td>Vision accuracy on real, cluttered, glare-heavy fridge photos (only a synthetic pharmacy label has been tested on Gemma 4)</td><td>Photograph the real demo fridge at 12:30 and fix the fixture. Editable chips for confidence &lt; 0.5. Unknown food → DISCARD, so a miss errs safe. Ask for one shelf at a time if the whole fridge fails.</td></tr>
+      <tr><td>Gemini credits: the key on this machine is depleted (HTTP 402 today)</td><td>A funded <code>GEMINI_API_KEY</code> is required for the Gemma prize. Until it exists, build against Workers AI Gemma 4 (same prompts), then flip <code>AI_PROVIDER=gemini</code> and run one test. If no funded key by 2:30, demo on Workers AI/Ollama and say so; do not claim the Gemini path in the README.</td></tr>
+      <tr><td>Inline image acceptance and JSON mode on Gemma via Gemini are unverified</td><td>Try <code>inline_data</code>, fall back to the Files API. Never rely on JSON mode; validate in code and retry once.</td></tr>
+      <tr><td>False reassurance (the worst failure)</td><td>Bias to DISCARD for food; banned-phrase filter on explanations; fixed status copy; "never taste" line in the prompt; source sentence on every card.</td></tr>
+      <tr><td>Telling someone to throw out insulin</td><td>Meds never get DISCARD. PAST_LIMIT copy follows FDA: keep cool, monitor, replace; use only if no replacement. DO_NOT_USE only when frozen.</td></tr>
+      <tr><td>FoodSafety.gov and FSIS block scripted fetches (403); the FSIS source page URL is dead</td><td>Bundle the chart and FoodKeeper in the repo with URLs and dates. No runtime dependency on either host.</td></tr>
+      <tr><td>FoodKeeper is from 2018 and has no outage fields</td><td>Use it only for names, keywords and shelf-life subtitles; say so in the README.</td></tr>
+      <tr><td>Door-open penalty, warm-start offsets, freezer USE NOW band and the indoor estimate are our heuristics</td><td>Every one is tagged in <code>assumptions[]</code> and shown as "our assumption" on the card and in the README.</td></tr>
+      <tr><td>Kreyòl quality</td><td>Short fixed strings; human check at the event; generated explanations capped at 45 words.</td></tr>
+      <tr><td>Secret leakage</td><td>All keys in server env only; <code>.env</code> gitignored; nothing printed. Minted narrow-scope Cloudflare token for any public deploy.</td></tr>
+      <tr><td>Machine load</td><td>One model call at a time; no parallel image jobs; <code>node --test</code> only (no jest/vitest workers).</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="sources"><div class="wrap">
+  <h2>Sources and verification log (Sat Oct 10, 2026)</h2>
+  <ul class="ref small">
+    <li>FoodSafety.gov, "Food Safety During Power Outage": <a href="https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage">foodsafety.gov/food-safety-charts/food-safety-during-power-outage</a>. Loaded in the browser pane 10:55 ET (403 to curl/WebFetch). Verbatim saved.</li>
+    <li>USDA FSIS FoodKeeper data: <a href="https://catalog.data.gov/dataset/fsis-foodkeeper-data">catalog.data.gov/dataset/fsis-foodkeeper-data</a> (CC0 per the page's JSON-LD). EN JSON loaded in the browser pane 10:56 ET from fsis.usda.gov/shared/data/EN/foodkeeper.json (403 to curl). Schema and samples saved.</li>
+    <li>openFDA Drug Label API: <a href="https://open.fda.gov/apis/drug/label/">open.fda.gov/apis/drug/label/</a>. Called 10:56–10:57 ET for amoxicillin (3 query forms that worked, 5 that returned NOT_FOUND). Cold Chain's calls for insulin/GLP-1/metformin not re-run.</li>
+    <li>FDA, "Safe Drug Use After a Natural Disaster": <a href="https://www.fda.gov/drugs/emergency-preparedness-drugs/safe-drug-use-after-natural-disaster">fda.gov/…/safe-drug-use-after-natural-disaster</a>. Fetched 10:57 ET (content current as of 09/01/2026).</li>
+    <li>FDA insulin emergency page: from Cold Chain (fetched this morning).</li>
+    <li>Gemma on the Gemini API: <a href="https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api">ai.google.dev/gemma/docs/core/gemma_on_gemini_api</a>. Fetched 10:58 ET. Gemini image understanding: <a href="https://ai.google.dev/gemini-api/docs/image-understanding">ai.google.dev/gemini-api/docs/image-understanding</a> and structured output: <a href="https://ai.google.dev/gemini-api/docs/structured-output">…/structured-output</a>, both fetched 10:54 ET. No Gemini call was made (key depleted; the 402 is from the parent's earlier run).</li>
+    <li>Workers AI Gemma 4 via Cloudflare AI Gateway: verified by the parent this morning; not re-run.</li>
+    <li>NWS API: from Cold Chain (KMIA observation 10:20 ET). Not re-run.</li>
+    <li><strong>Not fetched:</strong> FSIS "Keeping Food Safe During an Emergency" (old URL 404; wording seen only in search snippets); CDC power-outage food page (404 at the URL tried); USDA FoodData Central (parent inventory only); any vaccine or eye-drop storage guidance.</li>
+    <li>Raw captures: <code>reports/four-hour-rule-research/</code> (foodsafety verbatim, FoodKeeper schema notes, amoxicillin label JSON, FDA quotes, data.gov page HTML).</li>
+  </ul>
+</div></section>
+</main>
+
+<footer><div class="wrap">The 4-Hour Rule. Concept and build brief, Hack for Humanity: Miami, Sat Oct 10, 2026. USDA and FDA sourced. Not medical advice. When in doubt, throw it out.</div></footer>
+
+<script>
+(function(){
+  var FS="FoodSafety.gov", M=0.9, DOOR=0.5, DOORCAP=2;
+  var items=[
+    {nm:"2% milk",sub:"opened · USDA: discard after 4 h",cls:"discard_4h"},
+    {nm:"Eggs",sub:"in shell · FoodKeeper ID 21",cls:"discard_4h"},
+    {nm:"Cooked chicken",sub:"leftovers · FoodKeeper ID 135",cls:"discard_4h"},
+    {nm:"Baby formula",sub:"opened · USDA: discard",cls:"discard_4h"},
+    {nm:"Cheddar block",sub:"hard cheese · USDA: keep",cls:"keep"},
+    {nm:"Butter",sub:"USDA: keep",cls:"keep"},
+    {nm:"Ketchup",sub:"condiment · USDA: keep",cls:"keep"},
+    {nm:"Frozen chicken",sub:"freezer · refreeze if ice crystals",cls:"frozen"},
+    {nm:"Lantus SoloStar",sub:"unopened · label: ≤86°F, 28 d",med:{max:86,days:28,opened:null}},
+    {nm:"Humalog KwikPen",sub:"opened 20 d ago · 28 d total",med:{max:86,days:28,opened:20}},
+    {nm:"Amoxicillin susp.",sub:"mixed 10 d ago · discard after 14 d",med:{max:null,days:14,opened:10,inuse:true}},
+    {nm:"Metformin",sub:"tablets · excursions ≤86°F",med:{max:86,days:null,opened:null}}
+  ];
+  var hours=2.5, opens=0, full=true, temp=84;
+  var el=document.getElementById("cards"), hrs=document.getElementById("hrs"), hrsv=document.getElementById("hrsv"), opn=document.getElementById("opens");
+  function fmt(h){ if(h==null) return "No clock"; var s=Math.max(0,Math.round(h*3600)); var d=Math.floor(s/86400); s%=86400; var hh=Math.floor(s/3600); s%=3600; var mm=Math.floor(s/60); function p(n){return (n<10?"0":"")+n} return (d?d+"d ":"")+p(hh)+"h "+p(mm)+"m"; }
+  function food(it){
+    var pen=Math.min(DOORCAP,opens*DOOR);
+    if(it.cls==="keep") return {st:"SAFE",h:null,tot:null,why:FS+" chart: Keep"};
+    if(it.cls==="frozen"){ var tot=(full?48:24)-pen; var left=tot-hours; return {st:left<=0?"DISCARD":left<=12?"USE NOW":"SAFE",h:Math.max(0,left),tot:tot,why:FS+": full freezer ~48 h, half ~24 h"+(opens?" · −"+pen+" h door opens (ours)":"")}; }
+    var tot=4-pen, left=tot-hours; return {st:left<=0?"DISCARD":left<=2?"USE NOW":"SAFE",h:Math.max(0,left),tot:tot,why:FS+": fridge safe up to 4 h closed; 2 h at 40°F+ = use now"+(opens?" · −"+pen+" h door opens (ours)":"")};
+  }
+  function med(m){
+    if(m.max!=null && temp>m.max) return {st:"PAST LIMIT",h:0,tot:null,why:"Indoor "+temp+"°F is above the label max "+m.max+"°F. Keep cool, get a replacement. Not 'discard'."};
+    if(m.days==null) return {st:"SAFE",h:null,tot:null,why:"Room-temp med within label range"};
+    var b=[]; if(!m.inuse) b.push(m.days*24*M-hours); if(m.opened!=null) b.push(m.days*24*M-m.opened*24);
+    var h=Math.min.apply(null,b); if(h<=0) return {st:"PAST LIMIT",h:0,tot:m.days*24*M,why:"Label days used up. Keep cool, get a replacement."};
+    return {st:h<48?"USE NOW":"SAFE",h:h,tot:m.days*24*M,why:"Label days × 0.9 margin"+(m.inuse?" from mixing date":" − hours out of fridge")};
+  }
+  function render(){
+    var rows=items.map(function(it){ var v=it.med?med(it.med):food(it); return {it:it,v:v}; });
+    var rank={"DISCARD":0,"PAST LIMIT":0,"USE NOW":1,"SAFE":2};
+    rows.sort(function(a,b){ if(rank[a.v.st]!==rank[b.v.st]) return rank[a.v.st]-rank[b.v.st]; if(a.v.h==null) return b.v.h==null?0:1; if(b.v.h==null) return -1; return a.v.h-b.v.h; });
+    el.innerHTML=rows.map(function(r){
+      var c=r.v.st==="DISCARD"||r.v.st==="PAST LIMIT"?"dis":r.v.st==="USE NOW"?"use":"";
+      var pct=r.v.h==null||r.v.tot==null?100:Math.max(0,Math.min(100,100*r.v.h/r.v.tot));
+      return '<div class="it '+c+'"><div class="nm">'+r.it.nm+'</div><div class="sub">'+r.it.sub+'</div><div class="clock">'+fmt(r.v.h)+'</div><div class="bar"><i style="width:'+pct+'%"></i></div><span class="st">'+r.v.st+'</span><div class="why">'+r.v.why+'</div></div>';
+    }).join("");
+  }
+  hrs.addEventListener("input",function(){ hours=parseFloat(hrs.value); hrsv.textContent=hours+" h"; render(); });
+  document.getElementById("open").addEventListener("click",function(){ opens++; opn.textContent=opens+"×"; render(); });
+  document.querySelectorAll("[data-frz]").forEach(function(b){ b.addEventListener("click",function(){ full=b.dataset.frz==="full"; document.querySelectorAll("[data-frz]").forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false")}); render(); }); });
+  document.querySelectorAll("[data-temp]").forEach(function(b){ b.addEventListener("click",function(){ temp=parseInt(b.dataset.temp,10); document.querySelectorAll("[data-temp]").forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false")}); render(); }); });
+  render();
+})();
+</script>
+
+<script type="application/json" id="build-spec">
+{
+  "name": "four-hour-rule",
+  "parent": "blackout-box",
+  "path": "modules/four-hour-rule/",
+  "deadline": "2026-10-10T15:30:00-04:00",
+  "prizes": ["Best Use of Gemma 4 (requires Gemini API path)", "Best Open-Source AI (Agent Skill + offline open model)", "Track 01 Four Forces"],
+  "models": {
+    "gemini_primary": "gemma-4-26b-a4b-it",
+    "gemini_alt": "gemma-4-31b-it",
+    "gemini_endpoint": "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+    "gemini_auth_header": "x-goog-api-key",
+    "gemini_thinking": {"generationConfig": {"thinkingConfig": {"thinkingLevel": "minimal"}}},
+    "gemini_status": "key on this machine returned HTTP 402 (credits depleted); inline_data acceptance and JSON mode for Gemma unverified",
+    "workers_ai_fallback": "@cf/google/gemma-4-26b-a4b-it",
+    "workers_ai_notes": "OpenAI-style messages, image_url data URI, reasoning_content channel, max_tokens >= 2000, via Cloudflare AI Gateway",
+    "ollama_offline": "gemma4:e4b (see docs/blackout-box-brief.html; do not pull from this brief)"
+  },
+  "env": ["GEMINI_API_KEY", "DATA_GOV_API_KEY", "NWS_USER_AGENT", "CF_AIG_TOKEN", "CF_ACCOUNT_ID", "OLLAMA_HOST", "AI_PROVIDER", "DEMO_MODE"],
+  "sources": [
+    {"name": "FoodSafety.gov Food Safety During Power Outage", "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage", "reviewed": "2024-08-08", "verified": "2026-10-10 10:55 ET browser pane", "runtime_fetch": false, "note": "403 to curl/WebFetch; bundle"},
+    {"name": "USDA FSIS FoodKeeper Data", "url": "https://catalog.data.gov/dataset/fsis-foodkeeper-data", "file": "https://www.fsis.usda.gov/shared/data/EN/foodkeeper.json", "license": "CC0 1.0", "version": "128 (2018-09-06)", "verified": "2026-10-10 10:56 ET browser pane", "runtime_fetch": false},
+    {"name": "openFDA Drug Label API", "url": "https://api.fda.gov/drug/label.json", "auth": "X-Api-Key (optional)", "verified": "2026-10-10 (amoxicillin) + Cold Chain (insulin, GLP-1, metformin)", "runtime_fetch": true},
+    {"name": "FDA Safe Drug Use After a Natural Disaster", "url": "https://www.fda.gov/drugs/emergency-preparedness-drugs/safe-drug-use-after-natural-disaster", "current_as_of": "2026-09-01", "verified": "2026-10-10 10:57 ET"},
+    {"name": "FDA insulin storage in an emergency", "url": "https://www.fda.gov/drugs/emergency-preparedness-drugs/information-regarding-insulin-storage-and-switching-between-products-emergency", "verified": "Cold Chain brief"},
+    {"name": "NWS API", "url": "https://api.weather.gov", "auth": "User-Agent header", "verified": "Cold Chain brief", "runtime_fetch": true},
+    {"name": "Gemma on Gemini API docs", "url": "https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api", "verified": "2026-10-10 10:58 ET (docs only)"},
+    {"name": "USDA FoodData Central (optional)", "url": "https://api.nal.usda.gov/fdc/v1/foods/search", "auth": "X-Api-Key", "verified": "parent inventory only"}
+  ],
+  "constants": {"FRIDGE_H": 4, "FRIDGE_USE_NOW_H": 2, "FREEZER_FULL_H": 48, "FREEZER_HALF_H": 24, "FREEZER_USE_NOW_H": 12, "DOOR_OPEN_PENALTY_H": 0.5, "DOOR_OPEN_CAP_H": 2, "MAYO_AFTER_WARM_H": 8, "FROZEN_VEG_AFTER_WARM_H": 6, "MED_SAFETY_MARGIN": 0.9, "MED_USE_NOW_H": 48},
+  "types": {
+    "Category": ["food_refrigerated", "food_frozen", "food_shelf_stable", "med_refrigerated", "med_room_temp", "unknown"],
+    "FoodClass": ["discard_4h", "keep", "mayo_8h_50f", "frozen_refreeze", "frozen_discard", "frozen_veg_6h", "shelf_stable", "unknown"],
+    "Status": ["SAFE", "USE_NOW", "DISCARD", "PAST_LIMIT", "DO_NOT_USE", "UNKNOWN"],
+    "Item": "{id, name, category, container, quantity, opened, brandText, location, confidence, foodClass?, foodkeeperId?, medRule?, openedDaysAgo?, frozen?}",
+    "Limit": "{kind, hours, maxTempF, source:{name,url,quote,ref?}}",
+    "Outage": "{startedAt, doorOpens[], freezerFull, freezerDoorOpens[]}",
+    "Env": "{indoorTempF, indoorSource, forecastIndoorF?[]}",
+    "Verdict": "{itemId, status, hoursLeft, expiresAt, limit, reasons[], assumptions[]}",
+    "assess": "assess(items: Item[], outage: Outage, env: Env, now?: number): Verdict[]  // pure, sorted"
+  },
+  "files": [
+    "modules/four-hour-rule/engine/types.ts", "modules/four-hour-rule/engine/assess.ts", "modules/four-hour-rule/engine/classify.ts", "modules/four-hour-rule/engine/estimate.ts", "modules/four-hour-rule/engine/engine.test.mjs",
+    "modules/four-hour-rule/rules/food-classes.json", "modules/four-hour-rule/rules/meds.json", "modules/four-hour-rule/rules/foodkeeper.en.json", "modules/four-hour-rule/rules/SOURCES.md",
+    "modules/four-hour-rule/ai/vision.ts", "modules/four-hour-rule/ai/explain.ts", "modules/four-hour-rule/ai/prompts.ts",
+    "modules/four-hour-rule/ui/Countdown.ts", "modules/four-hour-rule/ui/i18n.ts",
+    "modules/four-hour-rule/fixtures/fridge.jpg", "modules/four-hour-rule/fixtures/fridge.items.json", "modules/four-hour-rule/fixtures/meds.jpg", "modules/four-hour-rule/fixtures/meds.items.json", "modules/four-hour-rule/fixtures/outage.json", "modules/four-hour-rule/fixtures/nws_kmia.json",
+    "skills/four-hour-rule/SKILL.md", "skills/four-hour-rule/scripts/assess.mjs", "skills/four-hour-rule/references/RULES.md", "skills/four-hour-rule/references/SOURCES.md",
+    "README.md (module section)", ".env.example"
+  ],
+  "research_dir": "reports/four-hour-rule-research/",
+  "unverified": ["Gemini API call to Gemma 4 (402 credits)", "inline_data image parts for Gemma on Gemini", "JSON mode for Gemma", "vision accuracy on real fridge photos", "FSIS source page wording (URL 404; seen only in search snippets)", "vaccine / eye-drop storage guidance", "Kreyòl strings"]
+}
+</script>
+</body>
+</html>
