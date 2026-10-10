@@ -14,7 +14,10 @@ import { emit, esc, fmtClock, haptic, usText, on, state, toLocalInput, uid, with
 type LastRead = { model: string; provider: string; latencyMs?: number; fallback?: boolean; unreadable?: number; at: string }
 
 let items: WebItem[] = []
-let outage: WebOutage = { startedAt: new Date(Date.now() - 3 * 36e5).toISOString(), doorOpenedAt: [], freezerFull: true }
+let outage: WebOutage = { startedAt: new Date().toISOString(), doorOpenedAt: [], freezerFull: true }
+// Power is on until "The power just went out" (or the outage slider) says otherwise: clocks show their full time and don't tick.
+let powerOn = true
+const POWER_ON_ROOM_F = 75 // a cooled home while the power is on
 let indoorTempF: number | null = null
 let lastRead: LastRead | null = null
 let busy = false
@@ -37,7 +40,10 @@ export async function mountFourHour(host: HTMLElement): Promise<void> {
   items = savedItems
   state.items = items
   if (savedOutage?.value?.startedAt) outage = { startedAt: savedOutage.value.startedAt, doorOpenedAt: savedOutage.value.doorOpenedAt ?? [], freezerFull: savedOutage.value.freezerFull ?? true }
-  else void kvSet('outage', outage, 'user')
+  else void kvSet('outage', { ...outage, powerOn }, 'user')
+  // Older saves have no powerOn flag: treat them as power on, so clocks only run after "The power just went out".
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  powerOn = (savedOutage?.value as any)?.powerOn !== false
   indoorTempF = savedEnv?.value?.indoorTempF ?? null
   lastRead = savedRead?.value ?? null
 
@@ -50,11 +56,11 @@ export async function mountFourHour(host: HTMLElement): Promise<void> {
 
 // ---------- persistence ----------
 function saveItems(): void { void itemsReplace(items); state.items = items; emit('items') }
-function saveOutage(): void { void kvSet('outage', outage, 'user') }
+function saveOutage(): void { void kvSet('outage', { ...outage, powerOn }, 'user') }
 function saveEnv(): void { void kvSet('env', { indoorTempF }, 'user') }
 
 // ---------- env / estimate ----------
-function hoursOut(): number { return Math.max(0, (Date.now() - Date.parse(outage.startedAt)) / 36e5) }
+function hoursOut(): number { return powerOn ? 0 : Math.max(0, (Date.now() - Date.parse(outage.startedAt)) / 36e5) }
 
 /** Cold Chain heuristic (labeled estimate): <4 h out → max(78, outdoor−4); else max(80, outdoor). */
 function estimateIndoor(): number | undefined {
@@ -152,7 +158,7 @@ function renderHero(): void {
     `<button type="button" class="fh-tile" id="${id}" ${busy ? 'disabled' : ''}>${iconHTML(uses, fb, 'mi fh-tile-mi')}<span class="fh-tile-l">${esc(t(lab))}</span><span class="fh-tile-cam"><span class="ms fill" aria-hidden="true">photo_camera</span></span></button>`
   el.innerHTML = `
     <section class="fh-sum">
-      <div class="fh-eyebrow">${items.length ? esc(t('hero_sub', { n: items.length, h: '\u0001' })).replace('\u0001', `<span data-hrs-h>${hoursOut().toFixed(1)}</span>`) : esc(t('fh_sub'))}</div>
+      <div class="fh-eyebrow">${items.length ? (powerOn ? esc(t('hero_sub_on', { n: items.length })) : esc(t('hero_sub', { n: items.length, h: '\u0001' })).replace('\u0001', `<span data-hrs-h>${hoursOut().toFixed(1)}</span>`)) : esc(t('fh_sub'))}</div>
       <div class="big" aria-live="polite">${head}</div>
       ${stack}${model}
     </section>
@@ -202,6 +208,18 @@ function roomC(): { c: number | null; estimated: boolean } {
 
 function renderControls(): void {
   const el = root.querySelector('#fh-outage')
+  if (el && powerOn) {
+    el.innerHTML = `
+      <div class="o-head">
+        <span class="o-ico on"><span class="ms fill" aria-hidden="true">power</span></span>
+        <span class="o-label">${esc(t('power_on_title'))}</span>
+      </div>
+      <div class="o-wait">${esc(t('power_on_wait'))}</div>
+      <button type="button" class="out-btn o-start" id="fh-start"><span class="ms fill" aria-hidden="true">power_off</span><span>${esc(t('power_went_out'))}</span><span class="ms" aria-hidden="true">chevron_right</span></button>`
+    el.querySelector('#fh-start')!.addEventListener('click', () => { haptic(); powerOutNow() })
+    if (ctlSheet) renderSheetControls(ctlSheet.body)
+    return
+  }
   if (el) {
     const h = hoursOut()
     const room = roomC()
@@ -212,6 +230,7 @@ function renderControls(): void {
         <span class="o-label">${esc(t('power_out'))}</span>
         <button type="button" class="o-adj" id="fh-adjust"><span class="ms" aria-hidden="true">tune</span>${esc(t('adjust'))}</button>
       </div>
+      <button type="button" class="o-back" id="fh-back"><span class="ms" aria-hidden="true">power</span>${esc(t('power_back'))}</button>
       <div class="o-val" id="fh-hrs-val">${esc(t('power_out_for', { h: h.toFixed(1) }))}</div>
       <input type="range" class="o-range" id="fh-hrs" min="0" max="72" step="0.25" value="${v.toFixed(2)}" style="--p:${(v / 72 * 100).toFixed(2)}%" aria-label="${esc(t('power_out'))} · ${esc(t('hours_ago'))}">
       <div class="o-meta">
@@ -220,6 +239,7 @@ function renderControls(): void {
         <button type="button" class="pill" data-open><span class="ms" aria-hidden="true">thermostat</span><span class="tnum">${esc(t('room', { t: room.c != null ? `${room.estimated ? '≈ ' : ''}${room.c} °F` : '—' }))}</span>${room.estimated && room.c != null ? ` <span class="est">${esc(t('estimated'))}</span>` : ''}</button>
       </div>`
     el.querySelector('#fh-adjust')!.addEventListener('click', openControls)
+    el.querySelector('#fh-back')!.addEventListener('click', () => { haptic(); powerOn = true; saveOutage(); renderControls(); recompute(true) })
     el.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', openControls))
     bindSlider(el as HTMLElement)
   }
@@ -231,6 +251,7 @@ function bindSlider(scope: HTMLElement): void {
   if (!hrs) return
   hrs.addEventListener('input', () => {
     const v = parseFloat(hrs.value)
+    powerOn = false
     outage.startedAt = new Date(Date.now() - v * 36e5).toISOString()
     document.querySelectorAll<HTMLInputElement>('#fh-hrs, [data-hrs]').forEach((x) => { if (x !== hrs) x.value = hrs.value; x.style.setProperty('--p', `${(v / 72 * 100).toFixed(2)}%`) })
     paintHours()
@@ -321,7 +342,10 @@ function renderSheetControls(body: HTMLElement): void {
 
 function recompute(force: boolean): void {
   try {
-    verdicts = runAssess(items, outage, currentEnv(), new Date())
+    const now = new Date()
+    verdicts = powerOn
+      ? runAssess(items, { ...outage, startedAt: now.toISOString(), doorOpenedAt: [] }, { indoorTempF: POWER_ON_ROOM_F, estimated: false }, now)
+      : runAssess(items, outage, currentEnv(), now)
   } catch (e) {
     console.error('assess failed', e)
     verdicts = items.map((it) => ({ itemId: it.id, status: 'UNKNOWN' as Status, deadlineMs: null, reason: 'engine error', source: '' }))
@@ -724,6 +748,7 @@ export async function captureFromHome(file: File, hint: 'fridge' | 'meds' | 'fre
 
 /** "The power just went out": outage starts now, door count resets. */
 export function powerOutNow(): void {
+  powerOn = false
   outage = { ...outage, startedAt: new Date().toISOString(), doorOpenedAt: [] }
   saveOutage()
   if (root) { renderControls(); recompute(true) }

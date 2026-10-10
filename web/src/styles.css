@@ -1325,3 +1325,11 @@ html[data-theme="dark"] .why-model:not(.gemma), html[data-blackout="1"] .why-mod
 .lang-fab-n { font-size: 8.5px; font-weight: 600; opacity: .9; line-height: 1.2; margin-top: 2px; }
 html.touring .lang-fab { display: none; }
 @media (min-width: 900px) { .lang-fab { right: 24px; bottom: 28px; width: 64px; height: 64px; } .lang-fab-c { font-size: 19px; } }
+
+/* ---- Clocks: power-on state (clocks wait for "The power just went out") ---- */
+.o-ico.on { background: rgba(52,199,89,.15) !important; color: #34C759 !important; }
+.o-wait { font-size: 17px; font-weight: 600; margin: 8px 0 14px; }
+.out-btn.o-start { width: 100%; justify-content: center; display: flex; align-items: center; gap: 8px; padding: 14px 18px; border-radius: 999px; border: 0;
+  background: #FF385C; color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 16px rgba(255,56,92,.35); }
+.o-back { display: inline-flex; align-items: center; gap: 6px; margin: 6px 0 0; padding: 6px 12px; border-radius: 999px; border: 0; font-size: 13px; font-weight: 600;
+  background: rgba(52,199,89,.14); color: #1f8f3e; cursor: pointer; }

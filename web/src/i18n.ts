@@ -261,6 +261,10 @@ const en: Dict = {
   all_clear: 'Everything is OK for now',
   hero_none: 'Scan your fridge to start the clocks',
   hero_sub: '{n} items · power out {h} h',
+  hero_sub_on: '{n} items · power is on',
+  power_on_title: 'Power is on',
+  power_on_wait: 'Clocks start the moment the power goes out.',
+  power_back: 'Power is back',
   adjust: 'Adjust',
   outage_title: 'Power outage',
   power_out_for: '{h} h ago',
@@ -662,6 +666,10 @@ const es: Dict = {
   all_clear: 'Todo está bien por ahora',
   hero_none: 'Escanee su refrigerador para iniciar los relojes',
   hero_sub: '{n} artículos · sin luz hace {h} h',
+  hero_sub_on: '{n} artículos · hay luz', // MT
+  power_on_title: 'Hay luz', // MT
+  power_on_wait: 'Los relojes empiezan en cuanto se vaya la luz.', // MT
+  power_back: 'Volvió la luz', // MT
   adjust: 'Ajustar',
   outage_title: 'Apagón',
   power_out_for: 'hace {h} h',
@@ -1063,6 +1071,10 @@ const ht: Dict = {
   all_clear: 'Tout bagay anfòm pou kounye a',
   hero_none: 'Eskane frijidè ou pou revèy yo kòmanse',
   hero_sub: '{n} bagay · san kouran depi {h} è',
+  hero_sub_on: '{n} bagay · gen kouran', // MT
+  power_on_title: 'Gen kouran', // MT
+  power_on_wait: 'Revèy yo kòmanse lè kouran an ale.', // MT
+  power_back: 'Kouran an tounen', // MT
   adjust: 'Ajiste',
   outage_title: 'Pàn kouran',
   power_out_for: 'depi {h} è',
