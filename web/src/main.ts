@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-pwa/vanillajs" />
 // App shell, "Apple meets Airbnb": frosted top bar (small title fades in on scroll), large title + status pills,
-// iOS bottom tab bar (Now, Clocks, Prep, Map, Ask), drill banner on every tab, fixed safety footer, Blackout mode, Add to Home Screen sheet.
+// iOS bottom tab bar (Now, Clocks, Prep, Map, Ask), drill banner on every tab, safety footer at the end of each page, Blackout mode, Add to Home Screen sheet.
 import './styles.css'
 import { registerSW } from 'virtual:pwa-register'
 import { mountAsk } from './ask'
@@ -48,8 +48,8 @@ app.innerHTML = `
     </section>
     <section class="view" id="v-ask"></section>
   </main>
-  <nav class="tabbar" id="tabbar" aria-label="Main"></nav>
-  <footer class="safety" id="safety" role="contentinfo"></footer>`
+  <footer class="safety" id="safety" role="contentinfo"></footer>
+  <nav class="tabbar" id="tabbar" aria-label="Main"></nav>`
 
 const topbar = document.getElementById('topbar')!
 const stage = document.getElementById('stage')!
@@ -92,7 +92,6 @@ function renderDrill(): void {
 function renderFooter(): void {
   const f = document.getElementById('safety')!
   f.innerHTML = `<span class="ms" aria-hidden="true">health_and_safety</span><span>${esc(t('footer'))}</span>`
-  requestAnimationFrame(() => document.documentElement.style.setProperty('--footer-h', f.offsetHeight + 'px'))
 }
 
 // ---------- Map tab (Agent F's web/src/map). Lazy-loaded so MapLibre stays out of the main bundle;
@@ -199,7 +198,6 @@ renderDrill()
 renderFooter()
 onLang(() => { renderNav(); renderDrill(); renderFooter(); if (!mapMounted && currentTab() === 'map') void showMap() })
 window.addEventListener('hashchange', route)
-window.addEventListener('resize', renderFooter)
 route()
 mountStatus(document.getElementById('status-pills')!, () => { location.hash = 'prep' })
 

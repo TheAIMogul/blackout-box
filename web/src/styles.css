@@ -718,3 +718,21 @@ img.mi { border-radius: 22%; }
 /* Lights-out clip: plays once when Blackout turns on, then fades to the Blackout still */
 .hero-media video.lightsout { z-index: 2; animation: none; transition: opacity .5s ease; }
 video.lightsout.out { opacity: 0; }
+
+/* ---------- 2:03 PM: Now hero fills the first screen; safety footer ends each page (not fixed) ---------- */
+:root { --footer-h: 0px; }
+.stage.now-stage {
+  min-height: calc(100svh - var(--tabbar-h) - env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column; padding-bottom: 28px;
+}
+.stage.now-stage > .content { width: 100%; box-sizing: border-box; }
+.stage.now-stage .now-hero-slot { display: flex; flex-direction: column; flex: 1; }
+.stage.now-stage .nh-main { padding-top: 8px; }
+.stage.now-stage .nh-snaps { margin-top: auto; padding-top: 28px; }
+@media (min-width: 900px) { .stage.now-stage { min-height: calc(100svh - 110px); } }
+.safety, .safety:not(#x) {
+  position: static; left: auto; right: auto; bottom: auto; transform: none; width: auto; z-index: auto;
+  max-width: 880px; margin: 28px auto 0; padding: 14px calc(16px + var(--safe-r)) 6px calc(16px + var(--safe-l));
+  background: transparent; border: 0; border-top: .5px solid var(--hairline); border-radius: 0; box-shadow: none;
+  -webkit-backdrop-filter: none; backdrop-filter: none; justify-content: center;
+}
