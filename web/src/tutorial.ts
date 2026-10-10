@@ -93,7 +93,8 @@ export function startTour(): void {
   root.setAttribute('aria-modal', 'true')
   root.setAttribute('aria-labelledby', 'tour-title')
   root.innerHTML = `<div class="tour-dim" aria-hidden="true"></div><div class="tour-hole" aria-hidden="true"></div><div class="tour-card" tabindex="-1"></div>`
-  document.body.append(root)
+  // Outside <body>: body carries `zoom: 0.9`, and the spotlight math uses getBoundingClientRect in unzoomed viewport px.
+  document.documentElement.append(root)
   document.documentElement.classList.add('touring')
   const dim = root.querySelector<HTMLElement>('.tour-dim')!
   const hole = root.querySelector<HTMLElement>('.tour-hole')!
