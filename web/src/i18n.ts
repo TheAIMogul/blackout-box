@@ -170,6 +170,8 @@ const en: Dict = {
   now_sub: 'Conditions and warnings, at a glance.',
   intro_head: 'Your storm and flood kit for the fridge and medicine cabinet.',
   offline_pill: 'No internet · using your saved data',
+  try_it: 'Try it now',
+  try_it_sub: 'Scan with your phone camera, or type bb.micahberkley.com',
   offline_photo: 'Photos need internet',
   intro_1t: 'Before the storm',
   intro_1b: 'Snap your fridge, freezer and medicine.',
@@ -569,6 +571,8 @@ const es: Dict = {
   now_sub: 'Condiciones y alertas de un vistazo.',
   intro_head: 'Su kit para tormentas e inundaciones: refrigerador y botiquín.', // MT
   offline_pill: 'Sin internet · usando sus datos guardados', // MT
+  try_it: 'Pruébelo ahora', // MT
+  try_it_sub: 'Escanee con la cámara del teléfono o escriba bb.micahberkley.com', // MT
   offline_photo: 'Las fotos necesitan internet', // MT
   intro_1t: 'Antes de la tormenta', // MT
   intro_1b: 'Tome fotos de su refrigerador, congelador y medicinas.', // MT
@@ -968,6 +972,8 @@ const ht: Dict = {
   now_sub: 'Kondisyon ak avètisman, yon sèl kou.',
   intro_head: 'Twous tanpèt ak inondasyon ou pou frijidè ak armwa medikaman.', // MT
   offline_pill: 'Pa gen entènèt · n ap itilize done ou sove yo', // MT
+  try_it: 'Eseye l kounye a', // MT
+  try_it_sub: 'Eskane ak kamera telefòn ou, oswa tape bb.micahberkley.com', // MT
   offline_photo: 'Foto bezwen entènèt', // MT
   intro_1t: 'Anvan tanpèt la', // MT
   intro_1b: 'Pran foto frijidè, frizè ak medikaman ou.', // MT

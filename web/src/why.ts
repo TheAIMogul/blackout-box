@@ -100,6 +100,19 @@ function render(): void {
     [['icon.chat'], 'translate', 'why_f7', 'why_f7s'],
   ]
   host.innerHTML = `<div class="why">
+    <a class="why-qr" href="https://blackoutbox.micahberkley.com" target="_blank" rel="noopener">
+      <img src="/qr.svg" width="148" height="148" alt="QR code for blackoutbox.micahberkley.com">
+      <span class="why-qr-t"><span class="why-qr-k">${esc(t('try_it'))}</span><span class="why-qr-u">blackoutbox.<wbr>micahberkley.com</span><span class="why-qr-s">${esc(t('try_it_sub'))}</span></span>
+    </a>
+    <section class="why-models" aria-label="AI models">
+      <p class="why-models-k">The AI behind Blackout Box</p>
+      <div class="why-model gemma"><span class="why-model-n">Gemma 4 <em>26B A4B</em></span><span class="why-model-b">Open weights</span><span class="why-model-d">Translates every answer into Spanish and Haitian Creole. Google DeepMind, on Cloudflare Workers AI.</span></div>
+      <div class="why-model"><span class="why-model-n">Gemini 3.5 Flash</span><span class="why-model-d">Reads your fridge, freezer and medicine photos in about 3 seconds.</span></div>
+      <div class="why-model"><span class="why-model-n">Claude Fable 5.1</span><span class="why-model-d">Answers questions from your saved data, with Claude Sonnet 5.5 as backup.</span></div>
+      <div class="why-model"><span class="why-model-n">Grok Imagine</span><span class="why-model-d">Painted every image in the app.</span></div>
+      <div class="why-model rules"><span class="why-model-n">Open rules engine</span><span class="why-model-b">No AI</span><span class="why-model-d">Every countdown comes from FDA and USDA rules, never a model. 77 tests.</span></div>
+      <p class="why-models-s">All model calls run through Cloudflare AI Gateway.</p>
+    </section>
     <section class="why-sec dark">
       ${bg('now.hero.storm')}<div class="why-in">
         <p class="why-k">${esc(t('why_k1'))}</p>
