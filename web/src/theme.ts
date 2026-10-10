@@ -11,6 +11,8 @@ export function isBlackout(): boolean { return manual ?? offline }
 export function onTheme(fn: () => void): void { subs.add(fn) }
 
 export function setOffline(off: boolean): void {
+  // .is-offline drives the "No internet" pill and greys out the photo buttons; the moon toggle never sets it.
+  document.documentElement.classList.toggle('is-offline', off)
   if (off === offline) return
   offline = off
   manual = null

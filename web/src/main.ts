@@ -24,6 +24,7 @@ const SUB: Record<Tab, string> = { now: 'now_sub', fourhour: 'fh_sub', prep: 'pr
 const app = document.getElementById('app')!
 app.innerHTML = `
   <div class="drill" id="drill" role="status"></div>
+  <div class="net-pill" id="net-pill" role="status" aria-live="polite"><span class="ms" aria-hidden="true">wifi_off</span><span class="net-pill-t"></span></div>
   <header class="topbar" id="topbar">
     <div class="tb-left"><span class="brand"><img src="/icons/icon-192.png" alt="" width="26" height="26"><span>Blackout Box</span></span></div>
     <div class="tb-title" id="tb-title" aria-hidden="true"></div>
@@ -220,3 +221,8 @@ void (async () => {
 
 // Service worker: precached app shell so a reload with no network still loads.
 registerSW({ immediate: true })
+
+// Tiny "No internet" pill (shown by the .is-offline class on <html>), with the translated text kept current.
+const paintNetPill = () => { const el = document.querySelector('#net-pill .net-pill-t'); if (el) el.textContent = t('offline_pill') }
+paintNetPill()
+onLang(paintNetPill)
