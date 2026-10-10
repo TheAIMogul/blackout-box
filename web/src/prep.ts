@@ -213,8 +213,18 @@ function render(): void {
   const stamp = state.prepAt ? `${t('checked')} ${fmtWhen(state.prepAt)}` : ''
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const placesNote = (b?.places as any)?.note as string | undefined
-  const rows = groups.flatMap((g) => g.items.slice(0, 5).map((p) => ({ g, p })))
+  // The 5 nearest places overall, one per address (a garage lists each charger separately).
+  const seenAddr = new Set<string>()
+  const rows = groups.flatMap((g) => g.items.map((p) => ({ g, p })))
     .sort((a, c) => (a.p.distanceMi ?? 1e9) - (c.p.distanceMi ?? 1e9))
+    .filter(({ p }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const key = String((p as any).address ?? (p as any).name ?? '').toLowerCase().replace(/\s+/g, ' ').trim()
+      if (!key || seenAddr.has(key)) return !key
+      seenAddr.add(key)
+      return true
+    })
+    .slice(0, 5)
 
   const status =
     phase === 'locating' ? `<div class="progress"><i></i></div>${banner('', 'my_location', esc(t('prep_locating')))}` :
