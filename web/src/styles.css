@@ -971,14 +971,14 @@ body { padding-bottom: calc(62px + 12px + 24px + env(safe-area-inset-bottom, 0px
 .tour { position: fixed; inset: 0; z-index: 1000; pointer-events: auto; }
 .tour-hole {
   position: fixed; border-radius: 22px; pointer-events: none;
-  box-shadow: 0 0 0 200vmax rgba(0, 0, 0, .58);
+  box-shadow: 0 0 0 200vmax rgba(0, 0, 0, .62);
 }
-.tour-hole.on { outline: 2px solid rgba(255, 255, 255, .9); outline-offset: 0; box-shadow: 0 0 0 200vmax rgba(0, 0, 0, .58), 0 0 0 6px rgba(255, 56, 92, .45); }
+.tour-hole.on { outline: 2px solid rgba(255, 255, 255, .9); outline-offset: 0; box-shadow: 0 0 0 200vmax rgba(0, 0, 0, .62), 0 0 0 6px rgba(255, 56, 92, .45); }
 .tour-card {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 1;
   padding: 18px 20px calc(18px + var(--safe-b, env(safe-area-inset-bottom, 0px)));
   border-radius: 28px 28px 0 0; color: var(--text);
-  background: var(--glass); border: .5px solid var(--glass-line); box-shadow: 0 -8px 30px rgba(0, 0, 0, .22);
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: .5px solid var(--glass-line); box-shadow: 0 -8px 30px rgba(0, 0, 0, .22);
   -webkit-backdrop-filter: saturate(180%) blur(24px); backdrop-filter: saturate(180%) blur(24px);
   outline: none;
 }
