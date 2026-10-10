@@ -1405,6 +1405,14 @@ function limitForMed(label) {
       quotes.push(exc.index);
     }
   }
+  if (maxTempF == null) {
+    const room = /room temperature[^.;]*/i.exec(core);
+    const temps = room ? [...room[0].matchAll(new RegExp(F, "gi"))].map((m) => Number(m[1])) : [];
+    if (room && temps.length) {
+      maxTempF = Math.max(...temps);
+      quotes.push(room.index);
+    }
+  }
   if (maxTempF == null && !refrigerated && !inUseSusp) {
     const store = /\bstore\b[^.]*/i.exec(core);
     const temps = store ? [...store[0].matchAll(new RegExp(F, "gi"))].map((m) => Number(m[1])) : [];

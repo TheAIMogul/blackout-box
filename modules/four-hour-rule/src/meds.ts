@@ -77,6 +77,15 @@ export function limitForMed(label: OpenFdaLabel): Limit | null {
       quotes.push(exc.index)
     }
   }
+  if (maxTempF == null) {
+    // "…for 56 days at room temperature between 59ºF to 86ºF" (Ozempic pen): the top of the room-temperature range.
+    const room = /room temperature[^.;]*/i.exec(core)
+    const temps = room ? [...room[0].matchAll(new RegExp(F, 'gi'))].map((m) => Number(m[1])) : []
+    if (room && temps.length) {
+      maxTempF = Math.max(...temps)
+      quotes.push(room.index)
+    }
+  }
   if (maxTempF == null && !refrigerated && !inUseSusp) {
     const store = /\bstore\b[^.]*/i.exec(core)
     const temps = store ? [...store[0].matchAll(new RegExp(F, 'gi'))].map((m) => Number(m[1])) : []

@@ -59,6 +59,10 @@ async function health(req: Request, env: unknown, ctx: Ctx): Promise<Response> {
 export default {
   fetch(req: Request, env: unknown, ctx: Ctx): Promise<Response> {
     const url = new URL(req.url);
+    // bb.micahberkley.com is a short link: send it to the one canonical origin (keeps the PWA install and offline data in one place).
+    if (url.hostname === 'bb.micahberkley.com') {
+      return Promise.resolve(Response.redirect(`https://blackoutbox.micahberkley.com${url.pathname}${url.search}${url.hash}`, 301));
+    }
     if (req.method === 'GET' && url.pathname === '/api/health') return health(req, env, ctx);
     return express.fetch(req, env, ctx);
   },

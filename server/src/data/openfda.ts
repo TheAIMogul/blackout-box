@@ -36,6 +36,13 @@ function storageFrom(r: any): { text: string; field: string } | null {
     const i = pd.search(/\bStore\b/i);
     if (i >= 0) return { text: pd.slice(i), field: 'package_label_principal_display_panel' };
   }
+  // Pen products from repackagers often carry storage only in the patient Instructions for Use ("How should I store…").
+  for (const field of ['instructions_for_use', 'patient_medication_information', 'information_for_patients'] as const) {
+    const v = r[field]?.[0];
+    if (typeof v !== 'string') continue;
+    const i = v.search(/How (should I|do I) store|\bStore your\b|\bStorage\b/i);
+    if (i >= 0 && /°|º|refrigerat/i.test(v.slice(i, i + 800))) return { text: v.slice(i, i + 800), field };
+  }
   return null;
 }
 
@@ -104,13 +111,24 @@ export async function openFdaLabel(qRaw: string) {
   const ql = q.toLowerCase();
   // Rank: exact brand or exact generic name first, then names that start with q, then anything else
   // (a plain "amoxicillin" search otherwise returns amoxicillin-clavulanate; "humalog" returns Humalog Mix50/50).
+  // A pen / injection on the label must match an injectable product, not the same brand's tablets (Ozempic pen vs oral Ozempic).
+  const injectable = /\b(pen|inject|injection|syringe|vial|subcutaneous|kwikpen|solostar|flextouch)\b/i.test(q);
+  const routeAdj = (r: any) => {
+    if (!injectable) return 0;
+    const routes: string[] = (r.openfda?.route || []).map((x: string) => x.toUpperCase());
+    if (routes.some((x) => /SUBCUTANEOUS|INTRAMUSCULAR|INTRAVENOUS/.test(x))) return 1.5;
+    if (routes.includes('ORAL')) return -2;
+    return 0;
+  };
   const score = (r: any) => {
     const brands: string[] = (r.openfda?.brand_name || []).map((b: string) => b.toLowerCase());
     const gens: string[] = (r.openfda?.generic_name || []).map((g: string) => g.toLowerCase());
-    if (brands.includes(ql) || gens.includes(ql)) return 3;
-    if (brands.some((b) => b.startsWith(ql + ' ') && !/\bmix\b|\band\b/.test(b))) return 2;
-    if (gens.some((g) => g === ql || (g.startsWith(ql) && !/\band\b/.test(g)))) return 2;
-    return 1;
+    const adj = routeAdj(r);
+    if (brands.includes(ql) || gens.includes(ql)) return 3 + adj;
+    if (brands.some((b) => b === first.toLowerCase())) return 2.5 + adj;
+    if (brands.some((b) => b.startsWith(ql + ' ') && !/\bmix\b|\band\b/.test(b))) return 2 + adj;
+    if (gens.some((g) => g === ql || (g.startsWith(ql) && !/\band\b/.test(g)))) return 2 + adj;
+    return 1 + adj;
   };
   type Pick = { r: any; st: { text: string; field: string }; fetchedAt: string; query: string; s: number };
   let fallback = null as Pick | null;

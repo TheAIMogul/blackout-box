@@ -399,3 +399,13 @@ describe('QA 2026-10-10: wrong Safe verdicts (8.3 h out, fridge opened 1×, free
     assert.equal(one(med('m2', 'some biologic', L), o, env(75)).status, 'SAFE')
   })
 })
+
+test('Ozempic pen: 56 days at room temperature, top of the 59ºF–86ºF range is the limit', () => {
+  const text = 'How should I store my OZEMPIC pen? • Store your new, unused OZEMPIC pens in the refrigerator between 36°F to 46°F (2°C to 8°C). • Store your pen in use for 56 days at room temperature between 59ºF to 86ºF (15ºC to 30ºC) or in a refrigerator between 36°F to 46°F (2°C to 8°C).'
+  const lim = limitForMed({ storageText: text, brand: 'Ozempic' })
+  assert.ok(lim)
+  assert.equal(lim!.kind, 'days_at_room_temp')
+  assert.equal(lim!.days, 56)
+  assert.equal(lim!.maxTempF, 86)
+})
+
