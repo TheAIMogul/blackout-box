@@ -24,7 +24,6 @@ const SUB: Record<Tab, string> = { now: 'now_sub', fourhour: 'fh_sub', prep: 'pr
 const app = document.getElementById('app')!
 app.innerHTML = `
   <div class="drill" id="drill" role="status"></div>
-  <div class="net-pill" id="net-pill" role="status" aria-live="polite"><span class="ms" aria-hidden="true">wifi_off</span><span class="net-pill-t"></span></div>
   <header class="topbar" id="topbar">
     <div class="tb-left"><span class="brand"><img src="/icons/icon-192.png" alt="" width="26" height="26"><span>Blackout Box</span></span></div>
     <div class="tb-title" id="tb-title" aria-hidden="true"></div>

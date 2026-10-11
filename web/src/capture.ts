@@ -91,7 +91,6 @@ function render(): void {
     const k = b.dataset.snap as Kind
     if (busy[k]) return
     haptic()
-    if (document.documentElement.classList.contains('is-offline')) return
     document.getElementById(`snap-file-${k}`)?.click()
   }))
 }

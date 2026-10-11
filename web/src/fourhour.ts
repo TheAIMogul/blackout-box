@@ -169,11 +169,10 @@ function renderHero(): void {
       ${tile('fh-photo-med', ['icon.medicine', 'icon.cat.medicine'], 'medication', 'cat_meds')}
     </div>
     <button type="button" class="btn text fh-demo demo-btn" id="fh-demo" ${busy ? 'disabled' : ''}>${busy ? '<span class="spinner" aria-hidden="true"></span>' : '<span class="ms" aria-hidden="true">photo_library</span>'}<span>${esc(t('fh_demo'))}</span></button>`
-  const online = () => !document.documentElement.classList.contains('is-offline')
-  el.querySelector('#fh-photo')!.addEventListener('click', () => { if (!online()) return; haptic(); root.querySelector<HTMLInputElement>('#fh-file')!.click() })
-  el.querySelector('#fh-photo-frz')!.addEventListener('click', () => { if (!online()) return; haptic(); root.querySelector<HTMLInputElement>('#fh-file-frz')!.click() })
-  el.querySelector('#fh-photo-med')!.addEventListener('click', () => { if (!online()) return; haptic(); root.querySelector<HTMLInputElement>('#fh-file-med')!.click() })
-  el.querySelector('#fh-demo')!.addEventListener('click', () => { if (!online()) return; haptic(); openSamples() })
+  el.querySelector('#fh-photo')!.addEventListener('click', () => { haptic(); root.querySelector<HTMLInputElement>('#fh-file')!.click() })
+  el.querySelector('#fh-photo-frz')!.addEventListener('click', () => { haptic(); root.querySelector<HTMLInputElement>('#fh-file-frz')!.click() })
+  el.querySelector('#fh-photo-med')!.addEventListener('click', () => { haptic(); root.querySelector<HTMLInputElement>('#fh-file-med')!.click() })
+  el.querySelector('#fh-demo')!.addEventListener('click', () => { haptic(); openSamples() })
 }
 
 function renderStatus(): void {
