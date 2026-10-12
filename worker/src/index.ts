@@ -61,6 +61,18 @@ export default {
     const url = new URL(req.url);
     // bb.micahberkley.com is a short link: send it to the one canonical origin (keeps the PWA install and offline data in one place).
     if (url.hostname === 'bb.micahberkley.com') {
+      // Browsers that installed the old app on bb.* keep a service worker there that never hits the network for pages.
+      // Its update check fetches /sw.js: answer with a worker that unregisters itself and sends open tabs to the real site.
+      if (url.pathname === '/sw.js' || url.pathname === '/registerSW.js') {
+        const kill = `self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (e) => e.waitUntil((async () => {
+  const keys = await caches.keys(); await Promise.all(keys.map((k) => caches.delete(k)));
+  await self.registration.unregister();
+  const cs = await self.clients.matchAll({ type: 'window' });
+  cs.forEach((c) => { try { const u = new URL(c.url); c.navigate('https://blackoutbox.micahberkley.com' + u.pathname + u.search + u.hash); } catch (_) {} });
+})()));`;
+        return Promise.resolve(new Response(kill, { headers: { 'content-type': 'text/javascript', 'cache-control': 'no-store' } }));
+      }
       return Promise.resolve(Response.redirect(`https://blackoutbox.micahberkley.com${url.pathname}${url.search}${url.hash}`, 301));
     }
     if (req.method === 'GET' && url.pathname === '/api/health') return health(req, env, ctx);
