@@ -33,20 +33,21 @@ export async function mountNow(hero: HTMLElement, view: HTMLElement, stage: HTML
   render()
   onLang(render)
   onTheme(paintStage)
-  on('health', () => { if (!live && navigator.onLine && !state.health?._fallback) void refresh() })
+  on('health', () => { if (!live) void refresh() })
   on('prep', render)
   on('items', renderClocksTile)
   setInterval(renderClocksTile, 5000)
   onMedia(() => { lastHero = '__'; render() })
   void loadMedia()
   setInterval(() => { paintDaylight() }, 60_000)
-  window.addEventListener('offline', () => { live = false; render() })
   void refresh()
-  setInterval(() => { if (navigator.onLine) void refresh() }, REFRESH_MS)
+  setInterval(() => void refresh(), REFRESH_MS)
+  // Until the first good answer, retry every 10 s so the screen never sits on "Loading".
+  const retry = setInterval(() => { if (live) clearInterval(retry); else void refresh() }, 10_000)
 }
 
 async function refresh(): Promise<void> {
-  if (loading || !navigator.onLine) return
+  if (loading) return
   loading = true
   const r = await getNow(state.lat, state.lon)
   loading = false

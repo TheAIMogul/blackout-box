@@ -11,8 +11,11 @@ export function isBlackout(): boolean { return manual ?? offline }
 export function onTheme(fn: () => void): void { subs.add(fn) }
 
 export function setOffline(off: boolean): void {
-  // .is-offline drives the "No internet" pill and greys out the photo buttons; the moon toggle never sets it.
-  document.documentElement.classList.toggle('is-offline', off)
+  // Automatic offline detection is switched off (user request, Oct 12): it misfired during the live demo.
+  // Blackout mode now only comes from the moon button.
+  void off
+  return
+  // eslint-disable-next-line no-unreachable
   if (off === offline) return
   offline = off
   manual = null
