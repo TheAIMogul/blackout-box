@@ -64,6 +64,8 @@ export default {
       return Promise.resolve(Response.redirect(`https://blackoutbox.micahberkley.com${url.pathname}${url.search}${url.hash}`, 301));
     }
     if (req.method === 'GET' && url.pathname === '/api/health') return health(req, env, ctx);
-    return express.fetch(req, env, ctx);
+    if (url.pathname.startsWith('/api/')) return express.fetch(req, env, ctx);
+    // Everything else is the static app (assets now run Worker-first so the bb.* redirect above always wins).
+    return (env as { ASSETS: { fetch: (r: Request) => Promise<Response> } }).ASSETS.fetch(req);
   },
 };
